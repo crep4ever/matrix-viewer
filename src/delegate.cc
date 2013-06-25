@@ -56,7 +56,7 @@ void CDelegate::paint(QPainter *painter,
 {
   QStyleOptionViewItemV4 opt(option);
 
-  double value;
+  double value = 0;
   if (qVariantCanConvert< double >(index.data()))
     value = qVariantValue< double >(index.data());
 
