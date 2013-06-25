@@ -184,21 +184,33 @@ QTabWidget* CMainWindow::mainWidget() const
 
 CTabWidget* CMainWindow::currentWidget() const
 {
+  if (!m_mainWidget)
+    return 0;
+
   return qobject_cast<CTabWidget*>(m_mainWidget->currentWidget());
 }
 
 CMatrixView* CMainWindow::currentView() const
 {
+  if (!currentWidget())
+    return 0;
+
   return qobject_cast<CMatrixView*>(currentWidget()->widget(0));
 }
 
 CMatrixModel* CMainWindow::currentModel() const
 {
+  if (!currentView())
+    return 0;
+
   return qobject_cast<CMatrixModel*>(currentView()->model());
 }
 
 cv::Mat CMainWindow::currentData() const
 {
+  if (!currentModel())
+    return cv::Mat();
+
   return currentModel()->data();
 }
 
