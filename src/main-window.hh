@@ -115,7 +115,7 @@ private:
   QAction *m_saveAct;
   QAction *m_saveAsAct;
   QAction *m_compareAct;
-  
+
   // Settings
   QString m_openPath;
   QString m_savePath;

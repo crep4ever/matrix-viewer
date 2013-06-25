@@ -49,7 +49,7 @@ class CDelegate : public QItemDelegate
 private:
   double m_absoluteThreshold;
   double m_percentageThreshold;
-  
+
   static QColor _redColor;
   static QColor _greenColor;
 

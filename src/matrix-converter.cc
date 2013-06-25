@@ -47,7 +47,7 @@ bool CMatrixConverter::load(const QString & filename)
     return loadFromXml(filename);
   else if (filename.endsWith(".txt"))
     return loadFromTxt(filename);
-  
+
   return false;
 }
 
@@ -57,7 +57,7 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToXml(filename);
   else if (filename.endsWith(".txt"))
     return saveToTxt(filename);
-  
+
   return false;
 }
 
@@ -116,7 +116,7 @@ bool CMatrixConverter::saveToTxt(const QString & filename)
       for (int j = 0; j < m_data.rows; ++j)
 	for (int i = 0; i < m_data.cols; ++i)
 	  stream << m_data.at< double >(j, i) << " ";
-      
+
       file.close();
       return true;
     }

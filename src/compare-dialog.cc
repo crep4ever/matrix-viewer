@@ -127,7 +127,7 @@ void CCompareDialog::compare()
   // Diff model/view
   cv::Mat diffData;
   cv::absdiff(originalData, newData, diffData);
- 
+
   CMatrixModel *diffModel = new CMatrixModel();
   diffModel->setData(diffData);
 
@@ -135,7 +135,7 @@ void CCompareDialog::compare()
   diffView->setModel(diffModel);
   diffView->setItemDelegate(new CDelegate);
   parent()->currentWidget()->addWidget(diffView);
-  
+
   accept();
 }
 

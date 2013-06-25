@@ -48,7 +48,7 @@ public:
   void writeSettings();
 
 public slots:
-  
+
   void compare();
 
 private:

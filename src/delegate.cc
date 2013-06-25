@@ -59,7 +59,7 @@ void CDelegate::paint(QPainter *painter,
   double value;
   if (qVariantCanConvert< double >(index.data()))
     value = qVariantValue< double >(index.data());
-  
+
   if (value >= m_absoluteThreshold)
     {
       painter->fillRect(opt.rect, _redColor);
@@ -68,6 +68,6 @@ void CDelegate::paint(QPainter *painter,
     {
       painter->fillRect(opt.rect, _greenColor);
     }
-  
+
   return QItemDelegate::paint(painter, option, index);
 }

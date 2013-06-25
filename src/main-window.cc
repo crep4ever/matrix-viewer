@@ -188,7 +188,7 @@ CTabWidget* CMainWindow::currentWidget() const
 }
 
 CMatrixView* CMainWindow::currentView() const
-{ 
+{
   return qobject_cast<CMatrixView*>(currentWidget()->widget(0));
 }
 
@@ -314,7 +314,7 @@ void CMainWindow::open(const QString & filename)
   // Set up the view
   CMatrixView *view = new CMatrixView;
   view->setModel(model);
-  
+
   // New tab
   CTabWidget *tab = new CTabWidget();
   tab->addWidget(view);

@@ -58,11 +58,11 @@ QVariant CMatrixModel::data (const QModelIndex & index, int role) const
     {
     case Qt::DisplayRole:
       return data().at< double >(index.row(), index.column());
-    
+
     default:
       data(index, Qt::DisplayRole);
     }
-  
+
   return QVariant();
 }
 
