@@ -24,6 +24,7 @@
 #include <QFormLayout>
 #include <QBoxLayout>
 #include <QSettings>
+#include <QMessageBox>
 #include <QDebug>
 
 #include "file-chooser.hh"
@@ -97,20 +98,35 @@ void CCompareDialog::compare()
     }
 
   CMatrixConverter converter(m_fileChooser->path());
+  cv::Mat originalData = parent()->currentData();
+  cv::Mat newData = converter.data();
+
+  if (converter.data().rows != originalData.rows ||
+      converter.data().cols != originalData.cols)
+    {
+      QMessageBox msgBox;
+      msgBox.setIcon(QMessageBox::Warning);
+      msgBox.setText(tr("The two matrix cannot be compared because they have different sizes."));
+      msgBox.setInformativeText(tr("First matrix: %1 rows x %2 cols\nSecond matrix: %3 rows x %4 cols.")
+				.arg(originalData.rows).arg(originalData.cols)
+				.arg(newData.rows).arg(newData.cols));
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.exec();
+      close();
+      return;
+    }
 
   // New model/view
   CMatrixModel *model = new CMatrixModel();
-  model->setData(converter.data());
+  model->setData(newData);
 
   CMatrixView *view = new CMatrixView;
   view->setModel(model);
   parent()->currentWidget()->addWidget(view);
 
   // Diff model/view
-  cv::Mat originalData = parent()->currentData();
-
   cv::Mat diffData;
-  cv::absdiff(originalData, model->data(), diffData);
+  cv::absdiff(originalData, newData, diffData);
  
   CMatrixModel *diffModel = new CMatrixModel();
   diffModel->setData(diffData);
