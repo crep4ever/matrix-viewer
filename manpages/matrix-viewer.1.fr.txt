@@ -1,0 +1,28 @@
+matrix-viewer(1)
+==================
+
+NOM
+---
+
+matrix-viewer - représentation graphique de données matriciells
+
+SYNOPSIS
+--------
+
+*matrix-viewer* [*--version*] [*-h* | *--help*]
+
+DESCRIPTION
+-----------
+
+*matrix-viewer* est une interface graphique pour la visualisation et l'édition de données matricielles issues de la sérialization OpenCV.
+
+OPTIONS
+-------
+*--version*::
+    Affiche les informations de version.
+*-h*, *--help*::
+    Affiche un message d'aide et s'arrête.
+
+AUTHORS
+-------
+Romain Goffe <romain.goffe@gmail.com>,

@@ -1,0 +1,34 @@
+matrix-viewer(1)
+==================
+
+NAME
+----
+
+matrix-viewer - visualize and edit matrix data
+
+SYNOPSIS
+--------
+
+*matrix-viewer* [*--version*] [*-h* | *--help*]
+
+DESCRIPTION
+-----------
+
+*matrix-viewer* is a graphical frontend for data matrix.
+It can be used to visualize and edit files from OpenCV or txt serialization.
+
+OPTIONS
+-------
+*--version*::
+    Display version information.
+*-h*, *--help*::
+    Print a help message and exit.
+
+BUGS
+----
+
+
+AUTHORS
+-------
+Romain Goffe <romain.goffe@gmail.com>,
+

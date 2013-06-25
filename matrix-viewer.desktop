@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=0.1
+Type=Application
+Name=Matrix viewer
+Name[fr]=Visualisation de données matricielles
+Name[en]=Visualise matrix data
+GenericName=Matrix viewer
+Comment=Visualize and edit matrix data
+TryExec=matrix-viewer
+Exec=matrix-viewer %U
+Icon=matrix-viewer.svg
+Terminal=false
+Categories=Application;Utility;
