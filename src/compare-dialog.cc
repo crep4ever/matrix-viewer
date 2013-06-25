@@ -40,8 +40,8 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   : QDialog(parent)
   , m_parent(qobject_cast<CMainWindow*>(parent))
   , m_fileChooser(new CFileChooser)
-  , m_absoluteThreshold(0)
-  , m_percentageThreshold(0)
+  , m_absoluteThresholdSpinBox(new QSpinBox)
+  , m_percentageThresholdSpinBox(new QSpinBox)
 {
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
   connect(buttons, SIGNAL(accepted()), this, SLOT(compare()));
@@ -50,14 +50,11 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   m_fileChooser->setCaption(tr("Open comparison data file"));
   m_fileChooser->setFilter(tr("Data files (*.xml *.txt)"));
 
-  QGroupBox *compareParametersGroupBox = new QGroupBox(tr("Thresholds"));
-
-  QSpinBox *absoluteThresholdSpinBox = new QSpinBox;
-  QSpinBox *percentageThresholdSpinBox = new QSpinBox;
-
   QFormLayout *parametersLayout = new QFormLayout;
-  parametersLayout->addRow(tr("Absolute threshold:"), absoluteThresholdSpinBox);
-  parametersLayout->addRow(tr("Percentage threshold:"), percentageThresholdSpinBox);
+  parametersLayout->addRow(tr("Absolute threshold:"), m_absoluteThresholdSpinBox);
+  parametersLayout->addRow(tr("Percentage threshold:"), m_percentageThresholdSpinBox);
+
+  QGroupBox *compareParametersGroupBox = new QGroupBox(tr("Thresholds"));
   compareParametersGroupBox->setLayout(parametersLayout);
 
   QBoxLayout *layout = new QVBoxLayout;
@@ -80,13 +77,20 @@ void CCompareDialog::readSettings()
 {
   QSettings settings;
   settings.beginGroup("compare");
-  m_absoluteThreshold = settings.value("absoluteThreshold", true).toDouble();
-  m_percentageThreshold = settings.value("percentageThreshold", true).toDouble();
+  m_fileChooser->setPath(settings.value("path", QDir::homePath()).toString());
+  m_absoluteThresholdSpinBox->setValue(settings.value("absoluteThreshold", true).toDouble());
+  m_percentageThresholdSpinBox->setValue(settings.value("percentageThreshold", true).toDouble());
   settings.endGroup();
 }
 
 void CCompareDialog::writeSettings()
 {
+  QSettings settings;
+  settings.beginGroup("compare");
+  settings.setValue("path", m_fileChooser->path());
+  settings.setValue("absoluteThreshold", m_absoluteThresholdSpinBox->value());
+  settings.setValue("percentageThreshold", m_percentageThresholdSpinBox->value());
+  settings.endGroup();
 }
 
 void CCompareDialog::compare()
