@@ -119,8 +119,6 @@ private:
   // Settings
   QString m_openPath;
   QString m_savePath;
-  QString m_comparePath;
-
 };
 
 #endif  // __MAIN_WINDOW_HH__

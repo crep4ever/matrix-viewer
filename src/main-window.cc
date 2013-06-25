@@ -54,7 +54,6 @@ CMainWindow::CMainWindow(QWidget *parent)
   , m_isStatusBarDisplayed(true)
   , m_openPath(QDir::homePath())
   , m_savePath(QDir::homePath())
-  , m_comparePath(QDir::homePath())
 {
   setWindowTitle("Matrix viewer");
   setWindowIcon(QIcon(":/icons/matrix-viewer/256x256/matrix-viewer.png"));
@@ -97,7 +96,6 @@ void CMainWindow::readSettings(bool firstLaunch)
     }
   m_openPath = settings.value("openPath", QDir::homePath()).toString();
   m_savePath = settings.value("savePath", QDir::homePath()).toString();
-  m_comparePath = settings.value("comparePath", QDir::homePath()).toString();
   settings.endGroup();
 
   settings.beginGroup("display");
@@ -118,7 +116,6 @@ void CMainWindow::writeSettings()
     }
   settings.setValue( "openPath", m_openPath );
   settings.setValue( "savePath", m_savePath );
-  settings.setValue( "comparePath", m_comparePath );
   settings.endGroup();
 }
 
