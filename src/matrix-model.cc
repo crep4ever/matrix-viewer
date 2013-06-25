@@ -37,6 +37,7 @@ cv::Mat CMatrixModel::data() const
 void CMatrixModel::setData(const cv::Mat & matrix)
 {
   m_data = matrix;
+  emit(dataChanged(QModelIndex(), QModelIndex()));
 }
 
 int CMatrixModel::rowCount(const QModelIndex & parent) const
@@ -71,6 +72,7 @@ bool CMatrixModel::setData(const QModelIndex & index, const QVariant & value, in
     {
     case Qt::EditRole:
 	data().at< double >(index.row(), index.column()) = value.toDouble();
+	emit(dataChanged(QModelIndex(), QModelIndex()));
 	return true;
 
     default:
@@ -84,4 +86,12 @@ Qt::ItemFlags CMatrixModel::flags(const QModelIndex & index) const
 {
   (void) index;
   return Qt::ItemIsSelectable | Qt::ItemIsEditable  | Qt::ItemIsEnabled;
+}
+
+
+void CMatrixModel::sort(int column, Qt::SortOrder order)
+{
+  const int cvOrder = (order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
+  cv::sort(m_data, m_data, CV_SORT_EVERY_COLUMN | cvOrder);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
 }
