@@ -93,6 +93,35 @@ void CCompareDialog::writeSettings()
   settings.endGroup();
 }
 
+bool CCompareDialog::checkData(const cv::Mat & first,
+			       const cv::Mat & second)
+{
+  if (first.rows == 0 || first.cols == 0)
+    {
+      QMessageBox msgBox;
+      msgBox.setIcon(QMessageBox::Warning);
+      msgBox.setText(tr("Empty matrix cannot be compared."));
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.exec();
+      return false;
+    }
+
+  if (first.rows != second.rows || first.cols != second.cols)
+    {
+      QMessageBox msgBox;
+      msgBox.setIcon(QMessageBox::Warning);
+      msgBox.setText(tr("The two matrix cannot be compared because they have different sizes."));
+      msgBox.setInformativeText(tr("First matrix: %1 rows x %2 cols\nSecond matrix: %3 rows x %4 cols.")
+				.arg(first.rows).arg(first.cols)
+				.arg(second.rows).arg(second.cols));
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.exec();
+      return false;
+    }
+
+  return true;
+}
+
 void CCompareDialog::compare()
 {
   if (m_fileChooser->path().isEmpty())
@@ -105,20 +134,12 @@ void CCompareDialog::compare()
   cv::Mat originalData = parent()->currentData();
   cv::Mat newData = converter.data();
 
-  if (converter.data().rows != originalData.rows ||
-      converter.data().cols != originalData.cols)
+  if (!checkData(originalData, converter.data()))
     {
-      QMessageBox msgBox;
-      msgBox.setIcon(QMessageBox::Warning);
-      msgBox.setText(tr("The two matrix cannot be compared because they have different sizes."));
-      msgBox.setInformativeText(tr("First matrix: %1 rows x %2 cols\nSecond matrix: %3 rows x %4 cols.")
-				.arg(originalData.rows).arg(originalData.cols)
-				.arg(newData.rows).arg(newData.cols));
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.exec();
       close();
       return;
     }
+  writeSettings(); //updates thresholds for delegate
 
   // New model/view
   CMatrixModel *model = new CMatrixModel();

@@ -53,6 +53,9 @@ public slots:
   void compare();
 
 private:
+  bool checkData(const cv::Mat & first,
+		 const cv::Mat & second);
+
   CMainWindow *m_parent;
   CFileChooser *m_fileChooser;
   QSpinBox *m_absoluteThresholdSpinBox;
