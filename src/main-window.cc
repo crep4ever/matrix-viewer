@@ -31,7 +31,7 @@
 #include <QFileDialog>
 #include <QUrl>
 #include <QDebug>
-#include <QStringListModel>
+#include <QStringList>
 #include <QTableView>
 #include <QSplitter>
 #include <QLabel>
@@ -334,12 +334,13 @@ void CMainWindow::open(const QString & filename)
 
 void CMainWindow::open()
 {
-  QString filename = QFileDialog::getOpenFileName(this,
-                                                  tr("Open data file"),
-                                                  m_openPath,
-                                                  tr("Data files (*.xml *.txt)"));
-  if (!filename.isEmpty())
-    open(filename);
+  QStringList filenames = QFileDialog::getOpenFileNames(this,
+                                                        tr("Open data file"),
+                                                        m_openPath,
+                                                        tr("Data files (*.xml *.txt);;Images (*.bmp)"));
+  foreach (const QString & filename, filenames)
+    if (!filename.isEmpty())
+      open(filename);
 }
 
 void CMainWindow::save()
