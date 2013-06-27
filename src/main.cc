@@ -106,7 +106,8 @@ int main(int argc, char *argv[])
 
   foreach (const QString & arg, arguments)
     {
-      if (QFile(arg).exists())
+      if ( QFile(arg).exists() &&
+           (arg.endsWith(".txt") || arg.endsWith(".xml")) )
         {
           mainWindow.open(arg);
         }
