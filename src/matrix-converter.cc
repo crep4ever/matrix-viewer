@@ -82,6 +82,12 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
       QString line = stream.readLine();
       QStringList values = line.split(" ");
       const uint rows = values[1].toInt(), cols = values[0].toInt();
+      if (rows == 0 || cols == 0)
+        {
+          qWarning() << tr("CMatrixConverter::loadFromTxt invalid dimensions for matrix: ") << filename;
+          return false;
+        }
+
       m_data = cv::Mat::zeros(rows, cols, CV_64FC1);
       //qDebug() << "CMatrixConverter::loadFromTxt cols: " << cols << " rows: " << rows;
 
@@ -133,8 +139,17 @@ bool CMatrixConverter::loadFromXml(const QString & filename)
   if (!fs.open(filename.toStdString(), cv::FileStorage::READ))
     return false;
 
-  fs["matrix"] >> m_data;
-  fs.release();
+  try
+    {
+      fs["matrix"] >> m_data;
+      fs.release();
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("CMatrixConverter::loadFromXml invalid matrix: ") << filename;
+      return false;
+    }
+
   return true;
 }
 
