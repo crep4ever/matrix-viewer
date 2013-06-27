@@ -104,5 +104,13 @@ int main(int argc, char *argv[])
   CMainWindow mainWindow;
   mainWindow.show();
 
+  foreach (const QString & arg, arguments)
+    {
+      if (QFile(arg).exists())
+        {
+          mainWindow.open(arg);
+        }
+    }
+
   return application.exec();
 }
