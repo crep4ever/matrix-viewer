@@ -56,10 +56,7 @@ void CDelegate::paint(QPainter *painter,
 {
   QStyleOptionViewItemV4 opt(option);
 
-  double value = 0;
-  if (qVariantCanConvert< double >(index.data()))
-    value = qVariantValue< double >(index.data());
-
+  const double value = index.data().toDouble();
   if (value >= m_absoluteThreshold)
     {
       painter->fillRect(opt.rect, _redColor);
