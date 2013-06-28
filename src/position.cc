@@ -23,12 +23,17 @@
 #include <QLabel>
 #include <QString>
 
+#include <limits>
+
 CPosition::CPosition(QWidget *parent)
   : QWidget(parent)
   , m_rowSpinBox(new QSpinBox)
   , m_colSpinBox(new QSpinBox)
   , m_valueLabel(new QLabel)
 {
+  m_rowSpinBox->setMaximum(std::numeric_limits<int>::max());
+  m_colSpinBox->setMaximum(std::numeric_limits<int>::max());
+
   connect(m_rowSpinBox, SIGNAL(valueChanged(int)),
 	  this, SLOT(changeRow(int)));
 
