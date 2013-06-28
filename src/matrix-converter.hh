@@ -58,6 +58,9 @@ private:
   bool loadFromXml(const QString & filename);
   bool saveToXml(const QString & filename);
 
+  bool loadFromBmp(const QString & filename);
+  bool saveToBmp(const QString & filename);
+
   cv::Mat m_data;
 };
 

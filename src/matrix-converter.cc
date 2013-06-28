@@ -47,6 +47,8 @@ bool CMatrixConverter::load(const QString & filename)
     return loadFromXml(filename);
   else if (filename.endsWith(".txt"))
     return loadFromTxt(filename);
+  else if (filename.endsWith(".bmp"))
+    return loadFromBmp(filename);
 
   return false;
 }
@@ -57,6 +59,8 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToXml(filename);
   else if (filename.endsWith(".txt"))
     return saveToTxt(filename);
+  else if (filename.endsWith(".bmp"))
+    return saveToBmp(filename);
 
   return false;
 }
@@ -164,6 +168,36 @@ bool CMatrixConverter::saveToXml(const QString & filename)
 
   return true;
 
+}
+
+bool CMatrixConverter::loadFromBmp(const QString & filename)
+{
+  try
+    {
+      m_data = cv::imread(filename.toStdString(), -1);
+      m_data.convertTo(m_data, CV_64FC1);
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("CMatrixConverter::loadFromBmp invalid matrix: ") << filename;
+      return false;
+    }
+  return true;
+}
+
+bool CMatrixConverter::saveToBmp(const QString & filename)
+{
+  bool ret;
+  try
+    {
+      ret = cv::imwrite(filename.toStdString(), m_data);
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("CMatrixConverter::loadFromBmp invalid matrix: ") << filename;
+      return false;
+    }
+  return ret;
 }
 
 void CMatrixConverter::print() const
