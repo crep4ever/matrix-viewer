@@ -24,7 +24,7 @@
 #include <QFormLayout>
 #include <QBoxLayout>
 #include <QSettings>
-#include <QMessageBox>
+#include <QStatusBar>
 #include <QDebug>
 
 #include "file-chooser.hh"
@@ -98,24 +98,15 @@ bool CCompareDialog::checkData(const cv::Mat & first,
 {
   if (first.rows == 0 || first.cols == 0)
     {
-      QMessageBox msgBox;
-      msgBox.setIcon(QMessageBox::Warning);
-      msgBox.setText(tr("Empty matrix cannot be compared."));
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.exec();
+      parent()->statusBar()->showMessage(tr("Empty matrix cannot be compared."));
       return false;
     }
 
   if (first.rows != second.rows || first.cols != second.cols)
     {
-      QMessageBox msgBox;
-      msgBox.setIcon(QMessageBox::Warning);
-      msgBox.setText(tr("The two matrix cannot be compared because they have different sizes."));
-      msgBox.setInformativeText(tr("First matrix: %1 rows x %2 cols\nSecond matrix: %3 rows x %4 cols.")
-				.arg(first.rows).arg(first.cols)
-				.arg(second.rows).arg(second.cols));
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.exec();
+      parent()->statusBar()->showMessage(tr("Different sizes: M1: %1 x %2 M2: %3 x %4")
+					 .arg(first.rows).arg(first.cols)
+					 .arg(second.rows).arg(second.cols));
       return false;
     }
 
