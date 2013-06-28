@@ -45,11 +45,13 @@
 #include "matrix-converter.hh"
 #include "compare-dialog.hh"
 #include "tab-widget.hh"
+#include "position.hh"
 
 CMainWindow::CMainWindow(QWidget *parent)
   : QMainWindow(parent)
   , m_mainWidget(new QTabWidget(this))
   , m_progressBar(new CProgressBar(this))
+  , m_position(new CPosition(this))
   , m_isToolBarDisplayed(true)
   , m_isStatusBarDisplayed(true)
   , m_openPath(QDir::homePath())
@@ -66,7 +68,7 @@ CMainWindow::CMainWindow(QWidget *parent)
   m_mainWidget->setTabsClosable(true);
   m_mainWidget->setMovable(true);
   connect(m_mainWidget, SIGNAL(tabCloseRequested(int)), SLOT(closeTab(int)));
-  //connect(m_mainWidget, SIGNAL(currentChanged(int)), SLOT(changeTab(int)));
+  connect(m_mainWidget, SIGNAL(currentChanged(int)), SLOT(changeTab(int)));
   setCentralWidget(m_mainWidget);
 
   m_progressBar->setTextVisible(false);
@@ -74,6 +76,7 @@ CMainWindow::CMainWindow(QWidget *parent)
   m_progressBar->hide();
 
   // status bar with an embedded label and progress bar
+  statusBar()->addPermanentWidget(m_position);
   statusBar()->addPermanentWidget(m_progressBar);
 
   readSettings(true);
@@ -211,6 +214,11 @@ cv::Mat CMainWindow::currentData() const
   return currentModel()->data();
 }
 
+CPosition* CMainWindow::positionWidget() const
+{
+  return m_position;
+}
+
 void CMainWindow::setToolBarDisplayed(bool value)
 {
   m_mainToolBar->setVisible(value);
@@ -321,7 +329,7 @@ void CMainWindow::open(const QString & filename)
   model->setData(converter.data());
 
   // Set up the view
-  CMatrixView *view = new CMatrixView;
+  CMatrixView *view = new CMatrixView(this);
   view->setModel(model);
 
   // New tab
@@ -329,7 +337,7 @@ void CMainWindow::open(const QString & filename)
   tab->addWidget(view);
   m_mainWidget->addTab(tab, fi.fileName());
   m_mainWidget->setCurrentWidget(tab);
-  statusBar()->setStatusTip(filename);
+  statusBar()->showMessage(filename);
 }
 
 void CMainWindow::open()
@@ -388,6 +396,16 @@ void CMainWindow::closeTab(int index)
           delete view->model();
 
       delete comparisonView;
+    }
+}
+
+void CMainWindow::changeTab(int index)
+{
+  if (currentWidget())
+    {
+      disconnect(positionWidget());
+      connect(positionWidget(), SIGNAL(positionChanged(int, int)),
+	      currentView(), SLOT(selectItem(int, int)));
     }
 }
 

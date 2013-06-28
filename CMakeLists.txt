@@ -26,6 +26,7 @@ set(MATRIX_VIEWER_SOURCES
   src/compare-dialog.cc
   src/tab-widget.cc
   src/delegate.cc
+  src/position.cc
   )
 
 # header (moc)
@@ -40,6 +41,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/compare-dialog.hh
   src/tab-widget.hh
   src/delegate.hh
+  src/position.hh
   )
 
 # uis

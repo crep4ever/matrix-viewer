@@ -136,7 +136,7 @@ void CCompareDialog::compare()
   CMatrixModel *model = new CMatrixModel();
   model->setData(newData);
 
-  CMatrixView *view = new CMatrixView;
+  CMatrixView *view = new CMatrixView(parent());
   view->setModel(model);
   parent()->currentWidget()->addWidget(view);
 
@@ -147,7 +147,7 @@ void CCompareDialog::compare()
   CMatrixModel *diffModel = new CMatrixModel();
   diffModel->setData(diffData);
 
-  CMatrixView *diffView = new CMatrixView;
+  CMatrixView *diffView = new CMatrixView(parent());
   diffView->setModel(diffModel);
   diffView->setItemDelegate(new CDelegate);
   parent()->currentWidget()->addWidget(diffView);

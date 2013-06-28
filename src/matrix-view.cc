@@ -20,16 +20,52 @@
 #include <QSettings>
 #include <QDebug>
 
-CMatrixView::CMatrixView()
-  : QTableView()
+#include "main-window.hh"
+#include "position.hh"
+
+CMatrixView::CMatrixView(QWidget *p)
+  : QTableView(p)
+  , m_parent(qobject_cast<CMainWindow*>(p))
 {
   setAlternatingRowColors(true);
   setShowGrid(true);
   setSortingEnabled(true);
   setEditTriggers(QAbstractItemView::DoubleClicked);
+  setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 CMatrixView::~CMatrixView()
 {
+}
+
+void CMatrixView::currentChanged(const QModelIndex & index, const QModelIndex & previous)
+{
+  Q_UNUSED(previous);
+  parent()->positionWidget()->setRow(index.row());
+  parent()->positionWidget()->setCol(index.column());
+  parent()->positionWidget()->setValue(index.data().toDouble());
+}
+
+void CMatrixView::setModel(QAbstractItemModel * model)
+{
+  QItemSelectionModel *sm = selectionModel();
+  QTableView::setModel(model);
+  delete sm;
+
+  connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+          this, SLOT(currentChanged(const QModelIndex &, const QModelIndex &)));
+}
+
+void CMatrixView::selectItem(int row, int col)
+{
+  setCurrentIndex(model()->index(row, col));
+}
+
+CMainWindow* CMatrixView::parent() const
+{
+  if (!m_parent)
+    qWarning() << "CMatrixView::parent invalid parent";
+
+  return m_parent;
 }
 

@@ -27,6 +27,7 @@
 class QTabWidget;
 class QToolBar;
 class CProgressBar;
+class CPosition;
 class CTabWidget;
 class CMatrixModel;
 class CMatrixView;
@@ -63,6 +64,8 @@ public:
   CMatrixModel* currentModel() const;
   cv::Mat currentData() const;
 
+  CPosition* positionWidget() const;
+
 protected:
   /*!
     Saves settings before closing the application.
@@ -74,6 +77,7 @@ private slots:
   void save();
   void saveAs();
   void closeTab(int index);
+  void changeTab(int index);
   void compare();
 
   //application
@@ -99,6 +103,7 @@ private:
   QTabWidget *m_mainWidget;
   QToolBar *m_mainToolBar;
   CProgressBar *m_progressBar;
+  CPosition *m_position;
 
   // Settings
   bool m_isToolBarDisplayed;

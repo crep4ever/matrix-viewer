@@ -1,4 +1,5 @@
-// Copyright (C) 2013, Romain Goffe <romain.goffe@gmail.com>
+// Copyright (C) 2009-2011, Romain Goffe <romain.goffe@gmail.com>
+// Copyright (C) 2009-2011, Alexandre Dupas <alexandre.dupas@gmail.com>
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License as
@@ -16,40 +17,44 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MATRIX_VIEW_HH__
-#define __MATRIX_VIEW_HH__
+#ifndef __POSITION_HH__
+#define __POSITION_HH__
 
-#include <QTableView>
-#include <QColor>
+#include <QWidget>
 
-class CMainWindow;
+class QSpinBox;
+class QLabel;
+
 /*!
-  \file matrix-view.hh
-  \class CMatrixView
-  \brief CMatrixView is a view that presents matrix data as a table of values
+  \file position.hh
+  \class CPosition
+  \brief CPosition is a small widget that displays the value matrix at an editable row/column position 
 */
-
-class CMatrixView : public QTableView
+class CPosition : public QWidget
 {
   Q_OBJECT
 
 public:
   /// Constructor.
-  CMatrixView(QWidget *parent = 0);
+  CPosition(QWidget *parent=0);
 
   /// Destructor.
-  virtual ~CMatrixView();
-
-  CMainWindow* parent() const;
-
-  virtual void setModel(QAbstractItemModel * model);
+  ~CPosition();
 
 public slots:
-  void currentChanged(const QModelIndex & index, const QModelIndex & previous);
-  void selectItem(int row, int col);
+  void setRow(const uint row);
+  void setCol(const uint col);
+  void setValue(const double value);
+  void changeRow(int row);
+  void changeCol(int col);
+
+signals:
+  void positionChanged(int row, int col);
 
 private:
-  CMainWindow *m_parent;
+  QSpinBox* m_rowSpinBox;
+  QSpinBox* m_colSpinBox;
+  QLabel*   m_valueLabel;
 };
 
-#endif  // __MATRIX_VIEW_HH__
+#endif  // __POSITION_HH__
