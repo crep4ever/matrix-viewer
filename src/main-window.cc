@@ -182,12 +182,12 @@ QTabWidget* CMainWindow::mainWidget() const
   return m_mainWidget;
 }
 
-CTabWidget* CMainWindow::currentWidget() const
+CTab* CMainWindow::currentWidget() const
 {
   if (!m_mainWidget)
     return 0;
 
-  return qobject_cast<CTabWidget*>(m_mainWidget->currentWidget());
+  return qobject_cast<CTab*>(m_mainWidget->currentWidget());
 }
 
 CMatrixView* CMainWindow::currentView() const
@@ -333,8 +333,12 @@ void CMainWindow::open(const QString & filename)
   view->setModel(model);
 
   // New tab
-  CTabWidget *tab = new CTabWidget();
+  CTab *tab = new CTab();
   tab->addWidget(view);
+
+//  connect(tab, SIGNAL(labelChanged(const QString&)),
+//	  m_mainWidget, SLOT(changeTabText(const QString&)));
+
   m_mainWidget->addTab(tab, fi.fileName());
   m_mainWidget->setCurrentWidget(tab);
   statusBar()->showMessage(filename);
@@ -401,6 +405,7 @@ void CMainWindow::closeTab(int index)
 
 void CMainWindow::changeTab(int index)
 {
+  Q_UNUSED(index);
   if (currentWidget())
     {
       disconnect(positionWidget());

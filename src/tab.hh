@@ -16,29 +16,38 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __TAB_WIDGET_HH__
-#define __TAB_WIDGET_HH__
+#ifndef __TAB_HH__
+#define __TAB_HH__
 
 #include <QSplitter>
-#include <QTableView>
-#include <QItemDelegate>
+#include <QModelIndex>
+#include <QString>
 
 /*!
-  \file matrix-view.hh
-  \class CMatrixView
-  \brief CMatrixView is a view that presents matrix data as a table of values
+  \file tab.hh
+  \class CTab
+  \brief CTab is the main widget of a tab: a splitter that may display different data views
 */
 
-class CTabWidget : public QSplitter
+class CTab : public QSplitter
 {
   Q_OBJECT
 
 public:
   /// Constructor.
-  CTabWidget();
+  CTab();
 
   /// Destructor.
-  virtual ~CTabWidget();
+  virtual ~CTab();
+
+  virtual void addWidget(QWidget* widget);
+
+signals:
+  void labelChanged(const QString &);
+
+public slots:
+  void modelDataChanged(const QModelIndex &, const QModelIndex &);
+
 };
 
-#endif  // __MATRIX_VIEW_HH__
+#endif  // __TAB_HH__

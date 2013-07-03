@@ -24,7 +24,7 @@ set(MATRIX_VIEWER_SOURCES
   src/matrix-view.cc
   src/matrix-converter.cc
   src/compare-dialog.cc
-  src/tab-widget.cc
+  src/tab.cc
   src/delegate.cc
   src/position.cc
   )
@@ -39,7 +39,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/matrix-view.hh
   src/matrix-converter.hh
   src/compare-dialog.hh
-  src/tab-widget.hh
+  src/tab.hh
   src/delegate.hh
   src/position.hh
   )

@@ -19,12 +19,39 @@
 
 #include <QDebug>
 
-CTabWidget::CTabWidget()
+#include "matrix-view.hh"
+
+CTab::CTab()
   : QSplitter(Qt::Horizontal)
 {
 }
 
-CTabWidget::~CTabWidget()
+CTab::~CTab()
 {
 }
 
+
+void CTab::addWidget(QWidget* w)
+{
+  QSplitter::addWidget(w);
+  if (CMatrixView *view = qobject_cast<CMatrixView*>(widget(0)))
+    {
+      disconnect(view->model());
+      connect(view->model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+	      this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+    }
+}
+
+void CTab::modelDataChanged(const QModelIndex & index,
+				  const QModelIndex & previous)
+{
+  Q_UNUSED(index);
+  Q_UNUSED(previous);
+
+  // update the window title
+  if (!windowTitle().contains(" *"))
+    {
+      setWindowTitle(windowTitle() + " *");
+      emit(labelChanged(windowTitle()));
+    }
+}

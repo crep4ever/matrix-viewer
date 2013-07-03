@@ -28,7 +28,7 @@ class QTabWidget;
 class QToolBar;
 class CProgressBar;
 class CPosition;
-class CTabWidget;
+class CTab;
 class CMatrixModel;
 class CMatrixView;
 
@@ -59,7 +59,7 @@ public:
   CProgressBar * progressBar() const;
 
   QTabWidget* mainWidget() const;
-  CTabWidget* currentWidget() const;
+  CTab* currentWidget() const;
   CMatrixView* currentView() const;
   CMatrixModel* currentModel() const;
   cv::Mat currentData() const;
