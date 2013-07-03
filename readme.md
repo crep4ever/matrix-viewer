@@ -2,7 +2,7 @@
 This is a Qt4/C++ client to visualize and edit matrix data
 
 # Matrix-viewer
-* required packages: cmake, libqt4-dev
+* required packages: cmake, libqt4-dev, libopencv-dev
  build and run:
 
 >     git clone git://github.com/crep4ever/matrix-viewer.git
