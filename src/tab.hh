@@ -42,12 +42,22 @@ public:
 
   virtual void addWidget(QWidget* widget);
 
+  bool isModified() const;
+  void setModified(const bool value);
+
+  QString filePath() const;
+  void setFilePath(const QString & path);
+
 signals:
   void labelChanged(const QString &);
+  void wasModified();
 
 public slots:
   void modelDataChanged(const QModelIndex &, const QModelIndex &);
 
+private:
+  bool m_isModified;
+  QString m_filePath;
 };
 
 #endif  // __TAB_HH__

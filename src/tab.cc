@@ -23,6 +23,8 @@
 
 CTab::CTab()
   : QSplitter(Qt::Horizontal)
+  , m_isModified(false)
+  , m_filePath()
 {
 }
 
@@ -43,15 +45,43 @@ void CTab::addWidget(QWidget* w)
 }
 
 void CTab::modelDataChanged(const QModelIndex & index,
-				  const QModelIndex & previous)
+			    const QModelIndex & previous)
 {
   Q_UNUSED(index);
   Q_UNUSED(previous);
 
+  setModified(true);
+  emit(wasModified());
+}
+
+bool CTab::isModified() const
+{
+  return m_isModified;
+}
+
+void CTab::setModified(const bool modified)
+{
+  m_isModified = modified;
+
   // update the window title
-  if (!windowTitle().contains(" *"))
+  if (modified && !windowTitle().contains(" *"))
     {
       setWindowTitle(windowTitle() + " *");
       emit(labelChanged(windowTitle()));
     }
+  else if (!modified && windowTitle().contains(" *"))
+    {
+      setWindowTitle(windowTitle().remove(" *"));
+      emit(labelChanged(windowTitle()));
+    }
+}
+
+QString CTab::filePath() const
+{
+  return m_filePath;
+}
+
+void CTab::setFilePath(const QString & path)
+{
+  m_filePath = path;
 }
