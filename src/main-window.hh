@@ -28,6 +28,7 @@ class QTabWidget;
 class QToolBar;
 class CProgressBar;
 class CPosition;
+class CTabWidget;
 class CTab;
 class CMatrixModel;
 class CMatrixView;
@@ -58,7 +59,7 @@ public:
   */
   CProgressBar * progressBar() const;
 
-  QTabWidget* mainWidget() const;
+  CTabWidget* mainWidget() const;
   CTab* currentWidget() const;
   CMatrixView* currentView() const;
   CMatrixModel* currentModel() const;
@@ -100,7 +101,7 @@ private:
   bool isStatusBarDisplayed();
 
   // Widgets
-  QTabWidget *m_mainWidget;
+  CTabWidget *m_mainWidget;
   QToolBar *m_mainToolBar;
   CProgressBar *m_progressBar;
   CPosition *m_position;

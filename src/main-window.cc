@@ -44,12 +44,13 @@
 #include "matrix-view.hh"
 #include "matrix-converter.hh"
 #include "compare-dialog.hh"
+#include "tab-widget.hh"
 #include "tab.hh"
 #include "position.hh"
 
 CMainWindow::CMainWindow(QWidget *parent)
   : QMainWindow(parent)
-  , m_mainWidget(new QTabWidget(this))
+  , m_mainWidget(new CTabWidget(this))
   , m_progressBar(new CProgressBar(this))
   , m_position(new CPosition(this))
   , m_isToolBarDisplayed(true)
@@ -177,7 +178,7 @@ void CMainWindow::createActions()
   connect(m_preferencesAct, SIGNAL(triggered()), SLOT(preferences()));
 }
 
-QTabWidget* CMainWindow::mainWidget() const
+CTabWidget* CMainWindow::mainWidget() const
 {
   return m_mainWidget;
 }
@@ -336,8 +337,8 @@ void CMainWindow::open(const QString & filename)
   CTab *tab = new CTab();
   tab->addWidget(view);
 
-//  connect(tab, SIGNAL(labelChanged(const QString&)),
-//	  m_mainWidget, SLOT(changeTabText(const QString&)));
+  connect(tab, SIGNAL(labelChanged(const QString&)),
+	  m_mainWidget, SLOT(changeTabText(const QString&)));
 
   m_mainWidget->addTab(tab, fi.fileName());
   m_mainWidget->setCurrentWidget(tab);
