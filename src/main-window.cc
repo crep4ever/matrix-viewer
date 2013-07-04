@@ -340,7 +340,7 @@ void CMainWindow::open(const QString & filename)
   connect(tab, SIGNAL(labelChanged(const QString&)),
 	  m_mainWidget, SLOT(changeTabText(const QString&)));
 
-  m_mainWidget->addTab(tab, fi.fileName());
+  m_mainWidget->addTab(tab, filename);
   m_mainWidget->setCurrentWidget(tab);
   statusBar()->showMessage(filename);
 }
@@ -356,10 +356,27 @@ void CMainWindow::open()
       open(filename);
 }
 
+void CMainWindow::save(const QString & filename)
+{
+  if (QTableView *view = qobject_cast< QTableView* >(currentWidget()->widget(0)))
+    if (CMatrixModel* model = qobject_cast< CMatrixModel* >(view->model()))
+      {
+        CMatrixConverter converter;
+        converter.setData(model->data());
+        converter.save(filename);
+      }
+  statusBar()->showMessage(tr("Save: %1").arg(filename));
+}
+
 void CMainWindow::save()
 {
-  saveAs();
+  if (!currentWidget() || !currentWidget()->isModified())
+    return;
+
+  currentWidget()->setModified(false);
+  save(currentWidget()->filePath());
 }
+
 
 void CMainWindow::saveAs()
 {

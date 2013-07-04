@@ -17,6 +17,7 @@
 //******************************************************************************
 #include "tab-widget.hh"
 
+#include <QFileInfo>
 #include <QDebug>
 
 #include "tab.hh"
@@ -38,11 +39,16 @@ void CTabWidget::changeTabText(const QString & str)
 
 void CTabWidget::addTab(QWidget * page, const QString & label)
 {
+  QFileInfo fi(label);
   CTab *tab = qobject_cast<CTab*>(page);
   if (tab)
     {
-      tab->setWindowTitle(label);
+      tab->setFilePath(fi.absoluteFilePath());
+      tab->setWindowTitle(fi.fileName());
+      QTabWidget::addTab(page, fi.fileName());
     }
-
-  QTabWidget::addTab(page, label);
+  else
+    {
+      QTabWidget::addTab(page, label);
+    }
 }

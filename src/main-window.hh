@@ -100,6 +100,8 @@ private:
   bool isToolBarDisplayed();
   bool isStatusBarDisplayed();
 
+  void save(const QString & filename);
+
   // Widgets
   CTabWidget *m_mainWidget;
   QToolBar *m_mainToolBar;
