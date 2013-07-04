@@ -132,14 +132,6 @@ void CCompareDialog::compare()
     }
   writeSettings(); //updates thresholds for delegate
 
-  // New model/view
-  CMatrixModel *model = new CMatrixModel();
-  model->setData(newData);
-
-  CMatrixView *view = new CMatrixView(parent());
-  view->setModel(model);
-  parent()->currentWidget()->addWidget(view);
-
   // Diff model/view
   cv::Mat diffData;
   cv::absdiff(originalData, newData, diffData);
