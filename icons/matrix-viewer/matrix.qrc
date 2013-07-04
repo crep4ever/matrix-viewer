@@ -1,0 +1,17 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource prefix="icons/matrix-viewer">
+    <file>22x22/matrix-viewer.png</file>
+    <file>22x22/compare.png</file>
+
+    <file>32x32/matrix-viewer.png</file>
+    <file>32x32/compare.png</file>
+
+    <file>48x48/matrix-viewer.png</file>
+    <file>48x48/compare.png</file>
+
+    <file>256x256/matrix-viewer.png</file>
+
+    <file>src/matrix-viewer.svg</file>
+    <file>src/compare.svg</file>
+ </qresource>
+</RCC>
