@@ -89,6 +89,10 @@ private slots:
   void reportBug();
   void about();
 
+  // views
+  void toggleDataView(bool);
+  void toggleImageView(bool);
+
 private:
   void readSettings(bool firstLaunch = false);
   void writeSettings();
@@ -123,6 +127,9 @@ private:
   QAction *m_saveAct;
   QAction *m_saveAsAct;
   QAction *m_compareAct;
+
+  QAction *m_dataViewAct;
+  QAction *m_imageViewAct;
 
   // Settings
   QString m_openPath;

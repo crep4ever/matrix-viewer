@@ -177,6 +177,48 @@ void CMainWindow::createActions()
   m_preferencesAct->setStatusTip(tr("Configure the application"));
   m_preferencesAct->setMenuRole(QAction::PreferencesRole);
   connect(m_preferencesAct, SIGNAL(triggered()), SLOT(preferences()));
+
+  m_dataViewAct = new QAction(tr("&Show data"), this);
+  m_dataViewAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/matrix-viewer.png"));
+  m_dataViewAct->setStatusTip(tr("Display the matrix in a table layout"));
+  m_dataViewAct->setCheckable(true);
+  m_dataViewAct->setChecked(true);
+  connect(m_dataViewAct, SIGNAL(toggled(bool)), SLOT(toggleDataView(bool)));
+
+  m_imageViewAct = new QAction(tr("&Show image"), this);
+  m_imageViewAct->setIcon(QIcon::fromTheme("image-x-generic"));
+  m_imageViewAct->setStatusTip(tr("Display the matrix as an image"));
+  m_imageViewAct->setCheckable(true);
+  m_imageViewAct->setChecked(true);
+  connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
+}
+
+void CMainWindow::toggleDataView(bool value)
+{
+  if (!currentWidget())
+    return;
+
+  int nbChildren = currentWidget()->count();
+  for (int i = 0; i < nbChildren; ++i)
+    {
+      CMatrixView *view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
+      if (view)
+	view->setVisible(value);
+    }
+}
+
+void CMainWindow::toggleImageView(bool value)
+{
+  if (!currentWidget())
+    return;
+
+  int nbChildren = currentWidget()->count();
+  for (int i = 0; i < nbChildren; ++i)
+    {
+      CImageView *view = qobject_cast<CImageView*>(currentWidget()->widget(i));
+      if (view)
+	view->setVisible(value);
+    }
 }
 
 CTabWidget* CMainWindow::mainWidget() const
@@ -276,6 +318,9 @@ void CMainWindow::createToolBar()
   m_mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   m_mainToolBar->addAction(m_openAct);
   m_mainToolBar->addAction(m_compareAct);
+  m_mainToolBar->addSeparator();
+  m_mainToolBar->addAction(m_dataViewAct);
+  m_mainToolBar->addAction(m_imageViewAct);
   addToolBar(m_mainToolBar);
 
   setUnifiedTitleAndToolBarOnMac(true);
