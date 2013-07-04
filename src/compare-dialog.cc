@@ -32,7 +32,7 @@
 #include "matrix-model.hh"
 #include "matrix-view.hh"
 #include "main-window.hh"
-#include "tab-widget.hh"
+#include "tab.hh"
 #include "delegate.hh"
 
 

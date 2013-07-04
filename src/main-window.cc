@@ -44,7 +44,7 @@
 #include "matrix-view.hh"
 #include "matrix-converter.hh"
 #include "compare-dialog.hh"
-#include "tab-widget.hh"
+#include "tab.hh"
 #include "position.hh"
 
 CMainWindow::CMainWindow(QWidget *parent)
