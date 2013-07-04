@@ -42,6 +42,7 @@
 #include "preferences.hh"
 #include "matrix-model.hh"
 #include "matrix-view.hh"
+#include "image-view.hh"
 #include "matrix-converter.hh"
 #include "compare-dialog.hh"
 #include "tab-widget.hh"
@@ -329,13 +330,17 @@ void CMainWindow::open(const QString & filename)
   CMatrixModel *model = new CMatrixModel();
   model->setData(converter.data());
 
-  // Set up the view
-  CMatrixView *view = new CMatrixView(this);
-  view->setModel(model);
+  // Set up the views
+  CMatrixView *matrixView = new CMatrixView(this);
+  matrixView->setModel(model);
+
+  CImageView *imgView = new CImageView(this);
+  imgView->setModel(model);
 
   // New tab
   CTab *tab = new CTab();
-  tab->addWidget(view);
+  tab->addWidget(matrixView);
+  tab->addWidget(imgView);
 
   connect(tab, SIGNAL(labelChanged(const QString&)),
 	  m_mainWidget, SLOT(changeTabText(const QString&)));

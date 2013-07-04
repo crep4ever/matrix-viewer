@@ -22,6 +22,7 @@ set(MATRIX_VIEWER_SOURCES
   src/file-chooser.cc
   src/matrix-model.cc
   src/matrix-view.cc
+  src/image-view.cc
   src/matrix-converter.cc
   src/compare-dialog.cc
   src/tab-widget.cc
@@ -38,6 +39,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/file-chooser.hh
   src/matrix-model.hh
   src/matrix-view.hh
+  src/image-view.hh
   src/matrix-converter.hh
   src/compare-dialog.hh
   src/tab-widget.hh
