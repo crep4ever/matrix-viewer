@@ -480,6 +480,8 @@ void CMainWindow::closeTab(int index)
 void CMainWindow::changeTab(int index)
 {
   Q_UNUSED(index);
+  toggleDataView(m_dataViewAct->isChecked());
+  toggleImageView(m_imageViewAct->isChecked());
   if (currentWidget())
     {
       disconnect(positionWidget());
