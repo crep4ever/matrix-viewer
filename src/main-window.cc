@@ -178,18 +178,16 @@ void CMainWindow::createActions()
   m_preferencesAct->setMenuRole(QAction::PreferencesRole);
   connect(m_preferencesAct, SIGNAL(triggered()), SLOT(preferences()));
 
-  m_dataViewAct = new QAction(tr("&Show data"), this);
+  m_dataViewAct = new QAction(tr("&Data"), this);
   m_dataViewAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/matrix-viewer.png"));
   m_dataViewAct->setStatusTip(tr("Display the matrix in a table layout"));
   m_dataViewAct->setCheckable(true);
-  m_dataViewAct->setChecked(true);
   connect(m_dataViewAct, SIGNAL(toggled(bool)), SLOT(toggleDataView(bool)));
 
-  m_imageViewAct = new QAction(tr("&Show image"), this);
+  m_imageViewAct = new QAction(tr("&Image"), this);
   m_imageViewAct->setIcon(QIcon::fromTheme("image-x-generic"));
   m_imageViewAct->setStatusTip(tr("Display the matrix as an image"));
   m_imageViewAct->setCheckable(true);
-  m_imageViewAct->setChecked(true);
   connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
 }
 
@@ -384,6 +382,7 @@ void CMainWindow::open(const QString & filename)
       CMatrixView *matrixView = new CMatrixView(this);
       matrixView->setModel(model);
       tab->addWidget(matrixView);
+      m_dataViewAct->setChecked(true);
     }
 
   if (converter.isFormatImage())
@@ -391,6 +390,7 @@ void CMainWindow::open(const QString & filename)
       CImageView *imgView = new CImageView(this);
       imgView->setModel(model);
       tab->addWidget(imgView);
+      m_imageViewAct->setChecked(true);
     }
 
   connect(tab, SIGNAL(labelChanged(const QString&)),
