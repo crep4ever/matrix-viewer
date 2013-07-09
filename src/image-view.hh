@@ -29,6 +29,7 @@ class QWheelEvent;
 class QScrollBar;
 class QImage;
 class QLabel;
+class QAction;
 
 /*!
   \file image-view.hh
@@ -59,7 +60,15 @@ public slots:
   void zoomIn();
   void zoomOut();
   void normalSize();
-  
+  void fitToWindow();
+
+protected:
+  /*!
+    Provides custom context menu with specific actions that are relevant to the image view.
+    For example, zoom actions
+  */
+  void contextMenuEvent(QContextMenuEvent *event);
+
 private:
   void scaleImage(const double factor);
   void adjustScrollBar(QScrollBar *scrollBar, const double factor);
@@ -68,6 +77,12 @@ private:
   QImage *m_image;
   QLabel *m_imageLabel;
   double m_scaleFactor;
+
+  // context menu actions
+  QAction *m_zoomInAct;
+  QAction *m_zoomOutAct;
+  QAction *m_normalSizeAct;
+  QAction *m_fitToWindowAct;
 };
 
 #endif  // __IMAGE_VIEW_HH__

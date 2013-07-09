@@ -23,6 +23,8 @@
 #include <QScrollBar>
 #include <QWheelEvent>
 #include <QSettings>
+#include <QAction>
+#include <QMenu>
 #include <QDebug>
 
 #include <opencv2/opencv.hpp>
@@ -44,7 +46,29 @@ CImageView::CImageView(QWidget *p)
   
   setBackgroundRole(QPalette::Dark);
   setWidget(m_imageLabel);
-  //setWidgetResizable(true);
+
+  m_zoomInAct = new QAction(tr("Zoom &In"), this);
+  m_zoomInAct->setIcon(QIcon::fromTheme("zoom-in"));
+  m_zoomInAct->setShortcut(QKeySequence::ZoomIn);
+  m_zoomInAct->setStatusTip(tr("Zoom in"));
+  connect(m_zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
+
+  m_zoomOutAct = new QAction(tr("Zoom &Out"), this);
+  m_zoomOutAct->setIcon(QIcon::fromTheme("zoom-out"));
+  m_zoomOutAct->setShortcut(QKeySequence::ZoomOut);
+  m_zoomOutAct->setStatusTip(tr("Zoom out"));
+  connect(m_zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
+
+  m_fitToWindowAct = new QAction(tr("&Fit window"), this);
+  m_fitToWindowAct->setIcon(QIcon::fromTheme("zoom-fit-best"));
+  m_fitToWindowAct->setStatusTip(tr("Fit the image within the window"));
+  m_fitToWindowAct->setCheckable(true);
+  connect(m_fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
+
+  m_normalSizeAct = new QAction(tr("&Original size"), this);
+  m_normalSizeAct->setIcon(QIcon::fromTheme("zoom-original"));
+  m_normalSizeAct->setStatusTip(tr("Original size of the image"));
+  connect(m_normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
 }
 
 CImageView::~CImageView()
@@ -80,7 +104,7 @@ void CImageView::setModel(CMatrixModel * model)
     }
 
   m_imageLabel->setPixmap(QPixmap::fromImage(*m_image));
-  normalSize();
+  fitToWindow();
 }
 
 CMainWindow* CImageView::parent() const
@@ -115,6 +139,14 @@ void CImageView::normalSize()
   m_scaleFactor = 1.0;
 }
 
+void CImageView::fitToWindow()
+{
+  const bool fitToWindow = m_fitToWindowAct->isChecked();
+  setWidgetResizable(fitToWindow);
+  if (!fitToWindow)
+    normalSize();
+}
+
 void CImageView::scaleImage(const double factor)
 {
   if (!m_imageLabel->pixmap())
@@ -131,4 +163,17 @@ void CImageView::adjustScrollBar(QScrollBar *scrollBar, const double factor)
 {
   scrollBar->setValue(int(factor * scrollBar->value()
 			  + ((factor - 1) * scrollBar->pageStep()/2)));
+}
+
+void CImageView::contextMenuEvent(QContextMenuEvent *event)
+{
+  QMenu *menu = new QMenu;
+
+  menu->addAction(m_zoomInAct);
+  menu->addAction(m_zoomOutAct);
+  menu->addAction(m_fitToWindowAct);
+  menu->addAction(m_normalSizeAct);
+
+  menu->exec(event->globalPos());
+  delete menu;
 }
