@@ -375,17 +375,23 @@ void CMainWindow::open(const QString & filename)
   CMatrixModel *model = new CMatrixModel();
   model->setData(converter.data());
 
-  // Set up the views
-  CMatrixView *matrixView = new CMatrixView(this);
-  matrixView->setModel(model);
-
-  CImageView *imgView = new CImageView(this);
-  imgView->setModel(model);
-
   // New tab
   CTab *tab = new CTab();
-  tab->addWidget(matrixView);
-  tab->addWidget(imgView);
+
+  // Set up the views
+  if (converter.isFormatData())
+    {
+      CMatrixView *matrixView = new CMatrixView(this);
+      matrixView->setModel(model);
+      tab->addWidget(matrixView);
+    }
+
+  if (converter.isFormatImage())
+    {
+      CImageView *imgView = new CImageView(this);
+      imgView->setModel(model);
+      tab->addWidget(imgView);
+    }
 
   connect(tab, SIGNAL(labelChanged(const QString&)),
 	  m_mainWidget, SLOT(changeTabText(const QString&)));

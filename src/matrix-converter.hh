@@ -32,8 +32,18 @@
 class CMatrixConverter : public QObject
 {
   Q_OBJECT
+  Q_ENUMS(FileFormat)
 
 public:
+
+  enum FileFormat
+  {
+    Format_Unknown,
+    Format_Bmp,
+    Format_Txt,
+    Format_Xml
+  };
+
   /// Constructor.
   CMatrixConverter();
 
@@ -51,6 +61,9 @@ public:
   bool save(const QString & filename);
   bool load(const QString & filename);
 
+  bool isFormatData() const;
+  bool isFormatImage() const;
+
 private:
   bool loadFromTxt(const QString & filename);
   bool saveToTxt(const QString & filename);
@@ -62,6 +75,7 @@ private:
   bool saveToBmp(const QString & filename);
 
   cv::Mat m_data;
+  FileFormat m_format;
 };
 
 #endif  // __MATRIX_CONVERTER_HH__

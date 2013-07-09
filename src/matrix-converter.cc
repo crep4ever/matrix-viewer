@@ -25,6 +25,7 @@
 CMatrixConverter::CMatrixConverter()
   : QObject()
   , m_data()
+  , m_format(Format_Unknown)
 {
 }
 
@@ -75,6 +76,16 @@ void CMatrixConverter::setData(const cv::Mat & matrix)
   m_data = matrix;
 }
 
+bool CMatrixConverter::isFormatData() const
+{
+  return m_format == Format_Xml || m_format == Format_Txt;
+}
+
+bool CMatrixConverter::isFormatImage() const
+{
+  return m_format == Format_Bmp;
+}
+
 bool CMatrixConverter::loadFromTxt(const QString & filename)
 {
   QFile file(filename);
@@ -106,6 +117,10 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
 	  m_data.at< double >(j, i) = values[count++].toDouble();
 
       file.close();
+
+      // Set file format
+      m_format = Format_Txt;
+
       return true;
     }
   else
@@ -154,6 +169,9 @@ bool CMatrixConverter::loadFromXml(const QString & filename)
       return false;
     }
 
+  // Set file format
+  m_format = Format_Xml;
+
   return true;
 }
 
@@ -182,6 +200,10 @@ bool CMatrixConverter::loadFromBmp(const QString & filename)
       qWarning() << tr("CMatrixConverter::loadFromBmp invalid matrix: ") << filename;
       return false;
     }
+
+  // Set file format
+  m_format = Format_Bmp;
+
   return true;
 }
 
