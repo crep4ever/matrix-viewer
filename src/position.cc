@@ -60,13 +60,11 @@ CPosition::~CPosition()
 void CPosition::setRow(const uint row)
 {
   m_rowSpinBox->setValue(row);
-  emit(positionChanged(m_rowSpinBox->value(), m_colSpinBox->value()));
 }
 
 void CPosition::setCol(const uint col)
 {
   m_colSpinBox->setValue(col);
-  emit(positionChanged(m_rowSpinBox->value(), m_colSpinBox->value()));
 }
 
 void CPosition::changeRow(int row)
