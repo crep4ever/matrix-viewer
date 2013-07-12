@@ -490,7 +490,7 @@ void CMainWindow::changeTab(int index)
     {
       disconnect(positionWidget());
       connect(positionWidget(), SIGNAL(positionChanged(int, int)),
-	      currentView(), SLOT(selectItem(int, int)));
+	      currentWidget(), SLOT(selectItem(int, int)));
     }
 }
 

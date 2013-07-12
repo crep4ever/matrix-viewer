@@ -54,6 +54,7 @@ signals:
 
 public slots:
   void modelDataChanged(const QModelIndex &, const QModelIndex &);
+  void selectItem(int, int);
 
 private:
   bool m_isModified;

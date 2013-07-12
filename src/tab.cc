@@ -20,6 +20,7 @@
 #include <QDebug>
 
 #include "matrix-view.hh"
+#include "image-view.hh"
 
 CTab::CTab()
   : QSplitter(Qt::Horizontal)
@@ -38,7 +39,6 @@ void CTab::addWidget(QWidget* w)
   QSplitter::addWidget(w);
   if (CMatrixView *view = qobject_cast<CMatrixView*>(widget(0)))
     {
-      disconnect(view->model());
       connect(view->model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
 	      this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
     }
@@ -52,6 +52,21 @@ void CTab::modelDataChanged(const QModelIndex & index,
 
   setModified(true);
   emit(wasModified());
+}
+
+void CTab::selectItem(int row, int col)
+{
+  for (int i = 0; i < count(); ++i)
+    {
+      CMatrixView *dataView = qobject_cast<CMatrixView*>(widget(i));
+      if (dataView)
+	dataView->selectItem(row, col);
+
+      CImageView *imgView = qobject_cast<CImageView*>(widget(i));
+      if (imgView)
+	imgView->selectItem(row, col);
+    }
+
 }
 
 bool CTab::isModified() const
