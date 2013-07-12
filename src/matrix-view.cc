@@ -59,6 +59,7 @@ void CMatrixView::setModel(QAbstractItemModel * model)
 void CMatrixView::selectItem(int row, int col)
 {
   setCurrentIndex(model()->index(row, col));
+  scrollTo(model()->index(row, col));
 }
 
 CMainWindow* CMatrixView::parent() const
