@@ -31,6 +31,7 @@
 #include "matrix-converter.hh"
 #include "matrix-model.hh"
 #include "matrix-view.hh"
+#include "image-view.hh"
 #include "main-window.hh"
 #include "tab.hh"
 #include "delegate.hh"
@@ -143,6 +144,10 @@ void CCompareDialog::compare()
   diffView->setModel(diffModel);
   diffView->setItemDelegate(new CDelegate);
   parent()->currentWidget()->addWidget(diffView);
+
+  CImageView *imageDiffView = new CImageView(parent());
+  imageDiffView->setModel(diffModel);
+  parent()->currentWidget()->addWidget(imageDiffView);
 
   accept();
 }
