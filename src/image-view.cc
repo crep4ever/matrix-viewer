@@ -127,6 +127,39 @@ void CImageView::mousePressEvent(QMouseEvent *event)
   selectItem(scenePoint.y(), scenePoint.x());
 }
 
+void CImageView::keyPressEvent(QKeyEvent *event)
+{
+  if (!parent())
+    {
+      return QGraphicsView::keyPressEvent(event);
+    }
+
+  const uint row = parent()->positionWidget()->row();
+  const uint col = parent()->positionWidget()->col();
+
+  switch (event->key())
+    {
+    case Qt::Key_Left:
+      selectItem(row, col - 1);
+      break;
+
+    case Qt::Key_Right:
+      selectItem(row, col + 1);
+      break;
+
+    case Qt::Key_Down:
+      selectItem(row + 1, col);
+      break;
+
+    case Qt::Key_Up:
+      selectItem(row - 1, col);
+      break;
+
+    default:
+      QGraphicsView::keyPressEvent(event);
+    }
+}
+
 void CImageView::selectItem(int row, int col)
 {
   m_selectionBox->setPos(col, row);

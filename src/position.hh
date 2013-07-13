@@ -41,6 +41,9 @@ public:
   /// Destructor.
   ~CPosition();
 
+  uint row() const;
+  uint col() const;
+
 public slots:
   void setRow(const uint row);
   void setCol(const uint col);

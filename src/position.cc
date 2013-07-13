@@ -57,9 +57,19 @@ CPosition::~CPosition()
 {
 }
 
+uint CPosition::row() const
+{
+  return m_rowSpinBox->value();
+}
+
 void CPosition::setRow(const uint row)
 {
   m_rowSpinBox->setValue(row);
+}
+
+uint CPosition::col() const
+{
+  return m_colSpinBox->value();
 }
 
 void CPosition::setCol(const uint col)

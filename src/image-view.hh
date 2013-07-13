@@ -29,6 +29,7 @@ class QAction;
 class QImage;
 class QWheelEvent;
 class QMouseEvent;
+class QKeyEvent;
 class QGraphicsScene;
 class QGraphicsRectItem;
 
@@ -55,6 +56,7 @@ public:
 
   void wheelEvent(QWheelEvent *event);
   void mousePressEvent(QMouseEvent *event);
+  void keyPressEvent(QKeyEvent *event);
 
 public slots:
   void selectItem(int row, int col);
