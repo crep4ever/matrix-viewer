@@ -64,7 +64,9 @@ uint CPosition::row() const
 
 void CPosition::setRow(const uint row)
 {
+  blockSignals(true);
   m_rowSpinBox->setValue(row);
+  blockSignals(false);
 }
 
 uint CPosition::col() const
@@ -74,7 +76,9 @@ uint CPosition::col() const
 
 void CPosition::setCol(const uint col)
 {
+  blockSignals(true);
   m_colSpinBox->setValue(col);
+  blockSignals(false);
 }
 
 void CPosition::changeRow(int row)
