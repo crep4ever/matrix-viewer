@@ -47,7 +47,7 @@ public:
 public slots:
   void setRow(const uint row);
   void setCol(const uint col);
-  void setValue(const double value);
+  void setValue(const QString & value);
   void changeRow(int row);
   void changeCol(int col);
 

@@ -91,8 +91,8 @@ void CPosition::changeCol(int col)
   emit(positionChanged(m_rowSpinBox->value(), col));
 }
 
-void CPosition::setValue(const double value)
+void CPosition::setValue(const QString & value)
 {
-  m_valueLabel->setText(tr("Value: %1").arg(value));  
+  m_valueLabel->setText(tr("Value: %1").arg(value));
 }
 
