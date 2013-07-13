@@ -117,6 +117,8 @@ void CImageView::wheelEvent(QWheelEvent *event)
     zoomIn();
   else
     zoomOut();
+
+  centerOn(mapToScene(event->pos()));
 }
 
 void CImageView::mousePressEvent(QMouseEvent *event)
