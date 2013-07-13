@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix>
+  <regexp>
+    [dD]ataProjectors*
+  </regexp>
+
+  <columns>
+    <column id="0" label="Projector" />
+    <column id="1" label="Plane" />
+    <column id="2" label="Camera" />
+    <column id="3" label="Point X" />
+    <column id="4" label="Point Y" />
+    <column id="5" label="Tool Col" />
+    <column id="6" label="Tool Row" />
+    <column id="7" label="Focus" />
+  </columns>
+
+</matrix>
+

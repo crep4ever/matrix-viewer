@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix>
+  <regexp>
+    [dD]ataCameras*
+  </regexp>
+
+  <columns>
+    <column id="0" label="Plane" />
+    <column id="1" label="Camera" />
+    <column id="1" label="Point X" />
+    <column id="1" label="Point Y" />
+    <column id="1" label="Tool Col" />
+    <column id="1" label="Tool Row" />
+    <column id="1" label="Focus" />
+  </columns>
+
+</matrix>
+
