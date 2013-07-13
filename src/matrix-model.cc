@@ -168,6 +168,9 @@ QString CMatrixModel::typeString() const
 
 void CMatrixModel::setProfile(const QString & profile)
 {
+  if (profile.isEmpty())
+    return;
+
   // Parse profile for rows/columns labels
   m_horizontalHeaderLabels.clear();
   m_verticalHeaderLabels.clear();
@@ -175,7 +178,7 @@ void CMatrixModel::setProfile(const QString & profile)
   QFile file(profile);
   if (!file.open(QIODevice::ReadOnly))
     {
-      qWarning() << tr("Can't open profile in read mode: %1") << profile;
+      qWarning() << tr("Can't open profile in read mode: %1").arg(profile);
       return;
     }
 

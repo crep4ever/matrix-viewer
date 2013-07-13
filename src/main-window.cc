@@ -462,7 +462,8 @@ QString CMainWindow::findProfile(const QString & filename) const
 	}
       file.close();
     }
-  return profile;
+
+  return foundProfile ? profile : QString();
 }
 
 void CMainWindow::open(const QString & filename)
