@@ -192,8 +192,7 @@ bool CMatrixConverter::loadFromBmp(const QString & filename)
 {
   try
     {
-      m_data = cv::imread(filename.toStdString(), -1);
-      m_data.convertTo(m_data, CV_64FC1);
+      m_data = cv::imread(filename.toStdString());
     }
   catch (cv::Exception & e)
     {
