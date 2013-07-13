@@ -93,6 +93,8 @@ private slots:
   void toggleDataView(bool);
   void toggleImageView(bool);
 
+  void loadProfile();
+
 private:
   void readSettings(bool firstLaunch = false);
   void writeSettings();
@@ -105,6 +107,7 @@ private:
   bool isStatusBarDisplayed();
 
   void save(const QString & filename);
+  QString findProfile(const QString & filename) const;
 
   // Widgets
   CTabWidget *m_mainWidget;
@@ -117,6 +120,7 @@ private:
   bool m_isStatusBarDisplayed;
 
   // Application actions
+  QAction *m_loadProfileAct;
   QAction *m_preferencesAct;
   QAction *m_documentationAct;
   QAction *m_bugsAct;

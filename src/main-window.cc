@@ -35,6 +35,8 @@
 #include <QTableView>
 #include <QSplitter>
 #include <QLabel>
+#include <QXmlStreamReader>
+#include <QDirIterator>
 
 #include <opencv2/opencv.hpp>
 
@@ -189,6 +191,11 @@ void CMainWindow::createActions()
   m_imageViewAct->setStatusTip(tr("Display the matrix as an image"));
   m_imageViewAct->setCheckable(true);
   connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
+
+  m_loadProfileAct = new QAction(tr("&Load profile"), this);
+  m_loadProfileAct->setIcon(QIcon::fromTheme("document-x-generic"));
+  m_loadProfileAct->setStatusTip(tr("Load a specific profile for the matrix"));
+  connect(m_loadProfileAct, SIGNAL(triggered()), SLOT(loadProfile()));
 }
 
 void CMainWindow::toggleDataView(bool value)
@@ -298,6 +305,7 @@ void CMainWindow::createMenus()
   fileMenu->addAction(m_saveAsAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_compareAct);
+  fileMenu->addAction(m_loadProfileAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_preferencesAct);
   fileMenu->addSeparator();
@@ -363,15 +371,73 @@ void CMainWindow::compare()
   dialog.exec();
 }
 
+void CMainWindow::loadProfile()
+{
+  if (!currentModel())
+    {
+      statusBar()->showMessage(tr("Can't load profiles for empty matrix"));
+      return;
+    }
+
+  QString filename = QFileDialog::getOpenFileName(this,
+						  tr("Open profile file"),
+						  QDir::currentPath() + "/profiles",
+						  tr("Profile files (*.xml)"));
+  if (!filename.isEmpty())
+    {
+      currentModel()->setProfile(filename);
+    }
+}
+
+QString CMainWindow::findProfile(const QString & filename) const
+{
+  QFileInfo fi(filename);
+  QString profile;
+  bool foundProfile = false;
+  QDirIterator it("./profiles/", QDir::Files, QDirIterator::NoIteratorFlags);
+  while (it.hasNext() && !foundProfile)
+    {
+      profile = it.next();
+
+      QFile file(profile);
+      file.open(QIODevice::ReadOnly);
+      QXmlStreamReader xml(&file);
+      while (!xml.atEnd())
+	{
+	  xml.readNext();
+	  if (xml.name() == "regexp")
+	    {
+	      QRegExp re(xml.readElementText().simplified());
+	      re.setPatternSyntax(QRegExp::Wildcard);
+	      if (re.exactMatch(fi.fileName()))
+		{
+		  foundProfile = true;
+		  break;
+		}
+	    }
+	}
+      if (xml.hasError())
+	{
+	  statusBar()->showMessage(tr("Badly formed xml document: %1").arg(profile));
+	}
+      file.close();
+    }
+  return profile;
+}
+
 void CMainWindow::open(const QString & filename)
 {
   QFileInfo fi(filename);
   m_openPath = fi.absolutePath();
   CMatrixConverter converter(filename);
 
+  // Try to find a suitable profile for this file
+  QString profile = findProfile(filename);
+
   // Build model from data file
   CMatrixModel *model = new CMatrixModel();
   model->setData(converter.data());
+  model->setProfile(profile);
 
   // New tab
   CTab *tab = new CTab();

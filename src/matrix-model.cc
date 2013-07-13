@@ -18,6 +18,8 @@
 #include "matrix-model.hh"
 
 #include <QDebug>
+#include <QXmlStreamReader>
+#include <QFile>
 
 CMatrixModel::CMatrixModel()
   : QAbstractTableModel()
@@ -82,6 +84,24 @@ bool CMatrixModel::setData(const QModelIndex & index, const QVariant & value, in
  return false;
 }
 
+QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (role == Qt::DisplayRole)
+    {
+    if (orientation == Qt::Horizontal)
+      {
+	return section < m_horizontalHeaderLabels.size() ?
+	  m_horizontalHeaderLabels.at(section) : QString::number(section);
+      }
+    else if(orientation == Qt::Vertical)
+      {
+	return section < m_verticalHeaderLabels.size() ?
+	  m_verticalHeaderLabels.at(section) : QString::number(section);
+      }
+    }
+  return QVariant();
+}
+
 Qt::ItemFlags CMatrixModel::flags(const QModelIndex & index) const
 {
   (void) index;
@@ -95,4 +115,49 @@ void CMatrixModel::sort(int column, Qt::SortOrder order)
   const int cvOrder = (order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
   cv::sort(m_data, m_data, CV_SORT_EVERY_COLUMN | cvOrder);
   emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::setProfile(const QString & profile)
+{
+  // Parse profile for rows/columns labels
+  m_horizontalHeaderLabels.clear();
+  m_verticalHeaderLabels.clear();
+
+  QFile file(profile);
+  if (!file.open(QIODevice::ReadOnly))
+    {
+      qWarning() << tr("Can't open profile in read mode: %1") << profile;
+      return;
+    }
+
+  QXmlStreamReader xml(&file);
+  while (!xml.atEnd())
+    {
+      if (xml.readNext())
+	{
+	  if (xml.name() == "column")
+	    {
+	      QString label = xml.attributes().value("label").toString().simplified();
+	      if (!label.isEmpty())
+		m_horizontalHeaderLabels << label;
+	    }
+	  else if (xml.name() == "row")
+	    {
+	      QString label = xml.attributes().value("label").toString().simplified();
+	      if (!label.isEmpty())
+		m_verticalHeaderLabels << label;
+	    }
+	}
+    }
+
+  if (xml.hasError())
+    {
+      qWarning() << tr("Badly formed xml document: %1").arg(profile);
+      qWarning() << tr("Error: %1").arg(xml.errorString());
+    }
+
+  file.close();
+
+  emit(headerDataChanged(Qt::Horizontal, 0, m_horizontalHeaderLabels.size()));
+  emit(headerDataChanged(Qt::Vertical, 0, m_verticalHeaderLabels.size()));
 }
