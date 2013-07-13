@@ -20,6 +20,7 @@
 #define __TAB_WIDGET_HH__
 
 #include <QTabWidget>
+#include <QTabBar>
 #include <QString>
 /*!
   \file tab-widget.hh
@@ -42,6 +43,37 @@ public:
 
 public slots:
   void changeTabText(const QString& str);
+};
+
+/*!
+  \file tab-widget.hh
+  \class CTabBar
+  \brief CTabBar is the widget representing the tabs in the mainwindow
+
+  A CTabBar allows tabs to be closed when middle-clicked with a mouse.
+
+  \image html tab-widget.png
+
+*/
+
+class QMouseEvent;
+
+class CTabBar : public QTabBar
+{
+  Q_OBJECT
+
+public:
+  /// Constructor.
+  CTabBar(QWidget *parent=0);
+  /// Destructor.
+  ~CTabBar();
+
+protected:
+  /*!
+    Reimplements QTabBar::mouseReleaseEvent to close
+    tabs when they are middle-clicked.
+  */
+  virtual void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif  // __TAB_WIDGET_HH__

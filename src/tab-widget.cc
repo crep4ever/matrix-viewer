@@ -18,6 +18,7 @@
 #include "tab-widget.hh"
 
 #include <QFileInfo>
+#include <QMouseEvent>
 #include <QDebug>
 
 #include "tab.hh"
@@ -25,6 +26,8 @@
 CTabWidget::CTabWidget(QWidget *parent)
   : QTabWidget(parent)
 {
+  setStyleSheet(" QTabWidget::tab-bar {}");
+  setTabBar(new CTabBar(this));
 }
 
 CTabWidget::~CTabWidget()
@@ -51,4 +54,22 @@ void CTabWidget::addTab(QWidget * page, const QString & label)
     {
       QTabWidget::addTab(page, label);
     }
+}
+
+//----------------------------------------------------------------------------
+
+CTabBar::CTabBar(QWidget *parent)
+  : QTabBar(parent)
+{}
+
+CTabBar::~CTabBar()
+{}
+
+void CTabBar::mouseReleaseEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::MidButton)
+    {
+      emit(tabCloseRequested(tabAt(event->pos())));
+    }
+  QTabBar::mouseReleaseEvent(event);
 }
