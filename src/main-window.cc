@@ -51,6 +51,8 @@
 #include "tab.hh"
 #include "position.hh"
 
+#include "config.hh"
+
 CMainWindow::CMainWindow(QWidget *parent)
   : QMainWindow(parent)
   , m_mainWidget(new CTabWidget(this))
@@ -381,7 +383,7 @@ void CMainWindow::loadProfile()
 
   QString filename = QFileDialog::getOpenFileName(this,
 						  tr("Open profile file"),
-						  QDir::currentPath() + "/profiles",
+						  QString(MATRIX_VIEWER_DATA_PATH) + "/profiles",
 						  tr("Profile files (*.xml)"));
   if (!filename.isEmpty())
     {
@@ -394,7 +396,7 @@ QString CMainWindow::findProfile(const QString & filename) const
   QFileInfo fi(filename);
   QString profile;
   bool foundProfile = false;
-  QDirIterator it("./profiles/", QDir::Files, QDirIterator::NoIteratorFlags);
+  QDirIterator it(QString(MATRIX_VIEWER_DATA_PATH) + "/profiles", QDir::Files, QDirIterator::NoIteratorFlags);
   while (it.hasNext() && !foundProfile)
     {
       profile = it.next();

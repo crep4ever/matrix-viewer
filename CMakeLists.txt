@@ -48,6 +48,15 @@ set(MATRIX_VIEWER_QT_HEADER
   src/position.hh
   )
 
+# matrix profiles
+set(MATRIX_VIEWER_PROFILES
+  profiles/cameras.xml
+  profiles/projectors.xml
+  profiles/planes.xml
+  profiles/tool.xml
+  )
+
+
 # uis
 set(MATRIX_VIEWER_UIS
   )
@@ -201,4 +210,5 @@ endif()
 install(FILES ${MATRIX_VIEWER_APPLICATION_NAME}.desktop DESTINATION share/applications)
 install(FILES icons/matrix-viewer/256x256/matrix-viewer.png DESTINATION share/icons)
 install(FILES ${COMPILED_TRANSLATIONS} DESTINATION ${MATRIX_VIEWER_DATA_PATH}/lang)
+install(FILES ${MATRIX_VIEWER_PROFILES} DESTINATION ${MATRIX_VIEWER_DATA_PATH}/profiles)
 # }}}
