@@ -114,7 +114,7 @@ QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int 
 	return section < m_horizontalHeaderLabels.size() ?
 	  m_horizontalHeaderLabels.at(section) : QString::number(section);
       }
-    else if(orientation == Qt::Vertical)
+    else if (orientation == Qt::Vertical)
       {
 	return section < m_verticalHeaderLabels.size() ?
 	  m_verticalHeaderLabels.at(section) : QString::number(section);
