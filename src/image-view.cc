@@ -52,6 +52,9 @@ CImageView::CImageView(QWidget *p)
 
 CImageView::~CImageView()
 {
+  delete m_image;
+  delete m_selectionBox;
+  delete m_scene;
 }
 
 void CImageView::createActions()

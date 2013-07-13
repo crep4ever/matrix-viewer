@@ -36,6 +36,8 @@ CMatrixView::CMatrixView(QWidget *p)
 
 CMatrixView::~CMatrixView()
 {
+  delete itemDelegate();
+  delete model();
 }
 
 void CMatrixView::currentChanged(const QModelIndex & index, const QModelIndex & previous)
