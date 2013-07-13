@@ -19,17 +19,18 @@
 #ifndef __IMAGE_VIEW_HH__
 #define __IMAGE_VIEW_HH__
 
-#include <QScrollArea>
+#include <QGraphicsView>
 #include <QModelIndex>
 
 class CMainWindow;
 class CMatrixModel;
 
-class QWheelEvent;
-class QScrollBar;
-class QImage;
-class QLabel;
 class QAction;
+class QImage;
+class QWheelEvent;
+class QMouseEvent;
+class QGraphicsScene;
+class QGraphicsRectItem;
 
 /*!
   \file image-view.hh
@@ -37,7 +38,7 @@ class QAction;
   \brief CImageView is a view that presents matrix data as an image
 */
 
-class CImageView : public QScrollArea
+class CImageView : public QGraphicsView
 {
   Q_OBJECT
 
@@ -53,9 +54,10 @@ public:
   virtual void setModel(CMatrixModel *model);
 
   void wheelEvent(QWheelEvent *event);
+  void mousePressEvent(QMouseEvent *event);
 
 public slots:
-  void currentChanged(const QModelIndex & index, const QModelIndex & previous);
+  void selectItem(int row, int col);
 
   void zoomIn();
   void zoomOut();
@@ -70,13 +72,12 @@ protected:
   void contextMenuEvent(QContextMenuEvent *event);
 
 private:
-  void scaleImage(const double factor);
-  void adjustScrollBar(QScrollBar *scrollBar, const double factor);
+  void createActions();
   
   CMainWindow *m_parent;
   QImage *m_image;
-  QLabel *m_imageLabel;
-  double m_scaleFactor;
+  QGraphicsScene *m_scene;
+  QGraphicsRectItem *m_selectionBox;
 
   // context menu actions
   QAction *m_zoomInAct;

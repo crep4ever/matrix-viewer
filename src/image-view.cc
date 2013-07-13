@@ -19,13 +19,16 @@
 
 #include <QImage>
 #include <QPixmap>
-#include <QLabel>
-#include <QScrollBar>
+#include <QPainter>
 #include <QWheelEvent>
+#include <QMouseEvent>
 #include <QSettings>
 #include <QAction>
 #include <QMenu>
 #include <QDebug>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsRectItem>
 
 #include <opencv2/opencv.hpp>
 
@@ -34,19 +37,25 @@
 #include "matrix-model.hh"
 
 CImageView::CImageView(QWidget *p)
-  : QScrollArea(p)
+  : QGraphicsView(p)
   , m_parent(qobject_cast<CMainWindow*>(p))
   , m_image(0)
-  , m_imageLabel(new QLabel)
-  , m_scaleFactor(1.0)
+  , m_scene(new QGraphicsScene)
+  , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
 {
-  m_imageLabel->setBackgroundRole(QPalette::Base);
-  m_imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-  m_imageLabel->setScaledContents(true);
-  
+  m_selectionBox->setBrush(QBrush(QColor(255, 0, 0, 100)));
   setBackgroundRole(QPalette::Dark);
-  setWidget(m_imageLabel);
+  setScene(m_scene);
 
+  createActions();
+}
+
+CImageView::~CImageView()
+{
+}
+
+void CImageView::createActions()
+{
   m_zoomInAct = new QAction(tr("Zoom &In"), this);
   m_zoomInAct->setIcon(QIcon::fromTheme("zoom-in"));
   m_zoomInAct->setShortcut(QKeySequence::ZoomIn);
@@ -62,25 +71,12 @@ CImageView::CImageView(QWidget *p)
   m_fitToWindowAct = new QAction(tr("&Fit window"), this);
   m_fitToWindowAct->setIcon(QIcon::fromTheme("zoom-fit-best"));
   m_fitToWindowAct->setStatusTip(tr("Fit the image within the window"));
-  m_fitToWindowAct->setCheckable(true);
   connect(m_fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
 
   m_normalSizeAct = new QAction(tr("&Original size"), this);
   m_normalSizeAct->setIcon(QIcon::fromTheme("zoom-original"));
   m_normalSizeAct->setStatusTip(tr("Original size of the image"));
   connect(m_normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
-}
-
-CImageView::~CImageView()
-{
-}
-
-void CImageView::currentChanged(const QModelIndex & index, const QModelIndex & previous)
-{
-  Q_UNUSED(previous);
-  parent()->positionWidget()->setRow(index.row());
-  parent()->positionWidget()->setCol(index.column());
-  parent()->positionWidget()->setValue(index.data().toDouble());
 }
 
 void CImageView::setModel(CMatrixModel * model)
@@ -102,9 +98,9 @@ void CImageView::setModel(CMatrixModel * model)
 	  qtRow[x] = qRgba(color, color, color, 255);
 	}
     }
-
-  m_imageLabel->setPixmap(QPixmap::fromImage(*m_image));
-  fitToWindow();
+  m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
+  m_scene->addPixmap(QPixmap::fromImage(*m_image));
+  m_scene->addItem(m_selectionBox);
 }
 
 CMainWindow* CImageView::parent() const
@@ -123,46 +119,35 @@ void CImageView::wheelEvent(QWheelEvent *event)
     zoomOut();
 }
 
+void CImageView::mousePressEvent(QMouseEvent *event)
+{
+  const QPointF scenePoint = mapToScene(event->pos());
+  selectItem(scenePoint.y(), scenePoint.x());
+}
+
+void CImageView::selectItem(int row, int col)
+{
+  m_selectionBox->setPos(col, row);
+}
+
 void CImageView::zoomIn()
 {
-  scaleImage(1.25);
+  scale(1.2, 1.2);
 }
 
 void CImageView::zoomOut()
 {
-  scaleImage(0.8);
+  scale(1 / 1.2, 1 / 1.2);
 }
 
 void CImageView::normalSize()
 {
-  m_imageLabel->adjustSize();
-  m_scaleFactor = 1.0;
+  resetTransform();
 }
 
 void CImageView::fitToWindow()
 {
-  const bool fitToWindow = m_fitToWindowAct->isChecked();
-  setWidgetResizable(fitToWindow);
-  if (!fitToWindow)
-    normalSize();
-}
-
-void CImageView::scaleImage(const double factor)
-{
-  if (!m_imageLabel->pixmap())
-    return;
-
-  m_scaleFactor *= factor;
-  m_imageLabel->resize(m_scaleFactor * m_imageLabel->pixmap()->size());
-
-  adjustScrollBar(horizontalScrollBar(), factor);
-  adjustScrollBar(verticalScrollBar(), factor);
-}
-
-void CImageView::adjustScrollBar(QScrollBar *scrollBar, const double factor)
-{
-  scrollBar->setValue(int(factor * scrollBar->value()
-			  + ((factor - 1) * scrollBar->pageStep()/2)));
+  fitInView(sceneRect(), Qt::KeepAspectRatio);
 }
 
 void CImageView::contextMenuEvent(QContextMenuEvent *event)
