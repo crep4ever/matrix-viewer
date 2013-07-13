@@ -17,6 +17,7 @@
 //******************************************************************************
 #include "tab.hh"
 
+#include <QFileInfo>
 #include <QDebug>
 
 #include "matrix-view.hh"
@@ -99,4 +100,7 @@ QString CTab::filePath() const
 void CTab::setFilePath(const QString & path)
 {
   m_filePath = path;
+  QFileInfo fi (path);
+  setWindowTitle(fi.fileName());
+  emit(labelChanged(windowTitle()));
 }

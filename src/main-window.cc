@@ -486,42 +486,46 @@ void CMainWindow::open()
 
 void CMainWindow::save(const QString & filename)
 {
-  if (QTableView *view = qobject_cast< QTableView* >(currentWidget()->widget(0)))
-    if (CMatrixModel* model = qobject_cast< CMatrixModel* >(view->model()))
-      {
-        CMatrixConverter converter;
-        converter.setData(model->data());
-        converter.save(filename);
-      }
+  if (!currentModel() || filename.isEmpty())
+    {
+      statusBar()->showMessage(tr("Can't save empty matrix"));
+      return;
+    }
+
+  if (!currentWidget() || !currentWidget()->isModified())
+    return;
+
+  currentWidget()->setModified(false);
+  currentWidget()->setFilePath(filename);
+
+  CMatrixConverter converter;
+  converter.setData(currentModel()->data());
+  converter.save(filename);
+
   statusBar()->showMessage(tr("Save: %1").arg(filename));
 }
 
 void CMainWindow::save()
 {
-  if (!currentWidget() || !currentWidget()->isModified())
-    return;
-
-  currentWidget()->setModified(false);
   save(currentWidget()->filePath());
 }
 
 
 void CMainWindow::saveAs()
 {
+  if (!currentModel())
+    {
+      statusBar()->showMessage(tr("Can't save empty matrix"));
+      return;
+    }
+
   QString filename = QFileDialog::getSaveFileName(this,
                                                   tr("Save data file"),
                                                   m_savePath,
                                                   tr("Data files (*.xml *.txt)"));
   QFileInfo fi(filename);
   m_savePath = fi.absolutePath();
-
-  if (QTableView *view = qobject_cast< QTableView* >(currentWidget()->widget(0)))
-    if (CMatrixModel* model = qobject_cast< CMatrixModel* >(view->model()))
-      {
-        CMatrixConverter converter;
-        converter.setData(model->data());
-        converter.save(filename);
-      }
+  save(filename);
 }
 
 
