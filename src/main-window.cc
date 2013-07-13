@@ -371,6 +371,8 @@ void CMainWindow::compare()
 {
   CCompareDialog dialog(this);
   dialog.exec();
+  toggleDataView(m_dataViewAct->isChecked());
+  toggleImageView(m_imageViewAct->isChecked());
 }
 
 void CMainWindow::loadProfile()
