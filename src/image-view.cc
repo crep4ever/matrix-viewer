@@ -138,6 +138,8 @@ void CImageView::setModel(CMatrixModel * model)
   m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
   m_scene->addPixmap(QPixmap::fromImage(*m_image));
   m_scene->addItem(m_selectionBox);
+
+  fitToWindow();
 }
 
 CMainWindow* CImageView::parent() const
