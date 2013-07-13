@@ -48,8 +48,8 @@ bool CMatrixConverter::load(const QString & filename)
     return loadFromXml(filename);
   else if (filename.endsWith(".txt"))
     return loadFromTxt(filename);
-  else if (filename.endsWith(".bmp"))
-    return loadFromBmp(filename);
+  else
+    return loadFromImage(filename);
 
   return false;
 }
@@ -60,8 +60,8 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToXml(filename);
   else if (filename.endsWith(".txt"))
     return saveToTxt(filename);
-  else if (filename.endsWith(".bmp"))
-    return saveToBmp(filename);
+  else
+    return saveToImage(filename);
 
   return false;
 }
@@ -83,7 +83,9 @@ bool CMatrixConverter::isFormatData() const
 
 bool CMatrixConverter::isFormatImage() const
 {
-  return m_format == Format_Bmp;
+  return (m_format == Format_Bmp ||
+	  m_format == Format_Jpg ||
+	  m_format == Format_Png);
 }
 
 bool CMatrixConverter::loadFromTxt(const QString & filename)
@@ -188,7 +190,7 @@ bool CMatrixConverter::saveToXml(const QString & filename)
 
 }
 
-bool CMatrixConverter::loadFromBmp(const QString & filename)
+bool CMatrixConverter::loadFromImage(const QString & filename)
 {
   try
     {
@@ -196,17 +198,22 @@ bool CMatrixConverter::loadFromBmp(const QString & filename)
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("CMatrixConverter::loadFromBmp invalid matrix: ") << filename;
+      qWarning() << tr("CMatrixConverter::loadFromImage invalid matrix: ") << filename;
       return false;
     }
 
-  // Set file format
-  m_format = Format_Bmp;
+  // Set file format according to extension
+  if (filename.endsWith(".bmp", Qt::CaseInsensitive))
+    m_format = Format_Bmp;
+  else if (filename.endsWith(".jpg", Qt::CaseInsensitive))
+    m_format = Format_Jpg;
+  else if (filename.endsWith(".png", Qt::CaseInsensitive))
+    m_format = Format_Png;
 
   return true;
 }
 
-bool CMatrixConverter::saveToBmp(const QString & filename)
+bool CMatrixConverter::saveToImage(const QString & filename)
 {
   bool ret;
   try
@@ -215,7 +222,7 @@ bool CMatrixConverter::saveToBmp(const QString & filename)
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("CMatrixConverter::loadFromBmp invalid matrix: ") << filename;
+      qWarning() << tr("CMatrixConverter::saveToImage invalid matrix: ") << filename;
       return false;
     }
   return ret;

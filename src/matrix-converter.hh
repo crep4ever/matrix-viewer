@@ -39,9 +39,11 @@ public:
   enum FileFormat
   {
     Format_Unknown,
-    Format_Bmp,
     Format_Txt,
-    Format_Xml
+    Format_Xml,
+    Format_Bmp,
+    Format_Jpg,
+    Format_Png
   };
 
   /// Constructor.
@@ -71,8 +73,8 @@ private:
   bool loadFromXml(const QString & filename);
   bool saveToXml(const QString & filename);
 
-  bool loadFromBmp(const QString & filename);
-  bool saveToBmp(const QString & filename);
+  bool loadFromImage(const QString & filename);
+  bool saveToImage(const QString & filename);
 
   cv::Mat m_data;
   FileFormat m_format;
