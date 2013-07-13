@@ -124,7 +124,12 @@ void CImageView::wheelEvent(QWheelEvent *event)
 void CImageView::mousePressEvent(QMouseEvent *event)
 {
   const QPointF scenePoint = mapToScene(event->pos());
-  selectItem(scenePoint.y(), scenePoint.x());
+  // ensure scenePoint is within the scene range
+  if (scenePoint.x() < sceneRect().width() &&
+      scenePoint.y() < sceneRect().height())
+    {
+      selectItem(scenePoint.y(), scenePoint.x());
+    }
 }
 
 void CImageView::keyPressEvent(QKeyEvent *event)
