@@ -43,7 +43,7 @@ void CMatrixView::currentChanged(const QModelIndex & index, const QModelIndex & 
   Q_UNUSED(previous);
   parent()->positionWidget()->setRow(index.row());
   parent()->positionWidget()->setCol(index.column());
-  parent()->positionWidget()->setValue(index.data().toDouble());
+  parent()->positionWidget()->setValue(index.data().toString());
 }
 
 void CMatrixView::setModel(QAbstractItemModel * model)
