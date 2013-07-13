@@ -516,7 +516,7 @@ void CMainWindow::open()
   QStringList filenames = QFileDialog::getOpenFileNames(this,
                                                         tr("Open data file"),
                                                         m_openPath,
-                                                        tr("Data files (*.xml *.txt *.bmp)"));
+                                                        tr("Data files (*.xml *.txt *.bmp *.png *.jpg)"));
   foreach (const QString & filename, filenames)
     if (!filename.isEmpty())
       open(filename);
@@ -583,6 +583,7 @@ void CMainWindow::closeTab(int index)
 
 void CMainWindow::changeTab(int index)
 {
+  Q_UNUSED(index);
   toggleDataView(m_dataViewAct->isChecked());
   toggleImageView(m_imageViewAct->isChecked());
   if (currentWidget())
