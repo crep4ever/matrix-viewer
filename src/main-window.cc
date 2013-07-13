@@ -195,6 +195,10 @@ void CMainWindow::createActions()
   m_imageViewAct->setCheckable(true);
   connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
 
+  m_adjustColumnsAct = new QAction(tr("&Adjust columns"), this);
+  m_adjustColumnsAct->setStatusTip(tr("Adjust columns of the table view to contents"));
+  connect(m_adjustColumnsAct, SIGNAL(triggered()), SLOT(adjustColumnsToContents()));
+
   m_propertiesAct = new QAction(tr("&Properties"), this);
   m_propertiesAct->setIcon(QIcon::fromTheme("document-properties"));
   m_propertiesAct->setStatusTip(tr("Display properties of the matrix"));
@@ -322,6 +326,7 @@ void CMainWindow::createMenus()
   QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
   viewMenu->addAction(m_dataViewAct);
   viewMenu->addAction(m_imageViewAct);
+  viewMenu->addAction(m_adjustColumnsAct);
   viewMenu->addAction(m_propertiesAct);
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -390,6 +395,20 @@ void CMainWindow::properties()
 {
   CPropertiesDialog dialog(this);
   dialog.exec();
+}
+
+void CMainWindow::adjustColumnsToContents()
+{
+  if (!currentWidget())
+    return;
+
+  int nbChildren = currentWidget()->count();
+  for (int i = 0; i < nbChildren; ++i)
+    {
+      CMatrixView *view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
+      if (view)
+	view->resizeColumnsToContents();
+    }
 }
 
 void CMainWindow::loadProfile()
@@ -553,28 +572,17 @@ CProgressBar* CMainWindow::progressBar() const
   return m_progressBar;
 }
 
-
 void CMainWindow::closeTab(int index)
 {
-  if (CMatrixView *view = qobject_cast< CMatrixView* >(m_mainWidget->widget(index)))
-    {
-      delete view->model();
-      delete view;
-    }
+  int nbChildren = currentWidget()->count();
+  for (int i = 0; i < nbChildren; ++i)
+    delete currentWidget()->widget(i);
 
-  if (QSplitter *comparisonView = qobject_cast< QSplitter* >(m_mainWidget->widget(index)))
-    {
-      for (int i = 0; i < comparisonView->count(); ++i)
-      	if (CMatrixView *view = qobject_cast< CMatrixView* >(comparisonView->widget(i)))
-          delete view->model();
-
-      delete comparisonView;
-    }
+  delete m_mainWidget->widget(index);
 }
 
 void CMainWindow::changeTab(int index)
 {
-  Q_UNUSED(index);
   toggleDataView(m_dataViewAct->isChecked());
   toggleImageView(m_imageViewAct->isChecked());
   if (currentWidget())
