@@ -87,20 +87,54 @@ void CImageView::setModel(CMatrixModel * model)
   if (m_image)
     delete m_image;
 
-  cv::Mat data = model->data();
-  m_image = new QImage(data.cols, data.rows, QImage::Format_ARGB32);
-
-  for (int y = 0; y < data.rows; ++y)
+  cv::Mat mat = model->data();
+  if (mat.type() == CV_8UC1)
     {
-      const double *cvRow = data.ptr<double>(y);
-      QRgb *qtRow = (QRgb*)m_image->scanLine(y);
-
-      for (int x = 0; x < data.cols; ++x)
+      m_image = new QImage(mat.cols, mat.rows, QImage::Format_Indexed8);
+      for (int i = 0; i < mat.rows; ++i)
+	memcpy(m_image->scanLine(i), mat.ptr(i), m_image->bytesPerLine());
+    }
+  else if (mat.type() == CV_8UC1)
+    {
+      cv::cvtColor(mat, mat, CV_BGR2RGB);
+      m_image = new QImage(mat.cols, mat.rows, QImage::Format_RGB888);
+      for (int i = 0; i < mat.rows; ++i)
+	memcpy(m_image->scanLine(i), mat.ptr(i), m_image->bytesPerLine());
+    }
+  else if (mat.channels() == 1)
+    {
+      mat.convertTo(mat, CV_64FC1);
+      m_image = new QImage(mat.cols, mat.rows, QImage::Format_ARGB32);
+      for (int y = 0; y < mat.rows; ++y)
 	{
-	  uint color = cvRow[x] * 255;
-	  qtRow[x] = qRgba(color, color, color, 255);
+	  const double *cvRow = mat.ptr<double>(y);
+	  QRgb *qtRow = (QRgb*)m_image->scanLine(y);
+	  for (int x = 0; x < mat.cols; ++x)
+	    {
+	      uint color = cvRow[x] * 255;
+	      qtRow[x] = qRgba(color, color, color, 255);
+	    }
 	}
     }
+  else if (mat.channels() == 3)
+    {
+      m_image = new QImage(mat.cols, mat.rows, QImage::Format_ARGB32);
+      for (int y = 0; y < mat.rows; ++y)
+	{
+	  const cv::Vec3b *cvRow = mat.ptr<cv::Vec3b>(y);
+	  QRgb *qtRow = (QRgb*)m_image->scanLine(y);
+	  for (int x = 0; x < mat.cols; ++x)
+	    {
+	      qtRow[x] = qRgba(cvRow[x][2], cvRow[x][1], cvRow[x][0], 255);
+	    }
+	}
+    }
+  else
+    {
+      qWarning() << tr("Unsupported image conversion from type: %1").arg(model->typeString());
+      return;
+    }
+
   m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
   m_scene->addPixmap(QPixmap::fromImage(*m_image));
   m_scene->addItem(m_selectionBox);
@@ -176,7 +210,10 @@ void CImageView::selectItem(int row, int col)
     {
       parent()->positionWidget()->setRow(row);
       parent()->positionWidget()->setCol(col);
-      parent()->positionWidget()->setValue(m_image->pixel(col, row));
+      QColor pixel(m_image->pixel(col, row));
+      parent()->positionWidget()->setValue
+	(QString("%1 | %2 | %3")
+	 .arg(pixel.red()).arg(pixel.green()).arg(pixel.blue()));
     }
 }
 
