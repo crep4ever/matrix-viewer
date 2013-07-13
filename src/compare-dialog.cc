@@ -44,6 +44,7 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   , m_absoluteThresholdSpinBox(new QSpinBox)
   , m_percentageThresholdSpinBox(new QSpinBox)
 {
+  setWindowTitle(tr("Compare matrix"));
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
   connect(buttons, SIGNAL(accepted()), this, SLOT(compare()));
   connect(buttons, SIGNAL(rejected()), this, SLOT(close()));
@@ -64,7 +65,7 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   layout->addWidget(buttons);
 
   setLayout(layout);
-
+  setMinimumSize(400, 60);
   readSettings();
 }
 
