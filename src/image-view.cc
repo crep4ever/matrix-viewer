@@ -130,6 +130,13 @@ void CImageView::mousePressEvent(QMouseEvent *event)
 void CImageView::selectItem(int row, int col)
 {
   m_selectionBox->setPos(col, row);
+
+  if (parent())
+    {
+      parent()->positionWidget()->setRow(row);
+      parent()->positionWidget()->setCol(col);
+      parent()->positionWidget()->setValue(m_image->pixel(col, row));
+    }
 }
 
 void CImageView::zoomIn()
