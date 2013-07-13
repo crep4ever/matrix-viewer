@@ -54,12 +54,33 @@ int CMatrixModel::columnCount(const QModelIndex & parent) const
   return data().cols;
 }
 
-QVariant CMatrixModel::data (const QModelIndex & index, int role) const
+QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 {
   switch (role)
     {
     case Qt::DisplayRole:
-      return data().at< double >(index.row(), index.column());
+      {
+	cv::Vec3b pixel;
+	switch(type())
+	  {
+	  case CV_8UC1:
+	    return data().at< uchar >(index.row(), index.column());
+
+	  case CV_8UC3:
+	    pixel = data().at< cv::Vec3b >(index.row(), index.column());
+	    return QString("%1 | %2 | %3").arg(pixel[0]).arg(pixel[1]).arg(pixel[2]);
+
+	  case CV_32FC1:
+	    return data().at< float >(index.row(), index.column());
+
+	  case CV_64FC1:
+	    return data().at< double >(index.row(), index.column());
+
+	  default:
+	    return QVariant();
+	  }
+	break;
+      }
 
     default:
       data(index, Qt::DisplayRole);
