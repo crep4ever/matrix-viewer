@@ -503,11 +503,12 @@ void CMainWindow::open(const QString & filename)
       toggleImageView(m_imageViewAct->isChecked());
     }
 
+  m_mainWidget->addTab(tab, filename);
+  m_mainWidget->setCurrentWidget(tab);
+
   connect(tab, SIGNAL(labelChanged(const QString&)),
 	  m_mainWidget, SLOT(changeTabText(const QString&)));
 
-  m_mainWidget->addTab(tab, filename);
-  m_mainWidget->setCurrentWidget(tab);
   statusBar()->showMessage(filename);
 }
 
