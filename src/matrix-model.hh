@@ -54,6 +54,11 @@ public:
 
   void setProfile(const QString & profile);
 
+  // OpenCV wrappers
+  int channels() const;
+  int type() const;
+  QString typeString() const;
+
 private:
 
   cv::Mat m_data;

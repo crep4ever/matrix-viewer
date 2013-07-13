@@ -117,6 +117,34 @@ void CMatrixModel::sort(int column, Qt::SortOrder order)
   emit(dataChanged(QModelIndex(), QModelIndex()));
 }
 
+int CMatrixModel::channels() const
+{
+  return m_data.channels();
+}
+
+int CMatrixModel::type() const
+{
+  return m_data.type();
+}
+
+QString CMatrixModel::typeString() const
+{
+  switch (type())
+    {
+    case CV_8U:
+      return "CV_8U";
+
+    case CV_32F:
+      return "CV_32F";
+
+    case CV_64F:
+      return "CV_64F";
+
+    default:
+      return tr("unknown");
+    }
+}
+
 void CMatrixModel::setProfile(const QString & profile)
 {
   // Parse profile for rows/columns labels
