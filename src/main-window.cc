@@ -193,7 +193,7 @@ void CMainWindow::createActions()
   connect(m_dataViewAct, SIGNAL(toggled(bool)), SLOT(toggleDataView(bool)));
 
   m_imageViewAct = new QAction(tr("&Image"), this);
-  m_imageViewAct->setIcon(QIcon::fromTheme("image-x-generic"));
+  m_imageViewAct->setIcon(QIcon::fromTheme("image-x-generic", QIcon(":/icons/tango/48x48/image-x-generic.png")));
   m_imageViewAct->setStatusTip(tr("Display the matrix as an image"));
   m_imageViewAct->setCheckable(true);
   connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
@@ -212,13 +212,13 @@ void CMainWindow::createActions()
   m_loadProfileAct->setStatusTip(tr("Load a specific profile for the matrix"));
   connect(m_loadProfileAct, SIGNAL(triggered()), SLOT(loadProfile()));
 
-  m_previousFileAct = new QAction(tr("&Previous file"), this);
-  m_previousFileAct->setIcon(QIcon::fromTheme("go-previous"));
+  m_previousFileAct = new QAction(tr("&Previous"), this);
+  m_previousFileAct->setIcon(QIcon::fromTheme("go-previous", QIcon(":/icons/tango/48x48/go-previous.png")));
   m_previousFileAct->setStatusTip(tr("Load previous data file in current folder"));
   connect(m_previousFileAct, SIGNAL(triggered()), SLOT(previousFile()));
 
-  m_nextFileAct = new QAction(tr("&Next file"), this);
-  m_nextFileAct->setIcon(QIcon::fromTheme("go-next"));
+  m_nextFileAct = new QAction(tr("&Next"), this);
+  m_nextFileAct->setIcon(QIcon::fromTheme("go-next", QIcon(":/icons/tango/48x48/go-next.png")));
   m_nextFileAct->setStatusTip(tr("Load next data file in current folder"));
   connect(m_nextFileAct, SIGNAL(triggered()), SLOT(nextFile()));
 }
