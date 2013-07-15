@@ -35,6 +35,19 @@
 #include "config.hh"
 #include "main-window.hh"
 
+namespace // anonymous namespace
+{
+  bool isFilenameSupported(const QString & filename)
+  {
+    return (filename.endsWith(".xml") ||
+            filename.endsWith(".txt") ||
+            filename.endsWith(".bmp") ||
+            filename.endsWith(".png") ||
+            filename.endsWith(".jpg") ||
+            filename.endsWith(".raw"));
+  }
+}
+
 /// Main routine of the application
 int main(int argc, char *argv[])
 {
@@ -106,8 +119,7 @@ int main(int argc, char *argv[])
 
   foreach (const QString & arg, arguments)
     {
-      if ( QFile(arg).exists() &&
-           (arg.endsWith(".txt") || arg.endsWith(".xml")) )
+      if (QFile(arg).exists() && isFilenameSupported(arg))
         {
           mainWindow.open(arg);
         }
