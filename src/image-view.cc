@@ -44,6 +44,7 @@ CImageView::CImageView(QWidget *p)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
 {
   m_selectionBox->setBrush(QBrush(QColor(255, 0, 0, 100)));
+  m_selectionBox->setPen(Qt::NoPen);
   setBackgroundRole(QPalette::Dark);
   setScene(m_scene);
 
