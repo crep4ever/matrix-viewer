@@ -77,7 +77,7 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 
 	  case CV_8UC3:
 	    point3b = data().at< cv::Vec3b >(index.row(), index.column());
-	    return QString("%1 | %2 | %3").arg(pixel[0]).arg(pixel[1]).arg(pixel[2]);
+	    return QString("%1 | %2 | %3").arg(point3b[0]).arg(point3b[1]).arg(point3b[2]);
 
 	  case CV_32FC1:
 	    return data().at< float >(index.row(), index.column());
