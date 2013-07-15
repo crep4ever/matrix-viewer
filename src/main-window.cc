@@ -220,7 +220,7 @@ void CMainWindow::toggleDataView(bool value)
     {
       CMatrixView *view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
       if (view)
-	view->setVisible(value);
+        view->setVisible(value);
     }
 }
 
@@ -234,7 +234,7 @@ void CMainWindow::toggleImageView(bool value)
     {
       CImageView *view = qobject_cast<CImageView*>(currentWidget()->widget(i));
       if (view)
-	view->setVisible(value);
+        view->setVisible(value);
     }
 }
 
@@ -443,23 +443,25 @@ QString CMainWindow::findProfile(const QString & filename) const
       file.open(QIODevice::ReadOnly);
       QXmlStreamReader xml(&file);
       while (!xml.atEnd())
-	{
-	  xml.readNext();
-	  if (xml.name() == "regexp")
-	    {
-	      QRegExp re(xml.readElementText().simplified());
-	      re.setPatternSyntax(QRegExp::Wildcard);
-	      if (re.exactMatch(fi.fileName()))
-		{
-		  foundProfile = true;
-		  break;
-		}
-	    }
-	}
+        {
+          xml.readNext();
+          if (xml.name() == "regexp")
+            {
+              QRegExp re(xml.readElementText().simplified());
+              re.setPatternSyntax(QRegExp::Wildcard);
+              if (re.exactMatch(fi.fileName()))
+                {
+                  foundProfile = true;
+                  break;
+                }
+            }
+        }
+
       if (xml.hasError())
-	{
-	  statusBar()->showMessage(tr("Badly formed xml document: %1").arg(profile));
-	}
+        {
+          statusBar()->showMessage(tr("Badly formed xml document: %1").arg(profile));
+        }
+
       file.close();
     }
 
