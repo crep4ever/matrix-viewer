@@ -132,9 +132,17 @@ Qt::ItemFlags CMatrixModel::flags(const QModelIndex & index) const
 
 void CMatrixModel::sort(int column, Qt::SortOrder order)
 {
-  Q_UNUSED(column);
   const int cvOrder = (order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
-  cv::sort(m_data, m_data, CV_SORT_EVERY_COLUMN | cvOrder);
+
+  cv::Mat sortedData(m_data.size(), m_data.type());
+  cv::Mat sortedColumnIndex;
+  cv::sortIdx(m_data.col(column), sortedColumnIndex, CV_SORT_EVERY_COLUMN | cvOrder);
+  for(int i = 0; i < sortedColumnIndex.rows; ++i)
+    {
+      m_data.row(sortedColumnIndex.at<int>(i, 0)).copyTo(sortedData.row(i));
+    }
+  sortedData.assignTo(m_data);
+
   emit(dataChanged(QModelIndex(), QModelIndex()));
 }
 
