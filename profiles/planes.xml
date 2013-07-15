@@ -5,8 +5,8 @@
   </regexp>
 
   <columns>
-    <column id="0" label="Plane" />
-    <column id="1" label="Camera" />
+    <column id="0" label="Camera" />
+    <column id="1" label="Plane" />
     <column id="2" label="tx" />
     <column id="3" label="ty" />
     <column id="4" label="tz" />

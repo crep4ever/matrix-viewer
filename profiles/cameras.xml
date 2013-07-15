@@ -5,13 +5,13 @@
   </regexp>
 
   <columns>
-    <column id="0" label="Plane" />
-    <column id="1" label="Camera" />
-    <column id="1" label="Point X" />
-    <column id="1" label="Point Y" />
-    <column id="1" label="Tool Col" />
-    <column id="1" label="Tool Row" />
-    <column id="1" label="Focus" />
+    <column id="0" label="Camera" />
+    <column id="1" label="Plane" />
+    <column id="2" label="Point X" />
+    <column id="3" label="Point Y" />
+    <column id="4" label="Tool Col" />
+    <column id="5" label="Tool Row" />
+    <column id="6" label="Focus" />
   </columns>
 
 </matrix>
