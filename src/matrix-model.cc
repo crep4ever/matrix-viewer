@@ -158,19 +158,31 @@ int CMatrixModel::type() const
 
 QString CMatrixModel::typeString() const
 {
-  switch (type())
+  switch (type() % 8)
     {
-    case CV_8U:
-      return "CV_8U";
+    case 0:
+      return "8U";
 
-    case CV_32F:
-      return "CV_32F";
+    case 1:
+      return "8S";
 
-    case CV_64F:
-      return "CV_64F";
+    case 2:
+      return "16U";
+
+    case 3:
+      return "16S";
+
+    case 4:
+      return "32S";
+
+    case 5:
+      return "32F";
+
+    case 6:
+      return "64F";
 
     default:
-      return tr("unknown");
+      return "unknown";
     }
 }
 
