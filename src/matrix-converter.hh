@@ -43,7 +43,8 @@ public:
     Format_Xml,
     Format_Bmp,
     Format_Jpg,
-    Format_Png
+    Format_Png,
+    Format_Raw
   };
 
   /// Constructor.
@@ -75,6 +76,9 @@ private:
 
   bool loadFromImage(const QString & filename);
   bool saveToImage(const QString & filename);
+
+  bool loadFromRaw(const QString & filename);
+  bool saveToRaw(const QString & filename);
 
   cv::Mat m_data;
   FileFormat m_format;

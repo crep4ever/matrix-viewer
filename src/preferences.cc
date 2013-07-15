@@ -53,6 +53,7 @@ ConfigDialog::ConfigDialog(QWidget* parent)
 
   m_pagesWidget = new QStackedWidget(this);
   m_pagesWidget->addWidget(new DisplayPage(this));
+  m_pagesWidget->addWidget(new ImportRawPage(this));
   m_pagesWidget->addWidget(new NetworkPage(this));
 
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -89,6 +90,12 @@ void ConfigDialog::createIcons()
   displayButton->setText(tr("Display"));
   displayButton->setTextAlignment(Qt::AlignHCenter);
   displayButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+  QListWidgetItem *importRawButton = new QListWidgetItem(m_contentsWidget);
+  importRawButton->setIcon(QIcon::fromTheme("image-x-generic"));
+  importRawButton->setText(tr("Raw images"));
+  importRawButton->setTextAlignment(Qt::AlignHCenter);
+  importRawButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
   QListWidgetItem *networkButton = new QListWidgetItem(m_contentsWidget);
   networkButton->setIcon(QIcon::fromTheme("preferences-system-network", QIcon(":/icons/tango/48x48/categories/preferences-system-network.png")));
@@ -191,6 +198,55 @@ void DisplayPage::writeSettings()
   settings.beginGroup("display");
   settings.setValue("statusBar", m_statusBarCheckBox->isChecked());
   settings.setValue("toolBar", m_toolBarCheckBox->isChecked());
+  settings.endGroup();
+}
+
+// Import Raw Page
+
+ImportRawPage::ImportRawPage(QWidget *parent)
+  : Page(parent)
+{
+  m_imageType = new QComboBox;
+  m_imageType->addItem(tr("16-bit unsigned"));
+
+  m_imageWidth = new QSpinBox;
+  m_imageWidth->setMaximum(20000);
+
+  m_imageHeight = new QSpinBox;
+  m_imageHeight->setMaximum(20000);
+
+  m_littleEndianByteOrder = new QCheckBox;
+  m_littleEndianByteOrder->setEnabled(false);
+
+  QFormLayout *mainLayout = new QFormLayout;
+  mainLayout->addRow(tr("Type"), m_imageType);
+  mainLayout->addRow(tr("Width"), m_imageWidth);
+  mainLayout->addRow(tr("Height"), m_imageHeight);
+  mainLayout->addRow(tr("Little-endian byte order"), m_littleEndianByteOrder);
+  setLayout(mainLayout);
+
+  readSettings();
+}
+
+void ImportRawPage::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("raw");
+  m_imageType->setCurrentIndex(settings.value("type", 0).toInt());
+  m_imageWidth->setValue(settings.value("width", 2592).toInt());
+  m_imageHeight->setValue(settings.value("height", 1944).toInt());
+  m_littleEndianByteOrder->setChecked(settings.value("little-endian", true).toBool());
+  settings.endGroup();
+}
+
+void ImportRawPage::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup("raw");
+  settings.setValue("type", m_imageType->currentIndex());
+  settings.setValue("width", m_imageWidth->value());
+  settings.setValue("height", m_imageHeight->value());
+  settings.setValue("little-endian", m_littleEndianByteOrder->isChecked());
   settings.endGroup();
 }
 

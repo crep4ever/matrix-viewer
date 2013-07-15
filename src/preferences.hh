@@ -33,6 +33,7 @@ class QLabel;
 class QLineEdit;
 class QCheckBox;
 class QSpinBox;
+class QComboBox;
 class CFileChooser;
 class CMainWindow;
 
@@ -124,6 +125,28 @@ private:
 
   QCheckBox *m_statusBarCheckBox;
   QCheckBox *m_toolBarCheckBox;
+};
+
+/**
+ * \class ImportRawPage
+ * \brief ImportRawPage defines parameters to import raw image files
+ */
+class ImportRawPage : public Page
+{
+  Q_OBJECT
+
+public:
+  /// Constructor.
+  ImportRawPage(QWidget *parent=0);
+
+private:
+  void readSettings();
+  void writeSettings();
+
+  QComboBox *m_imageType;
+  QSpinBox *m_imageWidth;
+  QSpinBox *m_imageHeight;
+  QCheckBox *m_littleEndianByteOrder;
 };
 
 /** \brief NetworkPage is the config page used to specify network options

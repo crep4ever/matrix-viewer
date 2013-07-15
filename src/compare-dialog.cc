@@ -50,7 +50,7 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   connect(buttons, SIGNAL(rejected()), this, SLOT(close()));
 
   m_fileChooser->setCaption(tr("Open comparison data file"));
-  m_fileChooser->setFilter(tr("Data files (*.xml *.txt *.bmp *.jpg *.png)"));
+  m_fileChooser->setFilter(tr("Data files (*.xml *.txt *.bmp *.jpg *.png *.raw)"));
 
   QFormLayout *parametersLayout = new QFormLayout;
   parametersLayout->addRow(tr("Absolute threshold:"), m_absoluteThresholdSpinBox);

@@ -20,7 +20,9 @@
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
+#include <QSettings>
 #include <QDebug>
+
 
 CMatrixConverter::CMatrixConverter()
   : QObject()
@@ -48,6 +50,8 @@ bool CMatrixConverter::load(const QString & filename)
     return loadFromXml(filename);
   else if (filename.endsWith(".txt"))
     return loadFromTxt(filename);
+  else if (filename.endsWith(".raw"))
+    return loadFromRaw(filename);
   else
     return loadFromImage(filename);
 
@@ -60,6 +64,8 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToXml(filename);
   else if (filename.endsWith(".txt"))
     return saveToTxt(filename);
+  else if (filename.endsWith(".raw"))
+    return saveToRaw(filename);
   else
     return saveToImage(filename);
 
@@ -84,8 +90,9 @@ bool CMatrixConverter::isFormatData() const
 bool CMatrixConverter::isFormatImage() const
 {
   return (m_format == Format_Bmp ||
-	  m_format == Format_Jpg ||
-	  m_format == Format_Png);
+          m_format == Format_Jpg ||
+          m_format == Format_Png ||
+          m_format == Format_Raw);
 }
 
 bool CMatrixConverter::loadFromTxt(const QString & filename)
@@ -226,6 +233,55 @@ bool CMatrixConverter::saveToImage(const QString & filename)
       return false;
     }
   return ret;
+}
+
+bool CMatrixConverter::loadFromRaw(const QString & filename)
+{
+  QSettings settings;
+  settings.beginGroup("raw");
+  int type = settings.value("type", 0).toInt();
+  int width = settings.value("width", 2592).toInt();
+  int height = settings.value("height", 1944).toInt();
+  settings.endGroup();
+
+  if (type == 0)
+    {
+      unsigned short *buffer = new unsigned short[width * height];
+      if (FILE* fd = fopen(filename.toStdString().c_str(), "rb"))
+        {
+          fread(buffer, sizeof(unsigned short), width * height, fd);
+        }
+      else
+        {
+          qWarning() << tr("Can't open raw image file in read mode: %1").arg(filename);
+          delete [] buffer;
+          return false;
+        }
+
+      cv::Mat data(cv::Size(width, height), CV_16U, buffer);
+
+      qDebug() << data.type() << data.channels();
+      const double ratio = 127.5 / 511.5; // convertion from 10bits to 8 bits
+      m_data = data * ratio;
+      m_data.convertTo(m_data, CV_8UC1);
+      delete [] buffer;
+    }
+  else
+    {
+      qWarning() << "CMatrixConverter::loadFromRaw format not supported yet";
+      return false;
+    }
+
+  m_format = Format_Raw;
+
+  return true;
+}
+
+bool CMatrixConverter::saveToRaw(const QString & filename)
+{
+  Q_UNUSED(filename);
+  qWarning() << "CMatrixConverter::saveToRaw not implemented yet";
+  return false;
 }
 
 void CMatrixConverter::print() const
