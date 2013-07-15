@@ -157,6 +157,12 @@ Qt::ItemFlags CMatrixModel::flags(const QModelIndex & index) const
 
 void CMatrixModel::sort(int column, Qt::SortOrder order)
 {
+  if (channels() != 1)
+    {
+      qWarning() << tr("Sorting matrix with multiple channels is not implemented yet");
+      return;
+    }
+
   const int cvOrder = (order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
 
   cv::Mat sortedData(m_data.size(), m_data.type());
