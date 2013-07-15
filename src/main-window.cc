@@ -225,6 +225,9 @@ void CMainWindow::createActions()
 
 void CMainWindow::nextFile()
 {
+  if (!currentWidget())
+    return;
+
   QFileInfo current(currentWidget()->filePath());
 
   QDir dir(m_openPath);
@@ -247,6 +250,9 @@ void CMainWindow::nextFile()
 
 void CMainWindow::previousFile()
 {
+  if (!currentWidget())
+    return;
+
   QFileInfo current(currentWidget()->filePath());
 
   QDir dir(m_openPath);
