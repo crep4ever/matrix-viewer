@@ -521,7 +521,7 @@ void CMainWindow::open()
   QStringList filenames = QFileDialog::getOpenFileNames(this,
                                                         tr("Open data file"),
                                                         m_openPath,
-                                                        tr("Data files (*.xml *.txt *.bmp *.png *.jpg)"));
+                                                        tr("Data files (*.xml *.txt *.bmp *.png *.jpg *.raw)"));
   foreach (const QString & filename, filenames)
     if (!filename.isEmpty())
       open(filename);
