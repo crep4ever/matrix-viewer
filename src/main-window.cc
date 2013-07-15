@@ -513,6 +513,7 @@ void CMainWindow::open(const QString & filename)
 	  m_mainWidget, SLOT(changeTabText(const QString&)));
 
   statusBar()->showMessage(filename);
+  writeSettings(); // updates openPath
 }
 
 void CMainWindow::open()
@@ -564,10 +565,11 @@ void CMainWindow::saveAs()
   QString filename = QFileDialog::getSaveFileName(this,
                                                   tr("Save data file"),
                                                   m_savePath,
-                                                  tr("Data files (*.xml *.txt)"));
+                                                  tr("Data files (*.xml *.txt *.png *.jpg *.bmp)"));
   QFileInfo fi(filename);
   m_savePath = fi.absolutePath();
   save(filename);
+  writeSettings(); //update savePath
 }
 
 
