@@ -60,21 +60,46 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
     {
     case Qt::DisplayRole:
       {
-	cv::Vec3b pixel;
+	cv::Vec2b point2b;
+	cv::Vec3b point3b;
+	cv::Vec2f point2f;
+	cv::Vec3f point3f;
+	cv::Vec2d point2d;
+	cv::Vec3d point3d;
 	switch(type())
 	  {
 	  case CV_8UC1:
 	    return data().at< uchar >(index.row(), index.column());
 
+	  case CV_8UC2:
+	    point2b = data().at< cv::Vec2b >(index.row(), index.column());
+	    return QString("%1 | %2").arg(point2b[0]).arg(point2b[1]);
+
 	  case CV_8UC3:
-	    pixel = data().at< cv::Vec3b >(index.row(), index.column());
+	    point3b = data().at< cv::Vec3b >(index.row(), index.column());
 	    return QString("%1 | %2 | %3").arg(pixel[0]).arg(pixel[1]).arg(pixel[2]);
 
 	  case CV_32FC1:
 	    return data().at< float >(index.row(), index.column());
 
+	  case CV_32FC2:
+	    point2f = data().at< cv::Vec2f >(index.row(), index.column());
+	    return QString("%1 | %2").arg(point2f[0]).arg(point2f[1]);
+
+	  case CV_32FC3:
+	    point3f = data().at< cv::Vec3f >(index.row(), index.column());
+	    return QString("%1 | %2 | %3").arg(point3f[0]).arg(point3f[1]).arg(point3f[2]);
+
 	  case CV_64FC1:
 	    return data().at< double >(index.row(), index.column());
+
+	  case CV_64FC2:
+	    point2d = data().at< cv::Vec2d >(index.row(), index.column());
+	    return QString("%1 | %2").arg(point2d[0]).arg(point2d[1]);
+
+	  case CV_64FC3:
+	    point3d = data().at< cv::Vec3d >(index.row(), index.column());
+	    return QString("%1 | %2 | %3").arg(point3d[0]).arg(point3d[1]).arg(point3d[2]);
 
 	  default:
 	    return QVariant();
