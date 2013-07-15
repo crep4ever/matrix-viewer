@@ -56,6 +56,7 @@ set(MATRIX_VIEWER_PROFILES
   profiles/projectors.xml
   profiles/planes.xml
   profiles/tool.xml
+  profiles/lines.xml
   )
 
 

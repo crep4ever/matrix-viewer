@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix>
+  <regexp>
+    *[lL]ines*
+  </regexp>
+
+  <columns>
+    <column id="0" label="Slope" />
+    <column id="1" label="Ordinate at origin" />
+  </columns>
+
+</matrix>
+
