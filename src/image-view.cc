@@ -30,8 +30,6 @@
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 
-#include <opencv2/opencv.hpp>
-
 #include "main-window.hh"
 #include "position.hh"
 #include "matrix-model.hh"
@@ -83,58 +81,47 @@ void CImageView::createActions()
   connect(m_normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
 }
 
+QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
+{
+  cv::Mat data = mat.clone();
+
+  if (mat.type() == CV_16U) // assuming range 0-65535
+    {
+      data /= 256;
+    }
+  else if (mat.type() == CV_32F || mat.type() == CV_64F)
+    {
+      double min = 0, max = 0;
+      cv::minMaxLoc(data, &min, &max);
+      if (max <= 1) // assuming range 0-1
+	{
+	  data *= 255; //scale up
+	}
+      else // try to keep dynamic of image
+	{
+	  double min2 = 0, max2 = 0;
+	  cv::Mat tmp = data - min;
+	  cv::minMaxLoc(tmp, &min2, &max2);
+	  data = tmp * 255 / max2;
+	}
+    }
+
+  data.convertTo(data, CV_8U);
+  cv::cvtColor(data, data, mat.channels() == 1 ? CV_GRAY2RGB : CV_BGR2RGB);
+
+  QImage *image = new QImage(data.cols, data.rows, QImage::Format_RGB888);
+  for (int i = 0; i < data.rows; ++i)
+    memcpy(image->scanLine(i), data.ptr(i), image->bytesPerLine());
+
+  return image;
+}
+
 void CImageView::setModel(CMatrixModel * model)
 {
   if (m_image)
     delete m_image;
 
-  cv::Mat mat = model->data();
-  if (mat.type() == CV_8UC1)
-    {
-      m_image = new QImage(mat.cols, mat.rows, QImage::Format_Indexed8);
-      for (int i = 0; i < mat.rows; ++i)
-	memcpy(m_image->scanLine(i), mat.ptr(i), m_image->bytesPerLine());
-    }
-  else if (mat.type() == CV_8UC1)
-    {
-      cv::cvtColor(mat, mat, CV_BGR2RGB);
-      m_image = new QImage(mat.cols, mat.rows, QImage::Format_RGB888);
-      for (int i = 0; i < mat.rows; ++i)
-	memcpy(m_image->scanLine(i), mat.ptr(i), m_image->bytesPerLine());
-    }
-  else if (mat.channels() == 1)
-    {
-      mat.convertTo(mat, CV_64FC1);
-      m_image = new QImage(mat.cols, mat.rows, QImage::Format_ARGB32);
-      for (int y = 0; y < mat.rows; ++y)
-	{
-	  const double *cvRow = mat.ptr<double>(y);
-	  QRgb *qtRow = (QRgb*)m_image->scanLine(y);
-	  for (int x = 0; x < mat.cols; ++x)
-	    {
-	      uint color = cvRow[x] * 255;
-	      qtRow[x] = qRgba(color, color, color, 255);
-	    }
-	}
-    }
-  else if (mat.channels() == 3)
-    {
-      m_image = new QImage(mat.cols, mat.rows, QImage::Format_ARGB32);
-      for (int y = 0; y < mat.rows; ++y)
-	{
-	  const cv::Vec3b *cvRow = mat.ptr<cv::Vec3b>(y);
-	  QRgb *qtRow = (QRgb*)m_image->scanLine(y);
-	  for (int x = 0; x < mat.cols; ++x)
-	    {
-	      qtRow[x] = qRgba(cvRow[x][2], cvRow[x][1], cvRow[x][0], 255);
-	    }
-	}
-    }
-  else
-    {
-      qWarning() << tr("Unsupported image conversion from type: %1").arg(model->typeString());
-      return;
-    }
+  m_image = imageFromCvMat(model->data());
 
   m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
   m_scene->addPixmap(QPixmap::fromImage(*m_image));
