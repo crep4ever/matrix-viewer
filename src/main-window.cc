@@ -576,9 +576,13 @@ CProgressBar* CMainWindow::progressBar() const
 
 void CMainWindow::closeTab(int index)
 {
-  int nbChildren = currentWidget()->count();
-  for (int i = 0; i < nbChildren; ++i)
-    delete currentWidget()->widget(i);
+  CTab *tab = qobject_cast<CTab*>(m_mainWidget->widget(index));
+  if (tab)
+    {
+      int nbChildren = tab->count();
+      for (int i = 0; i < nbChildren; ++i)
+        delete currentWidget()->widget(i);
+    }
 
   delete m_mainWidget->widget(index);
 }
