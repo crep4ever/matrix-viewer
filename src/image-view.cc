@@ -179,25 +179,25 @@ void CImageView::keyPressEvent(QKeyEvent *event)
       return QGraphicsView::keyPressEvent(event);
     }
 
-  const uint row = parent()->positionWidget()->row();
-  const uint col = parent()->positionWidget()->col();
+  const int row = parent()->positionWidget()->row();
+  const int col = parent()->positionWidget()->col();
 
   switch (event->key())
     {
     case Qt::Key_Left:
-      selectItem(row, col - 1);
+      selectItem(row, qMax(0, col - 1));
       break;
 
     case Qt::Key_Right:
-      selectItem(row, col + 1);
+      selectItem(row, qMin((int) sceneRect().width() - 1, col + 1));
       break;
 
     case Qt::Key_Down:
-      selectItem(row + 1, col);
+      selectItem(qMin((int) sceneRect().height() - 1, row + 1), col);
       break;
 
     case Qt::Key_Up:
-      selectItem(row - 1, col);
+      selectItem(qMax(0, row - 1), col);
       break;
 
     default:
