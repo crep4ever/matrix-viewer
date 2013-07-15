@@ -54,6 +54,9 @@
 
 #include "config.hh"
 
+const QStringList CMainWindow::_filters = QStringList()
+  << "*.xml" << "*.txt" << "*.bmp" << "*.jpg" << "*.png" << ".raw";
+
 CMainWindow::CMainWindow(QWidget *parent)
   : QMainWindow(parent)
   , m_mainWidget(new CTabWidget(this))
@@ -208,6 +211,60 @@ void CMainWindow::createActions()
   m_loadProfileAct->setIcon(QIcon::fromTheme("document-x-generic"));
   m_loadProfileAct->setStatusTip(tr("Load a specific profile for the matrix"));
   connect(m_loadProfileAct, SIGNAL(triggered()), SLOT(loadProfile()));
+
+  m_previousFileAct = new QAction(tr("&Previous file"), this);
+  m_previousFileAct->setIcon(QIcon::fromTheme("go-previous"));
+  m_previousFileAct->setStatusTip(tr("Load previous data file in current folder"));
+  connect(m_previousFileAct, SIGNAL(triggered()), SLOT(previousFile()));
+
+  m_nextFileAct = new QAction(tr("&Next file"), this);
+  m_nextFileAct->setIcon(QIcon::fromTheme("go-next"));
+  m_nextFileAct->setStatusTip(tr("Load next data file in current folder"));
+  connect(m_nextFileAct, SIGNAL(triggered()), SLOT(nextFile()));
+}
+
+void CMainWindow::nextFile()
+{
+  QFileInfo current(currentWidget()->filePath());
+
+  QDir dir(m_openPath);
+  dir.setNameFilters(_filters);
+
+  QFileInfoList list = dir.entryInfoList(QDir::Files | QDir::NoSymLinks, QDir::Name);
+  for (int i = 0; i < list.size(); ++i)
+    {
+      if (list.at(i).fileName() == current.fileName())
+	{
+	  int pos = (i + 1 == list.size()) ? 0 : i + 1;
+	  closeTab(m_mainWidget->currentIndex());
+	  open(list.at(pos).absoluteFilePath());
+	  return;
+	}
+    }
+
+  statusBar()->showMessage(tr("No next file found"));
+}
+
+void CMainWindow::previousFile()
+{
+  QFileInfo current(currentWidget()->filePath());
+
+  QDir dir(m_openPath);
+  dir.setNameFilters(_filters);
+
+  QFileInfoList list = dir.entryInfoList(QDir::Files | QDir::NoSymLinks, QDir::Name);
+  for (int i = 0; i < list.size(); ++i)
+    {
+      if (list.at(i).fileName() == current.fileName())
+	{
+	  int pos = (i == 0) ? list.size() - 1 : i - 1;
+	  closeTab(m_mainWidget->currentIndex());
+	  open(list.at(pos).absoluteFilePath());
+	  return;
+	}
+    }
+
+  statusBar()->showMessage(tr("No previous file found"));
 }
 
 void CMainWindow::toggleDataView(bool value)
@@ -343,6 +400,11 @@ void CMainWindow::createToolBar()
   m_mainToolBar->addAction(m_openAct);
   m_mainToolBar->addAction(m_compareAct);
   m_mainToolBar->addSeparator();
+
+  m_mainToolBar->addAction(m_previousFileAct);
+  m_mainToolBar->addAction(m_nextFileAct);
+  m_mainToolBar->addSeparator();
+
   m_mainToolBar->addAction(m_dataViewAct);
   m_mainToolBar->addAction(m_imageViewAct);
   addToolBar(m_mainToolBar);

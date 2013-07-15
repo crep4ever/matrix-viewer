@@ -91,6 +91,10 @@ private slots:
   void reportBug();
   void about();
 
+  void nextFile();
+  void previousFile();
+
+
   // views
   void toggleDataView(bool);
   void toggleImageView(bool);
@@ -128,6 +132,8 @@ private:
   QAction *m_bugsAct;
   QAction *m_aboutAct;
   QAction *m_exitAct;
+  QAction *m_nextFileAct;
+  QAction *m_previousFileAct;
 
   QAction *m_openAct;
   QAction *m_saveAct;
@@ -142,6 +148,8 @@ private:
   // Settings
   QString m_openPath;
   QString m_savePath;
+
+  static const QStringList _filters;
 };
 
 #endif  // __MAIN_WINDOW_HH__
