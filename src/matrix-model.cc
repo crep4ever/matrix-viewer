@@ -170,7 +170,8 @@ void CMatrixModel::sort(int column, Qt::SortOrder order)
   cv::sortIdx(m_data.col(column), sortedColumnIndex, CV_SORT_EVERY_COLUMN | cvOrder);
   for(int i = 0; i < sortedColumnIndex.rows; ++i)
     {
-      m_data.row(sortedColumnIndex.at<int>(i, 0)).copyTo(sortedData.row(i));
+      cv::Mat tmp = sortedData.row(i);
+      m_data.row(sortedColumnIndex.at<int>(i, 0)).copyTo(tmp);
     }
   sortedData.assignTo(m_data);
 
