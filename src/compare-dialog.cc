@@ -25,6 +25,7 @@
 #include <QBoxLayout>
 #include <QSettings>
 #include <QStatusBar>
+#include <QScrollBar>
 #include <QDebug>
 
 #include "file-chooser.hh"
@@ -149,6 +150,43 @@ void CCompareDialog::compare()
   CImageView *imageDiffView = new CImageView(parent());
   imageDiffView->setModel(diffModel);
   parent()->currentWidget()->addWidget(imageDiffView);
+
+  for (int i = 0; i < parent()->currentWidget()->count(); ++i)
+    {
+      // Synchronise scrollbars for data views
+      CMatrixView *dataView = qobject_cast<CMatrixView*>(parent()->currentWidget()->widget(i));
+      if (dataView)
+	{
+	  connect(diffView->verticalScrollBar(), SIGNAL(valueChanged(int)),
+		  dataView->verticalScrollBar(), SLOT(setValue(int)));
+
+	  connect(diffView->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+		  dataView->horizontalScrollBar(), SLOT(setValue(int)));
+
+	  connect(dataView->verticalScrollBar(), SIGNAL(valueChanged(int)),
+		  diffView->verticalScrollBar(), SLOT(setValue(int)));
+
+	  connect(dataView->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+		  diffView->horizontalScrollBar(), SLOT(setValue(int)));
+	}
+
+      // Synchronise scrollbars for image views
+      CImageView *imageView = qobject_cast<CImageView*>(parent()->currentWidget()->widget(i));
+      if (imageView)
+	{
+	  connect(imageDiffView->verticalScrollBar(), SIGNAL(valueChanged(int)),
+		  imageView->verticalScrollBar(), SLOT(setValue(int)));
+
+	  connect(imageDiffView->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+		  imageView->horizontalScrollBar(), SLOT(setValue(int)));
+
+	  connect(imageView->verticalScrollBar(), SIGNAL(valueChanged(int)),
+		  imageDiffView->verticalScrollBar(), SLOT(setValue(int)));
+
+	  connect(imageView->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+		  imageDiffView->horizontalScrollBar(), SLOT(setValue(int)));
+	}
+    }
 
   accept();
 }
