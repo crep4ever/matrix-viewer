@@ -106,8 +106,16 @@ QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
 	}
     }
 
-  data.convertTo(data, CV_8U);
-  cv::cvtColor(data, data, mat.channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
+  try
+    {
+      data.convertTo(data, CV_8U);
+      cv::cvtColor(data, data, mat.channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
+    }
+  catch(cv::Exception & e)
+    {
+      qWarning() << tr("Can't convert color space for matrix\n%1").arg(e.what());
+      return new QImage;
+    }
 
   QImage *image = new QImage(data.cols, data.rows, QImage::Format_RGB888);
   for (int i = 0; i < data.rows; ++i)
