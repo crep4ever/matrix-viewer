@@ -107,7 +107,7 @@ QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
     }
 
   data.convertTo(data, CV_8U);
-  cv::cvtColor(data, data, mat.channels() == 1 ? CV_GRAY2RGB : CV_BGR2RGB);
+  cv::cvtColor(data, data, mat.channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
 
   QImage *image = new QImage(data.cols, data.rows, QImage::Format_RGB888);
   for (int i = 0; i < data.rows; ++i)
