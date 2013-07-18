@@ -66,8 +66,10 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToTxt(filename);
   else if (filename.endsWith(".raw"))
     return saveToRaw(filename);
-  else
+  else if (filename.endsWith(".bmp"))
     return saveToImage(filename);
+  else
+    qWarning() << tr("Unsupported save format for file:") << filename;
 
   return false;
 }

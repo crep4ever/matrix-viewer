@@ -597,14 +597,11 @@ void CMainWindow::open()
 
 void CMainWindow::save(const QString & filename)
 {
-  if (!currentModel() || filename.isEmpty())
+  if (!currentWidget() || filename.isEmpty())
     {
       statusBar()->showMessage(tr("Can't save empty matrix"));
       return;
     }
-
-  if (!currentWidget() || !currentWidget()->isModified())
-    return;
 
   currentWidget()->setModified(false);
   currentWidget()->setFilePath(filename);
@@ -633,7 +630,7 @@ void CMainWindow::saveAs()
   QString filename = QFileDialog::getSaveFileName(this,
                                                   tr("Save data file"),
                                                   m_savePath,
-                                                  tr("Data files (*.xml *.txt *.png *.jpg *.bmp)"));
+                                                  tr("Data files (*.xml *.txt *.bmp *raw)"));
   QFileInfo fi(filename);
   m_savePath = fi.absolutePath();
   save(filename);
