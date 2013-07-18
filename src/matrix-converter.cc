@@ -23,6 +23,11 @@
 #include <QSettings>
 #include <QDebug>
 
+#include "config.hh"
+
+#ifdef ENABLE_OPENMP
+#include <omp.h>
+#endif
 
 CMatrixConverter::CMatrixConverter()
   : QObject()
@@ -118,10 +123,13 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
       // second line contains matrix values
       values = stream.readLine().split(" ");
 
-      int count = 0;
-      for (uint j = 0; j < rows; ++j)
-	for (uint i = 0; i < cols; ++i)
-	  m_data.at< double >(j, i) = values[count++].toDouble();
+#pragma omp parallel for schedule(static)
+      for (uint v = 0; v < rows * cols; ++v)
+	{
+	  int row = v / cols;
+	  int col = v % cols;
+	  m_data.at< double >(row, col) = values[v].toDouble();
+	}
 
       file.close();
 
