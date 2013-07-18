@@ -105,8 +105,7 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
       QTextStream stream(&file);
 
       // first line contains the number of columns and rows of the matrix
-      QString line = stream.readLine();
-      QStringList values = line.split(" ");
+      QStringList values = stream.readLine().split(" ");
       const uint rows = values[1].toInt(), cols = values[0].toInt();
       if (rows == 0 || cols == 0)
         {
@@ -114,13 +113,10 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
           return false;
         }
 
-      m_data = cv::Mat::zeros(rows, cols, CV_64FC1);
-      //qDebug() << "CMatrixConverter::loadFromTxt cols: " << cols << " rows: " << rows;
+      m_data.create(rows, cols, CV_64FC1);
 
       // second line contains matrix values
-      line = stream.readLine();
-      values = line.split(" ");
-      //qDebug() << "CMatrixConverter::loadFromTxt values: " << values;
+      values = stream.readLine().split(" ");
 
       int count = 0;
       for (uint j = 0; j < rows; ++j)
