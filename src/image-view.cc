@@ -255,6 +255,7 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
 
 void CImageView::resizeEvent(QResizeEvent * event)
 {
+  Q_UNUSED(event);
   if (m_scene->sceneRect().width() > width() ||
       m_scene->sceneRect().height() > height())
     fitToWindow();

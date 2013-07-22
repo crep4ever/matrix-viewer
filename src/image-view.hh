@@ -70,8 +70,6 @@ public slots:
   void normalSize();
   void fitToWindow();
 
-  void linesView();
-  void pointsView();
   void histogram();
 
 protected:
