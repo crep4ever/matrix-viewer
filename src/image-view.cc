@@ -33,6 +33,7 @@
 #include "main-window.hh"
 #include "position.hh"
 #include "matrix-model.hh"
+#include "histogram-dialog.hh"
 
 CImageView::CImageView(QWidget *p)
   : QGraphicsView(p)
@@ -79,6 +80,10 @@ void CImageView::createActions()
   m_normalSizeAct->setIcon(QIcon::fromTheme("zoom-original"));
   m_normalSizeAct->setStatusTip(tr("Original size of the image"));
   connect(m_normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
+
+  m_histogramAct = new QAction(tr("&Histogram"), this);
+  m_histogramAct->setStatusTip(tr("Histogram"));
+  connect(m_histogramAct, SIGNAL(triggered()), this, SLOT(histogram()));
 }
 
 QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
@@ -241,6 +246,8 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
   menu->addAction(m_zoomOutAct);
   menu->addAction(m_fitToWindowAct);
   menu->addAction(m_normalSizeAct);
+  menu->addSeparator();
+  menu->addAction(m_histogramAct);
 
   menu->exec(event->globalPos());
   delete menu;
@@ -253,3 +260,12 @@ void CImageView::resizeEvent(QResizeEvent * event)
     fitToWindow();
 }
 
+void CImageView::histogram()
+{
+  if (!m_image)
+    return;
+
+  CHistogramDialog dialog(parent());
+  dialog.setImage(m_image);
+  dialog.exec();
+}

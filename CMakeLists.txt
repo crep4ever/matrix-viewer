@@ -30,6 +30,8 @@ set(MATRIX_VIEWER_SOURCES
   src/tab.cc
   src/delegate.cc
   src/position.cc
+  src/histogram.cc
+  src/histogram-dialog.cc
   )
 
 # header (moc)
@@ -48,6 +50,8 @@ set(MATRIX_VIEWER_QT_HEADER
   src/tab.hh
   src/delegate.hh
   src/position.hh
+  src/histogram.hh
+  src/histogram-dialog.hh
   )
 
 # matrix profiles

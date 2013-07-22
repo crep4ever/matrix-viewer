@@ -96,6 +96,8 @@ private:
   QAction *m_zoomOutAct;
   QAction *m_normalSizeAct;
   QAction *m_fitToWindowAct;
+
+  QAction *m_histogramAct;
 };
 
 #endif  // __IMAGE_VIEW_HH__
