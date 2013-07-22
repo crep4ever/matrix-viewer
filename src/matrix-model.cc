@@ -79,6 +79,17 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 	    point3b = data().at< cv::Vec3b >(index.row(), index.column());
 	    return QString("%1 | %2 | %3").arg(point3b[0]).arg(point3b[1]).arg(point3b[2]);
 
+	  case CV_16UC1:
+	    return data().at< unsigned short >(index.row(), index.column());
+
+	  case CV_16UC2:
+	    point2b = data().at< cv::Vec2b >(index.row(), index.column());
+	    return QString("%1 | %2").arg(point2b[0]).arg(point2b[1]);
+
+	  case CV_16UC3:
+	    point3b = data().at< cv::Vec3b >(index.row(), index.column());
+	    return QString("%1 | %2 | %3").arg(point3b[0]).arg(point3b[1]).arg(point3b[2]);
+
 	  case CV_32FC1:
 	    return data().at< float >(index.row(), index.column());
 
@@ -168,7 +179,7 @@ void CMatrixModel::sort(int column, Qt::SortOrder order)
   cv::Mat sortedData(m_data.size(), m_data.type());
   cv::Mat sortedColumnIndex;
   cv::sortIdx(m_data.col(column), sortedColumnIndex, CV_SORT_EVERY_COLUMN | cvOrder);
-  for(int i = 0; i < sortedColumnIndex.rows; ++i)
+  for (int i = 0; i < sortedColumnIndex.rows; ++i)
     {
       cv::Mat tmp = sortedData.row(i);
       m_data.row(sortedColumnIndex.at<int>(i, 0)).copyTo(tmp);
