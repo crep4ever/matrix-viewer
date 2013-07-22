@@ -245,3 +245,11 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
   menu->exec(event->globalPos());
   delete menu;
 }
+
+void CImageView::resizeEvent(QResizeEvent * event)
+{
+  if (m_scene->sceneRect().width() > width() ||
+      m_scene->sceneRect().height() > height())
+    fitToWindow();
+}
+

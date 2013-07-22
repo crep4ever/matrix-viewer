@@ -70,12 +70,18 @@ public slots:
   void normalSize();
   void fitToWindow();
 
+  void linesView();
+  void pointsView();
+  void histogram();
+
 protected:
   /*!
     Provides custom context menu with specific actions that are relevant to the image view.
     For example, zoom actions
   */
-  void contextMenuEvent(QContextMenuEvent *event);
+  virtual void contextMenuEvent(QContextMenuEvent *event);
+
+  virtual void resizeEvent(QResizeEvent * event);
 
 private:
   void createActions();
