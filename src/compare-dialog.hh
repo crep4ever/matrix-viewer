@@ -22,7 +22,7 @@
 #include <QDialog>
 #include <opencv2/opencv.hpp>
 
-class QSpinBox;
+class QDoubleSpinBox;
 class CFileChooser;
 class CMainWindow;
 
@@ -58,8 +58,8 @@ private:
 
   CMainWindow *m_parent;
   CFileChooser *m_fileChooser;
-  QSpinBox *m_absoluteThresholdSpinBox;
-  QSpinBox *m_percentageThresholdSpinBox;
+  QDoubleSpinBox *m_absoluteThresholdSpinBox;
+  QDoubleSpinBox *m_percentageThresholdSpinBox;
 };
 
 #endif  // __COMPARE_DIALOG_HH__

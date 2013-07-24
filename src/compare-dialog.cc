@@ -19,7 +19,7 @@
 
 #include <QDialogButtonBox>
 #include <QGroupBox>
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QSettings>
 #include <QFormLayout>
 #include <QBoxLayout>
@@ -42,8 +42,8 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   : QDialog(parent)
   , m_parent(qobject_cast<CMainWindow*>(parent))
   , m_fileChooser(new CFileChooser)
-  , m_absoluteThresholdSpinBox(new QSpinBox)
-  , m_percentageThresholdSpinBox(new QSpinBox)
+  , m_absoluteThresholdSpinBox(new QDoubleSpinBox)
+  , m_percentageThresholdSpinBox(new QDoubleSpinBox)
 {
   setWindowTitle(tr("Compare matrix"));
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
@@ -56,6 +56,8 @@ CCompareDialog::CCompareDialog(QWidget *parent)
   QFormLayout *parametersLayout = new QFormLayout;
   parametersLayout->addRow(tr("Absolute threshold:"), m_absoluteThresholdSpinBox);
   parametersLayout->addRow(tr("Percentage threshold:"), m_percentageThresholdSpinBox);
+
+  m_percentageThresholdSpinBox->setEnabled(false);
 
   QGroupBox *compareParametersGroupBox = new QGroupBox(tr("Thresholds"));
   compareParametersGroupBox->setLayout(parametersLayout);
