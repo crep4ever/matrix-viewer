@@ -69,6 +69,7 @@ public slots:
   void zoomOut();
   void normalSize();
   void fitToWindow();
+  void bestSize();
 
   void histogram();
 
