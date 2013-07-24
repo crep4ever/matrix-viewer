@@ -61,6 +61,8 @@ protected:
   */
   virtual void contextMenuEvent(QContextMenuEvent *event);
 
+  void keyPressEvent(QKeyEvent *event);
+
 private:
   CMainWindow *m_parent;
 
