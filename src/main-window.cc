@@ -198,7 +198,7 @@ void CMainWindow::createActions()
   connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
 
   m_loadProfileAct = new QAction(tr("&Load profile"), this);
-  m_loadProfileAct->setIcon(QIcon::fromTheme("document-x-generic"));
+  m_loadProfileAct->setIcon(QIcon::fromTheme("document-import", QIcon(":/icons/tango/48x48/document-import.png")));
   m_loadProfileAct->setStatusTip(tr("Load a specific profile for the matrix"));
   connect(m_loadProfileAct, SIGNAL(triggered()), SLOT(loadProfile()));
 
