@@ -562,6 +562,11 @@ void CMainWindow::open(const QString & filename)
   imgView->setModel(model);
   tab->addWidget(imgView);
 
+  m_mainWidget->addTab(tab, filename);
+  m_mainWidget->setCurrentWidget(tab);
+
+  imgView->bestSize();
+
   if (converter.isFormatData())
     {
       m_dataViewAct->setChecked(true);
