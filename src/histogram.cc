@@ -18,9 +18,6 @@
 
 #include "histogram.hh"
 
-#include <QPainter>
-#include <cmath>
-
 CHistogram::CHistogram(QWidget* parent) :
   QGraphicsView(parent)
   , m_scene(new QGraphicsScene)
