@@ -22,7 +22,7 @@ CHistogram::CHistogram(QWidget* parent) :
   QGraphicsView(parent)
   , m_scene(new QGraphicsScene)
 {
-  setBackgroundRole(QPalette::Dark);
+  setBackgroundRole(QPalette::Light);
   setScene(m_scene);
 }
 
