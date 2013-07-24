@@ -99,8 +99,8 @@ void CMatrixView::contextMenuEvent(QContextMenuEvent *event)
 {
   QMenu *menu = new QMenu;
 
-  menu->addAction(m_propertiesAct);
   menu->addAction(m_adjustColumnsAct);
+  menu->addAction(m_propertiesAct);
 
   menu->exec(event->globalPos());
   delete menu;
