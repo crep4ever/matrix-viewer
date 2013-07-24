@@ -80,8 +80,6 @@ protected:
   */
   virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  virtual void resizeEvent(QResizeEvent * event);
-
 private:
   void createActions();
   

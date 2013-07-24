@@ -264,14 +264,6 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
   delete menu;
 }
 
-void CImageView::resizeEvent(QResizeEvent * event)
-{
-  Q_UNUSED(event);
-  if (m_scene->sceneRect().width() > width() ||
-      m_scene->sceneRect().height() > height())
-    fitToWindow();
-}
-
 void CImageView::histogram()
 {
   if (!m_image)
