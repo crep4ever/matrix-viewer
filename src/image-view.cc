@@ -42,9 +42,12 @@ CImageView::CImageView(QWidget *p)
   , m_scene(new QGraphicsScene)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
 {
+  setDragMode(QGraphicsView::ScrollHandDrag);
+  setBackgroundRole(QPalette::Dark);
+
   m_selectionBox->setBrush(QBrush(QColor(255, 0, 0, 100)));
   m_selectionBox->setPen(Qt::NoPen);
-  setBackgroundRole(QPalette::Dark);
+
   setScene(m_scene);
 
   createActions();
