@@ -27,6 +27,10 @@
 #include "main-window.hh"
 #include "histogram.hh"
 
+const QColor CHistogramDialog::_red(239, 41, 41);
+const QColor CHistogramDialog::_green(138, 226, 52);
+const QColor CHistogramDialog::_blue(114, 159, 207);
+
 CHistogramDialog::CHistogramDialog(QWidget *p)
   : QDialog(p)
   , m_parent(qobject_cast<CMainWindow*>(p))
@@ -70,9 +74,9 @@ void CHistogramDialog::setImage(QImage *image)
 	}
     }
 
-  m_redHistogram->setValues(redValues, Qt::NoPen, QBrush(QColor(239, 41, 41)));
-  m_greenHistogram->setValues(greenValues, Qt::NoPen, QBrush(QColor(138, 226, 52)));
-  m_blueHistogram->setValues(blueValues, Qt::NoPen, QBrush(QColor(114, 159, 207)));
+  m_redHistogram->setValues(redValues, Qt::NoPen, QBrush(_red));
+  m_greenHistogram->setValues(greenValues, Qt::NoPen, QBrush(_green));
+  m_blueHistogram->setValues(blueValues, Qt::NoPen, QBrush(_blue));
 }
 
 CMainWindow* CHistogramDialog::parent() const

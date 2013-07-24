@@ -20,6 +20,7 @@
 #define __HISTOGRAM_DIALOG_HH__
 
 #include <QDialog>
+#include <QColor>
 
 class CMainWindow;
 class CHistogram;
@@ -51,6 +52,10 @@ private:
   CHistogram *m_redHistogram;
   CHistogram *m_greenHistogram;
   CHistogram *m_blueHistogram;
+
+  static const QColor _red;
+  static const QColor _green;
+  static const QColor _blue;
 };
 
 #endif  // __HISTOGRAM_DIALOG_HH__
