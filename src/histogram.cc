@@ -46,4 +46,5 @@ void CHistogram::setValues(const QVector<int>& values,
 void CHistogram::resizeEvent(QResizeEvent * event)
 {
   fitInView(m_scene->sceneRect());
+  QGraphicsView::resizeEvent(event);
 }

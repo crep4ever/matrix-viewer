@@ -157,6 +157,8 @@ void CImageView::wheelEvent(QWheelEvent *event)
     zoomOut();
 
   centerOn(mapToScene(event->pos()));
+
+  QGraphicsView::wheelEvent(event);
 }
 
 void CImageView::mousePressEvent(QMouseEvent *event)
@@ -168,6 +170,8 @@ void CImageView::mousePressEvent(QMouseEvent *event)
     {
       selectItem(scenePoint.y(), scenePoint.x());
     }
+
+  QGraphicsView::mousePressEvent(event);
 }
 
 void CImageView::keyPressEvent(QKeyEvent *event)
