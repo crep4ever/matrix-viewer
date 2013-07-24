@@ -47,7 +47,6 @@
 #include "image-view.hh"
 #include "matrix-converter.hh"
 #include "compare-dialog.hh"
-#include "properties-dialog.hh"
 #include "tab-widget.hh"
 #include "tab.hh"
 #include "position.hh"
@@ -197,15 +196,6 @@ void CMainWindow::createActions()
   m_imageViewAct->setStatusTip(tr("Display the matrix as an image"));
   m_imageViewAct->setCheckable(true);
   connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));
-
-  m_adjustColumnsAct = new QAction(tr("&Adjust columns"), this);
-  m_adjustColumnsAct->setStatusTip(tr("Adjust columns of the table view to contents"));
-  connect(m_adjustColumnsAct, SIGNAL(triggered()), SLOT(adjustColumnsToContents()));
-
-  m_propertiesAct = new QAction(tr("&Properties"), this);
-  m_propertiesAct->setIcon(QIcon::fromTheme("document-properties"));
-  m_propertiesAct->setStatusTip(tr("Display properties of the matrix"));
-  connect(m_propertiesAct, SIGNAL(triggered()), SLOT(properties()));
 
   m_loadProfileAct = new QAction(tr("&Load profile"), this);
   m_loadProfileAct->setIcon(QIcon::fromTheme("document-x-generic"));
@@ -389,8 +379,6 @@ void CMainWindow::createMenus()
   QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
   viewMenu->addAction(m_dataViewAct);
   viewMenu->addAction(m_imageViewAct);
-  viewMenu->addAction(m_adjustColumnsAct);
-  viewMenu->addAction(m_propertiesAct);
 
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(m_documentationAct);
@@ -457,26 +445,6 @@ void CMainWindow::compare()
   dialog.exec();
   toggleDataView(m_dataViewAct->isChecked());
   toggleImageView(m_imageViewAct->isChecked());
-}
-
-void CMainWindow::properties()
-{
-  CPropertiesDialog dialog(this);
-  dialog.exec();
-}
-
-void CMainWindow::adjustColumnsToContents()
-{
-  if (!currentWidget())
-    return;
-
-  int nbChildren = currentWidget()->count();
-  for (int i = 0; i < nbChildren; ++i)
-    {
-      CMatrixView *view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
-      if (view)
-	view->resizeColumnsToContents();
-    }
 }
 
 void CMainWindow::loadProfile()
@@ -578,9 +546,6 @@ void CMainWindow::open(const QString & filename)
       m_imageViewAct->setChecked(true);
       toggleImageView(m_imageViewAct->isChecked());
     }
-
-  m_mainWidget->addTab(tab, filename);
-  m_mainWidget->setCurrentWidget(tab);
 
   connect(tab, SIGNAL(labelChanged(const QString&)),
 	  m_mainWidget, SLOT(changeTabText(const QString&)));

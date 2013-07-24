@@ -23,6 +23,9 @@
 #include <QColor>
 
 class CMainWindow;
+class QAction;
+class QContextMenuEvent;
+
 /*!
   \file matrix-view.hh
   \class CMatrixView
@@ -48,8 +51,21 @@ public slots:
   void currentChanged(const QModelIndex & index, const QModelIndex & previous);
   void selectItem(int row, int col);
 
+  void properties();
+  void adjustColumnsToContents();
+
+protected:
+  /*!
+    Provides custom context menu with specific actions that are relevant to the matrix view.
+    For example, properties, adjustColumns
+  */
+  virtual void contextMenuEvent(QContextMenuEvent *event);
+
 private:
   CMainWindow *m_parent;
+
+  QAction *m_adjustColumnsAct;
+  QAction *m_propertiesAct;
 };
 
 #endif  // __MATRIX_VIEW_HH__

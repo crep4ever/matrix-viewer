@@ -80,8 +80,6 @@ private slots:
   void closeTab(int index);
   void changeTab(int index);
   void compare();
-  void properties();
-  void adjustColumnsToContents();
 
   //application
   void preferences();
@@ -142,8 +140,6 @@ private:
 
   QAction *m_dataViewAct;
   QAction *m_imageViewAct;
-  QAction *m_adjustColumnsAct;
-  QAction *m_propertiesAct;
 
   // Settings
   QString m_openPath;

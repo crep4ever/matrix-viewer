@@ -17,11 +17,15 @@
 //******************************************************************************
 #include "matrix-view.hh"
 
+#include <QContextMenuEvent>
 #include <QSettings>
+#include <QAction>
+#include <QMenu>
 #include <QDebug>
 
 #include "main-window.hh"
 #include "position.hh"
+#include "properties-dialog.hh"
 
 CMatrixView::CMatrixView(QWidget *p)
   : QTableView(p)
@@ -32,6 +36,15 @@ CMatrixView::CMatrixView(QWidget *p)
   setSortingEnabled(true);
   setEditTriggers(QAbstractItemView::DoubleClicked);
   setSelectionMode(QAbstractItemView::SingleSelection);
+
+  m_adjustColumnsAct = new QAction(tr("&Adjust columns"), this);
+  m_adjustColumnsAct->setStatusTip(tr("Adjust columns of the table view to contents"));
+  connect(m_adjustColumnsAct, SIGNAL(triggered()), SLOT(adjustColumnsToContents()));
+
+  m_propertiesAct = new QAction(tr("&Properties"), this);
+  m_propertiesAct->setIcon(QIcon::fromTheme("document-properties"));
+  m_propertiesAct->setStatusTip(tr("Display properties of the matrix"));
+  connect(m_propertiesAct, SIGNAL(triggered()), SLOT(properties()));
 }
 
 CMatrixView::~CMatrixView()
@@ -62,6 +75,28 @@ void CMatrixView::selectItem(int row, int col)
 {
   setCurrentIndex(model()->index(row, col));
   scrollTo(model()->index(row, col));
+}
+
+void CMatrixView::contextMenuEvent(QContextMenuEvent *event)
+{
+  QMenu *menu = new QMenu;
+
+  menu->addAction(m_propertiesAct);
+  menu->addAction(m_adjustColumnsAct);
+
+  menu->exec(event->globalPos());
+  delete menu;
+}
+
+void CMatrixView::properties()
+{
+  CPropertiesDialog dialog(parent());
+  dialog.exec();
+}
+
+void CMatrixView::adjustColumnsToContents()
+{
+  resizeColumnsToContents();
 }
 
 CMainWindow* CMatrixView::parent() const
