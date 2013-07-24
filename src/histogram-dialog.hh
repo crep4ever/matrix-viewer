@@ -24,6 +24,7 @@
 
 class CMainWindow;
 class CHistogram;
+class QBoxLayout;
 
 /*!
   \file histogram-dialog.hh
@@ -47,6 +48,8 @@ public:
   void setImage(QImage *image);
 
 private:
+  QBoxLayout * makeAxisLayout(const QColor & color);
+
 
   CMainWindow *m_parent;
   CHistogram *m_redHistogram;

@@ -22,6 +22,7 @@
 #include <QTableWidgetItem>
 #include <QHeaderView>
 #include <QBoxLayout>
+#include <QLabel>
 #include <QDebug>
 
 #include "main-window.hh"
@@ -45,8 +46,14 @@ CHistogramDialog::CHistogramDialog(QWidget *p)
 
   QBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(m_redHistogram);
+  layout->addLayout(makeAxisLayout(_red));
+
   layout->addWidget(m_greenHistogram);
+  layout->addLayout(makeAxisLayout(_green));
+
   layout->addWidget(m_blueHistogram);
+  layout->addLayout(makeAxisLayout(_blue));
+
   layout->addStretch();
   layout->addWidget(buttons);
   setLayout(layout);
@@ -77,6 +84,26 @@ void CHistogramDialog::setImage(QImage *image)
   m_redHistogram->setValues(redValues, Qt::NoPen, QBrush(_red));
   m_greenHistogram->setValues(greenValues, Qt::NoPen, QBrush(_green));
   m_blueHistogram->setValues(blueValues, Qt::NoPen, QBrush(_blue));
+}
+
+QBoxLayout * CHistogramDialog::makeAxisLayout(const QColor & color)
+{
+  QString css = QString("QLabel{background-color: "
+			"qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
+			"stop: 0 black, stop: 1 %1);}").arg(color.name());
+
+  QLabel *begin = new QLabel("0");
+  QLabel *end = new QLabel("255");
+
+  QLabel *gradient = new QLabel;
+  gradient->setStyleSheet(css);
+
+  QBoxLayout * layout = new QHBoxLayout;
+  layout->addWidget(begin);
+  layout->addWidget(gradient, 1);
+  layout->addWidget(end);
+
+  return layout;
 }
 
 CMainWindow* CHistogramDialog::parent() const
