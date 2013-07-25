@@ -21,10 +21,10 @@
 
 #include <QDialog>
 #include <QColor>
+#include <QSize>
 
 class CMainWindow;
 class CHistogram;
-class QBoxLayout;
 
 /*!
   \file histogram-dialog.hh
@@ -47,10 +47,10 @@ public:
 
   void setImage(QImage *image);
 
+protected:
+  virtual QSize sizeHint() const;
+
 private:
-  QBoxLayout * makeAxisLayout(const QColor & color);
-
-
   CMainWindow *m_parent;
   CHistogram *m_redHistogram;
   CHistogram *m_greenHistogram;

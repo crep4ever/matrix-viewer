@@ -19,28 +19,57 @@
 #ifndef __HISTOGRAM_HH__
 #define __HISTOGRAM_HH__
 
-#include <QGraphicsView>
+#include <QWidget>
 #include <QVector>
+#include <QPen>
+#include <QBrush>
+#include <QColor>
 
 class QResizeEvent;
+class QGraphicsView;
+class QGraphicsScene;
+class QBoxLayout;
 
-class CHistogram : public QGraphicsView
+class CHistogram : public QWidget
 {
   Q_OBJECT
 
   public:
   CHistogram(QWidget* parent = 0);
+  CHistogram(const QColor & color, QWidget* parent = 0);
   virtual ~CHistogram();
 
   void setValues(const QVector<int>& values,
 		 const QPen & pen = QPen(),
 		 const QBrush & brush = QBrush());
 
+  QColor color() const;
+  void setColor(const QColor & color);
+
+  int count() const;
+  int min() const;
+  int max() const;
+  double mean() const;
+  double standardDeviation() const;
+
 protected:
   virtual void resizeEvent(QResizeEvent * event);
 
 private:
+  void update();
+  QBoxLayout * makeAxisBar() const;
+
+private:
+  QColor m_color;
+
   QGraphicsScene *m_scene;
+  QGraphicsView *m_view;
+
+  int m_count;
+  int m_min;
+  int m_max;
+  double m_mean;
+  double m_standardDeviation;
 };
 
 #endif // __HISTOGRAM_HH__
