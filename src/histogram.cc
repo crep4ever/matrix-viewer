@@ -23,6 +23,8 @@
 #include <QGraphicsScene>
 #include <QBoxLayout>
 #include <QLabel>
+#include <QPen>
+#include <QBrush>
 #include <QDebug>
 
 CHistogram::CHistogram(QWidget* parent) :
@@ -96,9 +98,7 @@ void CHistogram::setColor(const QColor & color)
   m_color = color;
 }
 
-void CHistogram::setValues(const QVector<int>& values,
-			   const QPen & pen,
-			   const QBrush & brush)
+void CHistogram::setValues(const QVector<int>& values)
 {
   uint squareSum = 0;
   uint sum = 0;
@@ -107,7 +107,7 @@ void CHistogram::setValues(const QVector<int>& values,
     {
       if (values[i] > 0)
 	{
-	  m_scene->addRect(QRect(i, 0, 1, -values[i]), pen, brush);
+	  m_scene->addRect(QRect(i, 0, 1, -values[i]), Qt::NoPen, QBrush(m_color));
 	  sum += i * values[i];
 	  squareSum += i * i * values[i];
 	}

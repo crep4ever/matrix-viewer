@@ -21,8 +21,6 @@
 
 #include <QWidget>
 #include <QVector>
-#include <QPen>
-#include <QBrush>
 #include <QColor>
 
 class QResizeEvent;
@@ -39,9 +37,7 @@ class CHistogram : public QWidget
   CHistogram(const QColor & color, QWidget* parent = 0);
   virtual ~CHistogram();
 
-  void setValues(const QVector<int>& values,
-		 const QPen & pen = QPen(),
-		 const QBrush & brush = QBrush());
+  void setValues(const QVector<int>& values);
 
   QColor color() const;
   void setColor(const QColor & color);

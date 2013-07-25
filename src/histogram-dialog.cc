@@ -76,9 +76,9 @@ void CHistogramDialog::setImage(QImage *image)
 	}
     }
 
-  m_redHistogram->setValues(redValues, Qt::NoPen, QBrush(_red));
-  m_greenHistogram->setValues(greenValues, Qt::NoPen, QBrush(_green));
-  m_blueHistogram->setValues(blueValues, Qt::NoPen, QBrush(_blue));
+  m_redHistogram->setValues(redValues);
+  m_greenHistogram->setValues(greenValues);
+  m_blueHistogram->setValues(blueValues);
 }
 
 QSize CHistogramDialog::sizeHint() const
