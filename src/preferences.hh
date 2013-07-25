@@ -149,25 +149,4 @@ private:
   QCheckBox *m_littleEndianByteOrder;
 };
 
-/** \brief NetworkPage is the config page used to specify network options
- * \image html pref-network.png
- */
-class NetworkPage : public Page
-{
-  Q_OBJECT
-
-public:
-  /// Constructor.
-  NetworkPage(QWidget *parent=0);
-
-private:
-  void readSettings();
-  void writeSettings();
-
-  QLineEdit *m_hostname;
-  QSpinBox *m_port;
-  QLineEdit *m_user;
-  QLineEdit *m_password;
-};
-
 #endif // __PREFERENCES_HH__

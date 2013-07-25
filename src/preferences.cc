@@ -32,7 +32,6 @@
 #include <QSettings>
 #include <QSpinBox>
 #include <QStackedWidget>
-#include <QNetworkProxy>
 
 #include "main-window.hh"
 #include "file-chooser.hh"
@@ -54,7 +53,6 @@ ConfigDialog::ConfigDialog(QWidget* parent)
   m_pagesWidget = new QStackedWidget(this);
   m_pagesWidget->addWidget(new DisplayPage(this));
   m_pagesWidget->addWidget(new ImportRawPage(this));
-  m_pagesWidget->addWidget(new NetworkPage(this));
 
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Close);
   connect(buttons, SIGNAL(rejected()), this, SLOT(close()));
@@ -96,12 +94,6 @@ void ConfigDialog::createIcons()
   importRawButton->setText(tr("Raw images"));
   importRawButton->setTextAlignment(Qt::AlignHCenter);
   importRawButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
-  QListWidgetItem *networkButton = new QListWidgetItem(m_contentsWidget);
-  networkButton->setIcon(QIcon::fromTheme("preferences-system-network", QIcon(":/icons/tango/48x48/categories/preferences-system-network.png")));
-  networkButton->setText(tr("Network"));
-  networkButton->setTextAlignment(Qt::AlignHCenter);
-  networkButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
   connect(m_contentsWidget,
           SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
@@ -248,78 +240,4 @@ void ImportRawPage::writeSettings()
   settings.setValue("height", m_imageHeight->value());
   settings.setValue("little-endian", m_littleEndianByteOrder->isChecked());
   settings.endGroup();
-}
-
-
-// Network Page
-
-NetworkPage::NetworkPage(QWidget *parent)
-  : Page(parent)
-  , m_hostname()
-  , m_port()
-  , m_user()
-  , m_password()
-{
-  m_hostname = new QLineEdit;
-  m_port = new QSpinBox;
-  m_port->setRange(0, 65535);
-  m_user = new QLineEdit;
-  m_password = new QLineEdit;
-  m_password->setEchoMode(QLineEdit::Password);
-
-  readSettings();
-
-  // check application
-  QGroupBox *proxyGroupBox
-    = new QGroupBox(tr("Proxy settings"));
-
-  QFormLayout *proxyLayout = new QFormLayout;
-  proxyLayout->addRow(tr("Hostname:"), m_hostname);
-  proxyLayout->addRow(tr("Port:"), m_port);
-  proxyLayout->addRow(tr("User:"), m_user);
-  proxyLayout->addRow(tr("Password:"), m_password);
-  proxyGroupBox->setLayout(proxyLayout);
-
-  // main layout
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addWidget(proxyGroupBox);
-  mainLayout->addStretch(1);
-  setLayout(mainLayout);
-}
-
-void NetworkPage::readSettings()
-{
-  QSettings settings;
-  settings.beginGroup("proxy");
-  m_hostname->setText(settings.value("hostname", QString()).toString());
-  m_port->setValue(settings.value("port", 0).toInt());
-  m_user->setText(settings.value("user", QString()).toString());
-  m_password->setText(settings.value("password", QString()).toString());
-  settings.endGroup();
-}
-
-void NetworkPage::writeSettings()
-{
-  QSettings settings;
-  settings.beginGroup("proxy");
-  settings.setValue("hostname", m_hostname->text());
-  settings.setValue("port", m_port->value());
-  settings.setValue("user", m_user->text());
-  settings.setValue("password", m_password->text());
-  settings.endGroup();
-
-  QNetworkProxy proxy;
-  if (m_hostname->text().isEmpty())
-    {
-      proxy.setType(QNetworkProxy::NoProxy);
-    }
-  else
-    {
-      proxy.setType(QNetworkProxy::HttpProxy);
-      proxy.setHostName(m_hostname->text());
-      proxy.setPort(m_port->value());
-      proxy.setUser(m_user->text());
-      proxy.setPassword(m_password->text());
-    }
-  QNetworkProxy::setApplicationProxy(proxy);
 }
