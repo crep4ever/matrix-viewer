@@ -80,7 +80,6 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p)
   item = new QTableWidgetItem(channels);
   matrixInfo->setItem(3, 1, item);
 
-  // image info
 
   QBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(matrixInfo);
