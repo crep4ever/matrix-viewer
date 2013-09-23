@@ -203,11 +203,13 @@ void CMainWindow::createActions()
   connect(m_loadProfileAct, SIGNAL(triggered()), SLOT(loadProfile()));
 
   m_previousFileAct = new QAction(tr("&Previous"), this);
+  m_previousFileAct->setShortcut(QKeySequence::MoveToPreviousChar);
   m_previousFileAct->setIcon(QIcon::fromTheme("go-previous", QIcon(":/icons/tango/48x48/go-previous.png")));
   m_previousFileAct->setStatusTip(tr("Load previous data file in current folder"));
   connect(m_previousFileAct, SIGNAL(triggered()), SLOT(previousFile()));
 
   m_nextFileAct = new QAction(tr("&Next"), this);
+  m_nextFileAct->setShortcut(QKeySequence::MoveToNextChar);
   m_nextFileAct->setIcon(QIcon::fromTheme("go-next", QIcon(":/icons/tango/48x48/go-next.png")));
   m_nextFileAct->setStatusTip(tr("Load next data file in current folder"));
   connect(m_nextFileAct, SIGNAL(triggered()), SLOT(nextFile()));
