@@ -169,12 +169,12 @@ bool CMatrixConverter::saveToTxt(const QString & filename)
 
 bool CMatrixConverter::loadFromXml(const QString & filename)
 {
-  cv::FileStorage fs;
-  if (!fs.open(filename.toStdString(), cv::FileStorage::READ))
-    return false;
-
   try
     {
+      cv::FileStorage fs;
+      if (!fs.open(filename.toStdString(), cv::FileStorage::READ))
+        return false;
+
       fs["matrix"] >> m_data;
       fs.release();
     }
