@@ -30,5 +30,5 @@ BUGS
 
 AUTHORS
 -------
-Romain Goffe <romain.goffe@gmail.com>,
+Romain Goffe <romain.goffe@gmail.com>
 

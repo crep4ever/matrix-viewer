@@ -14,7 +14,8 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-*matrix-viewer* est une interface graphique pour la visualisation et l'édition de données matricielles issues de la sérialization OpenCV.
+*matrix-viewer* est une interface graphique pour la visualisation et
+ l'édition de données matricielles issues de la sérialization OpenCV.
 
 OPTIONS
 -------
@@ -25,4 +26,4 @@ OPTIONS
 
 AUTHORS
 -------
-Romain Goffe <romain.goffe@gmail.com>,
+Romain Goffe <romain.goffe@gmail.com>
