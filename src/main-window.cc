@@ -600,7 +600,7 @@ void CMainWindow::saveAs()
   QString filename = QFileDialog::getSaveFileName(this,
                                                   tr("Save data file"),
                                                   m_savePath,
-                                                  tr("Data files (*.xml *.txt *.bmp *raw)"));
+                                                  tr("Data files (*.xml *.txt *.bmp *.raw)"));
   QFileInfo fi(filename);
   m_savePath = fi.absolutePath();
   save(filename);
