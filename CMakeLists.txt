@@ -177,7 +177,7 @@ if(GENERATE_MANPAGES)
         DEPENDS ${txtfile}
         VERBATIM)
       add_custom_command(
-        COMMAND ${XMLTO_EXECUTABLE} man ${xmlfile}
+        COMMAND ${XMLTO_EXECUTABLE} --skip-validation man ${xmlfile}
         OUTPUT  ${manfile}
         WORKING_DIRECTORY ${BUILD_DIR}/${relpath2}
         DEPENDS ${xmlfile})
