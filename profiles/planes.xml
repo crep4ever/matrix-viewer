@@ -7,12 +7,12 @@
   <columns>
     <column id="0" label="Camera" />
     <column id="1" label="Plane" />
-    <column id="2" label="tx" />
-    <column id="3" label="ty" />
-    <column id="4" label="tz" />
-    <column id="5" label="α" />
-    <column id="6" label="β" />
-    <column id="7" label="γ" />
+    <column id="2" label="α" />
+    <column id="3" label="β" />
+    <column id="4" label="γ" />
+    <column id="5" label="tx" />
+    <column id="6" label="ty" />
+    <column id="7" label="tz" />
   </columns>
 
 </matrix>
