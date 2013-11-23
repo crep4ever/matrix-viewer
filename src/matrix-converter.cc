@@ -267,7 +267,7 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
       cv::Mat data(cv::Size(width, height), CV_16U, buffer);
 
       qDebug() << data.type() << data.channels();
-      const double ratio = 127.5 / 511.5; // convertion from 10bits to 8 bits
+      const double ratio = 127.5 / 511.5; // conversion from 10bits to 8 bits
       m_data = data * ratio;
       m_data.convertTo(m_data, CV_8UC1);
       delete [] buffer;
