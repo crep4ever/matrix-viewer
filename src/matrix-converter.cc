@@ -111,6 +111,12 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
 
       // first line contains the number of columns and rows of the matrix
       QStringList values = stream.readLine().split(" ");
+      if (values.size() != 2)
+        {
+          qWarning() << tr("CMatrixConverter::loadFromTxt first line of file [%1] should contain COL ROW information but has [%2]").arg(filename).arg(values.join(" "));
+          return false;
+        }
+
       const uint rows = values[1].toInt(), cols = values[0].toInt();
       if (rows == 0 || cols == 0)
         {
