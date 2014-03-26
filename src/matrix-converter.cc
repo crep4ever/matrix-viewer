@@ -153,6 +153,8 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
 
 bool CMatrixConverter::saveToTxt(const QString & filename)
 {
+  m_data.convertTo(m_data, CV_64FC1);
+
   QFile file(filename);
   if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -160,8 +162,8 @@ bool CMatrixConverter::saveToTxt(const QString & filename)
       stream << m_data.cols << " " << m_data.rows << "\n";
 
       for (int j = 0; j < m_data.rows; ++j)
-	for (int i = 0; i < m_data.cols; ++i)
-	  stream << m_data.at< double >(j, i) << " ";
+        for (int i = 0; i < m_data.cols; ++i)
+          stream << m_data.at< double >(j, i) << " ";
 
       file.close();
       return true;
