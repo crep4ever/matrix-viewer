@@ -9,6 +9,9 @@
 #  mdv matrix
 #
 # where matrix is a cv::Mat instance
+#
+# This script requires the package python-opencv
+
 
 import gdb
 import cv2.cv as cv

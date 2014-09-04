@@ -8,11 +8,10 @@
     <column id="0" label="Projector" />
     <column id="1" label="Camera" />
     <column id="2" label="Plane" />
-    <column id="3" label="Point X" />
-    <column id="4" label="Point Y" />
-    <column id="5" label="Tool Col" />
-    <column id="6" label="Tool Row" />
-    <column id="7" label="Focus" />
+    <column id="3" label="Pattern Col" />
+    <column id="4" label="Pattern Row" />
+    <column id="5" label="Point X" />
+    <column id="6" label="Point Y" />
   </columns>
 
 </matrix>
