@@ -44,7 +44,8 @@ public:
     Format_Bmp,
     Format_Jpg,
     Format_Png,
-    Format_Raw
+    Format_Raw,
+    Format_Mfe
   };
 
   /// Constructor.
@@ -79,6 +80,9 @@ private:
 
   bool loadFromRaw(const QString & filename);
   bool saveToRaw(const QString & filename);
+
+  bool loadFromMfe(const QString & filename);
+  bool saveToMfe(const QString & filename);
 
   cv::Mat m_data;
   FileFormat m_format;

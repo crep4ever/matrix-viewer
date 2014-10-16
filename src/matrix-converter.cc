@@ -25,6 +25,8 @@
 
 #include "config.hh"
 
+#include "mfe.cc"
+
 #ifdef ENABLE_OPENMP
 #include <omp.h>
 #endif
@@ -57,6 +59,8 @@ bool CMatrixConverter::load(const QString & filename)
     return loadFromTxt(filename);
   else if (filename.endsWith(".raw"))
     return loadFromRaw(filename);
+  else if (filename.endsWith(".mfe"))
+    return loadFromMfe(filename);
   else
     return loadFromImage(filename);
 
@@ -71,6 +75,8 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToTxt(filename);
   else if (filename.endsWith(".raw"))
     return saveToRaw(filename);
+  else if (filename.endsWith(".mfe"))
+    return saveToMfe(filename);
   else if (filename.endsWith(".bmp"))
     return saveToImage(filename);
   else
@@ -91,7 +97,7 @@ void CMatrixConverter::setData(const cv::Mat & matrix)
 
 bool CMatrixConverter::isFormatData() const
 {
-  return m_format == Format_Xml || m_format == Format_Txt;
+  return m_format == Format_Xml || m_format == Format_Txt || m_format == Format_Mfe;
 }
 
 bool CMatrixConverter::isFormatImage() const
@@ -298,6 +304,31 @@ bool CMatrixConverter::saveToRaw(const QString & filename)
   return false;
 }
 
+
+bool CMatrixConverter::loadFromMfe(const QString & filename)
+{
+  MFE mfe;
+  if (!mfe.Read(filename))
+    {
+      qWarning() << "MFE serialization: can't read matrix: " << filename;
+      return false;
+    }
+
+  m_data = mfe.GetData();
+
+  m_format = Format_Mfe;
+
+  return true;
+}
+
+bool CMatrixConverter::saveToMfe(const QString & filename)
+{
+  MFE mfe;
+  mfe.SetData(m_data);
+  mfe.SetComment("MatrixViewer");
+  return mfe.Write(filename);
+}
+
 void CMatrixConverter::print() const
 {
   for (int i = 0; i < m_data.rows; ++i)
@@ -309,3 +340,4 @@ void CMatrixConverter::print() const
       std::cout << std::endl;
     }
 }
+
