@@ -67,11 +67,11 @@ public:
   ~MFE()
   {}
 
-  void SetData(const cv::Mat & p_mat)
+  void setData(const cv::Mat & p_mat)
   {
     if (!p_mat.isContinuous())
       {
-        qWarning() << tr("OpenCV matrix must be continuous");
+        qWarning() << "OpenCV matrix must be continuous";
         return;
       }
 
@@ -87,23 +87,23 @@ public:
     m_header.depth = p_mat.channels();
   }
 
-  cv::Mat GetData() const
+  cv::Mat data() const
   {
     return m_data;
   }
 
-  void SetComment(const std::string & p_str)
+  void setComment(const std::string & p_str)
   {
     m_comment = p_str;
     m_header.offset = m_comment.size() + sizeof(MFEHeader);
   }
 
-  std::string GetComment() const
+  std::string comment() const
   {
     return m_comment;
   }
 
-  bool Write(const QString & p_path)
+  bool write(const QString & p_path)
   {
     std::ofstream stream;
     stream.open(p_path.toStdString().c_str(),
@@ -128,7 +128,7 @@ public:
     return true;
   }
 
-  bool Read(const QString & p_path)
+  bool read(const QString & p_path)
   {
     std::ifstream stream;
     stream.open(p_path.toStdString().c_str(), 
@@ -143,7 +143,7 @@ public:
     char* comment = new char[size + 1];
     stream.read(comment, size);
     comment[size] = '\0';
-    SetComment(comment);
+    setComment(comment);
 
     // data
     m_data.create(m_header.rows, m_header.cols, m_header.type);

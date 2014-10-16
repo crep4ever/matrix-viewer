@@ -308,13 +308,13 @@ bool CMatrixConverter::saveToRaw(const QString & filename)
 bool CMatrixConverter::loadFromMfe(const QString & filename)
 {
   MFE mfe;
-  if (!mfe.Read(filename))
+  if (!mfe.read(filename))
     {
       qWarning() << "MFE serialization: can't read matrix: " << filename;
       return false;
     }
 
-  m_data = mfe.GetData();
+  m_data = mfe.data();
 
   m_format = Format_Mfe;
 
@@ -324,9 +324,9 @@ bool CMatrixConverter::loadFromMfe(const QString & filename)
 bool CMatrixConverter::saveToMfe(const QString & filename)
 {
   MFE mfe;
-  mfe.SetData(m_data);
-  mfe.SetComment("MatrixViewer");
-  return mfe.Write(filename);
+  mfe.setData(m_data);
+  mfe.setComment("MatrixViewer");
+  return mfe.write(filename);
 }
 
 void CMatrixConverter::print() const
