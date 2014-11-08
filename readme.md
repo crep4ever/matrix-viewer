@@ -6,7 +6,7 @@ This is a Qt4/C++ client to visualize and edit matrix data from OpenCV serializa
 
 # Matrix-viewer
 * required packages: cmake, libqt4-dev, libopencv-dev
-* optionnal packages: pyhton-opencv
+* optionnal packages: python-opencv
 
 * build and run:
 

@@ -44,6 +44,7 @@ namespace // anonymous namespace
             filename.endsWith(".bmp") ||
             filename.endsWith(".png") ||
             filename.endsWith(".jpg") ||
+            filename.endsWith(".mfe") ||
             filename.endsWith(".raw"));
   }
 }

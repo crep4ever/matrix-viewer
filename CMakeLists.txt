@@ -32,6 +32,7 @@ set(MATRIX_VIEWER_SOURCES
   src/position.cc
   src/histogram.cc
   src/histogram-dialog.cc
+  src/mfe.cc
   )
 
 # header (moc)
