@@ -38,6 +38,7 @@
 CImageView::CImageView(QWidget *p)
   : QGraphicsView(p)
   , m_parent(qobject_cast<CMainWindow*>(p))
+  , m_model(0)
   , m_image(0)
   , m_scene(new QGraphicsScene)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
@@ -132,16 +133,23 @@ QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
   return image;
 }
 
+CMatrixModel * CImageView::model() const
+{
+  return m_model;
+}
+
 void CImageView::setModel(CMatrixModel * model)
 {
-  if (m_image)
-    delete m_image;
+  if (model != m_model)
+    {
+      m_model = model;
 
-  m_image = imageFromCvMat(model->data());
+      connect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+	      this, SLOT(redraw(const QModelIndex &, const QModelIndex & )));
 
-  m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
-  m_scene->addPixmap(QPixmap::fromImage(*m_image));
-  m_scene->addItem(m_selectionBox);
+      redraw();
+    }
+
 }
 
 CMainWindow* CImageView::parent() const
@@ -275,4 +283,30 @@ void CImageView::histogram()
   CHistogramDialog dialog(parent());
   dialog.setImage(m_image);
   dialog.exec();
+}
+
+void CImageView::redraw(const QModelIndex & p_begin,
+			const QModelIndex & p_end)
+{
+  Q_UNUSED(p_begin);
+  Q_UNUSED(p_end);
+
+  // reset scene
+  m_scene->clear();
+
+  // redraw image
+  if (m_image)
+    delete m_image;
+
+  m_image = imageFromCvMat(model()->data());
+
+  // rebuild selectionbox
+  m_selectionBox = new QGraphicsRectItem(0, 0, 1, 1);
+  m_selectionBox->setBrush(QBrush(QColor(255, 0, 0, 100)));
+  m_selectionBox->setPen(Qt::NoPen);
+
+  // rebuild scene
+  m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
+  m_scene->addPixmap(QPixmap::fromImage(*m_image));
+  m_scene->addItem(m_selectionBox);
 }

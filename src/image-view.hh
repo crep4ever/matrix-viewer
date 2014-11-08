@@ -54,6 +54,7 @@ public:
 
   CMainWindow* parent() const;
 
+  CMatrixModel * model() const;
   virtual void setModel(CMatrixModel *model);
 
   void wheelEvent(QWheelEvent *event);
@@ -73,6 +74,9 @@ public slots:
 
   void histogram();
 
+  void redraw(const QModelIndex & p_begin = QModelIndex(),
+	      const QModelIndex & p_end = QModelIndex());
+
 protected:
   /*!
     Provides custom context menu with specific actions that are relevant to the image view.
@@ -84,6 +88,8 @@ private:
   void createActions();
   
   CMainWindow *m_parent;
+  CMatrixModel *m_model;
+
   QImage *m_image;
   QGraphicsScene *m_scene;
   QGraphicsRectItem *m_selectionBox;
