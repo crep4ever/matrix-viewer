@@ -95,6 +95,7 @@ private:
 
   QImage *m_image;
   CHistogramWidget *m_histogramWidget;
+  bool m_histogramNeedsRedraw;
 
   QGraphicsScene *m_scene;
   QGraphicsRectItem *m_selectionBox;

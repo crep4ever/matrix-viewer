@@ -40,7 +40,8 @@ CImageView::CImageView(QWidget *p)
   , m_parent(qobject_cast<CMainWindow*>(p))
   , m_model(0)
   , m_image(0)
-  , m_histogramWidget(new CHistogramWidget(this))
+  , m_histogramWidget(0)
+  , m_histogramNeedsRedraw(true)
   , m_scene(new QGraphicsScene)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
 {
@@ -282,6 +283,15 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
 
 void CImageView::toggleHistogram(bool p_visible)
 {
+  if (p_visible && m_histogramNeedsRedraw)
+    {
+      if (!m_histogramWidget)
+	m_histogramWidget = new CHistogramWidget(this);
+
+      m_histogramWidget->setImage(m_image);
+      m_histogramNeedsRedraw = false;
+    }
+
   m_histogramWidget->setVisible(p_visible);
 }
 
@@ -298,8 +308,19 @@ void CImageView::draw()
   m_image = imageFromCvMat(model()->data());
 
   // rebuild histogram
-  m_histogramWidget->setImage(m_image);
-  m_histogramWidget->setVisible(m_histogramAct->isChecked());
+  if (m_histogramAct->isChecked())
+    {
+      if (!m_histogramWidget)
+	m_histogramWidget = new CHistogramWidget(this);
+
+      m_histogramWidget->setImage(m_image);
+      m_histogramNeedsRedraw = false;
+      m_histogramWidget->setVisible(true);
+    }
+  else
+    {
+      m_histogramNeedsRedraw = true;
+    }
 
   // rebuild selectionbox
   m_selectionBox = new QGraphicsRectItem(0, 0, 1, 1);

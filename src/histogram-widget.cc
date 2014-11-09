@@ -58,10 +58,9 @@ void CHistogramWidget::setImage(QImage *image)
       QRgb *row = (QRgb *)copy.scanLine(j);
       for (int i = 0; i < image->width(); ++i)
 	{
-	  const QColor color = QColor(row[i]);
-	  ++redValues[color.red()];
-	  ++greenValues[color.green()];
-	  ++blueValues[color.blue()];
+	  ++redValues[qRed(row[i])];
+	  ++greenValues[qGreen(row[i])];
+	  ++blueValues[qBlue(row[i])];
 	}
     }
 
