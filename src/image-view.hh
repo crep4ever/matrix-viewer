@@ -74,8 +74,10 @@ public slots:
 
   void histogram();
 
-  void redraw(const QModelIndex & p_begin = QModelIndex(),
+  void update(const QModelIndex & p_begin = QModelIndex(),
 	      const QModelIndex & p_end = QModelIndex());
+
+  void draw(QImage * p_image);
 
 protected:
   /*!

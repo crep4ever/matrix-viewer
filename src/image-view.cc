@@ -145,9 +145,9 @@ void CImageView::setModel(CMatrixModel * model)
       m_model = model;
 
       connect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-	      this, SLOT(redraw(const QModelIndex &, const QModelIndex & )));
+	      this, SLOT(update(const QModelIndex &, const QModelIndex & )));
 
-      redraw();
+      update();
     }
 
 }
@@ -285,20 +285,17 @@ void CImageView::histogram()
   dialog.exec();
 }
 
-void CImageView::redraw(const QModelIndex & p_begin,
-			const QModelIndex & p_end)
+void CImageView::draw(QImage * p_image)
 {
-  Q_UNUSED(p_begin);
-  Q_UNUSED(p_end);
-
   // reset scene
   m_scene->clear();
 
-  // redraw image
+  // delete previous image
   if (m_image)
     delete m_image;
 
-  m_image = imageFromCvMat(model()->data());
+  // set p_image as current image
+  m_image = p_image;
 
   // rebuild selectionbox
   m_selectionBox = new QGraphicsRectItem(0, 0, 1, 1);
@@ -309,4 +306,14 @@ void CImageView::redraw(const QModelIndex & p_begin,
   m_scene->setSceneRect(QRect(0, 0, m_image->width(), m_image->height()));
   m_scene->addPixmap(QPixmap::fromImage(*m_image));
   m_scene->addItem(m_selectionBox);
+}
+
+
+void CImageView::update(const QModelIndex & p_begin,
+			const QModelIndex & p_end)
+{
+  Q_UNUSED(p_begin);
+  Q_UNUSED(p_end);
+
+  draw(imageFromCvMat(model()->data()));
 }
