@@ -280,3 +280,95 @@ void CMatrixModel::setProfile(const QString & profile)
   emit(headerDataChanged(Qt::Horizontal, 0, m_horizontalHeaderLabels.size()));
   emit(headerDataChanged(Qt::Vertical, 0, m_verticalHeaderLabels.size()));
 }
+
+
+
+/*
+Operations
+*/
+
+void CMatrixModel::add(double p_value)
+{
+  if (p_value != 0)
+    {
+      m_data += p_value;
+      emit(dataChanged(QModelIndex(), QModelIndex()));
+    }
+}
+
+void CMatrixModel::multiply(double p_value)
+{
+  if (p_value != 1)
+    {
+      m_data *= p_value;
+      emit(dataChanged(QModelIndex(), QModelIndex()));
+    }
+}
+
+void CMatrixModel::transpose()
+{
+  m_data = m_data.t();
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::verticalFlip()
+{
+  cv::flip(m_data, m_data, 0);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::horizontalFlip()
+{
+  cv::flip(m_data, m_data, 1);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+
+void CMatrixModel::rotate(const cv::Point & p_center,
+			  const double p_angle_dg,
+			  const double p_scaleFactor)
+{
+  cv::Mat rotation = getRotationMatrix2D(p_center, p_angle_dg, p_scaleFactor);
+  cv::warpAffine(m_data, m_data, rotation, m_data.size());
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::normalize(const double p_alpha,
+			     const double p_beta,
+			     const int p_norm)
+{
+  cv::normalize(m_data, m_data, p_alpha, p_beta, p_norm);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::absdiff(const cv::Mat & p_other)
+{
+  cv::absdiff(m_data, p_other, m_data);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::multiplyElements(const cv::Mat & p_other)
+{
+  m_data = m_data.mul(p_other);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::multiplyMatrix(const cv::Mat & p_other)
+{
+  m_data = m_data * p_other;
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::applyColorMap(const int p_colorMap)
+{
+  cv::applyColorMap(m_data, m_data, p_colorMap);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+void CMatrixModel::threshold(const double p_threshold,
+			     const double p_maxValue,
+			     const int p_type)
+{
+  cv::threshold(m_data, m_data, p_threshold, p_maxValue, p_type);
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+}

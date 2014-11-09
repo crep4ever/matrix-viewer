@@ -59,6 +59,42 @@ public:
   int type() const;
   QString typeString() const;
 
+public slots:
+
+  // scalar
+  void add(double p_value);
+
+  void multiply(double p_value);
+
+  // transform
+  void transpose();
+
+  void verticalFlip();
+
+  void horizontalFlip();
+
+  void rotate(const cv::Point & p_center,
+	      const double p_angle_dg,
+	      const double p_scaleFactor);
+
+  void normalize(const double p_alpha,
+		 const double p_beta,
+		 const int p_norm);
+
+  // matrix-matrix
+  void absdiff(const cv::Mat & p_other);
+
+  void multiplyElements(const cv::Mat & p_other);
+
+  void multiplyMatrix(const cv::Mat & p_other);
+
+  // image
+  void applyColorMap(const int p_colorMap);
+
+  void threshold(const double p_threshold,
+		 const double p_maxValue,
+		 const int p_type);
+
 private:
 
   cv::Mat m_data;
