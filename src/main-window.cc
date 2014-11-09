@@ -435,6 +435,12 @@ void CMainWindow::about()
 
 void CMainWindow::operations()
 {
+  if (!currentModel())
+    {
+      statusBar()->showMessage(tr("Can't apply operations without matrix"));
+      return;
+    }
+
   COperationsDialog dialog(this);
   dialog.exec();
 }
