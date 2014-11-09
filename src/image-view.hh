@@ -26,6 +26,7 @@
 
 class CMainWindow;
 class CMatrixModel;
+class CHistogramWidget;
 
 class QAction;
 class QImage;
@@ -72,12 +73,12 @@ public slots:
   void fitToWindow();
   void bestSize();
 
-  void histogram();
+  void toggleHistogram(bool p_visible);
 
   void update(const QModelIndex & p_begin = QModelIndex(),
 	      const QModelIndex & p_end = QModelIndex());
 
-  void draw(QImage * p_image);
+  void draw();
 
 protected:
   /*!
@@ -93,6 +94,8 @@ private:
   CMatrixModel *m_model;
 
   QImage *m_image;
+  CHistogramWidget *m_histogramWidget;
+
   QGraphicsScene *m_scene;
   QGraphicsRectItem *m_selectionBox;
 

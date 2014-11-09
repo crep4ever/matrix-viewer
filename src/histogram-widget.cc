@@ -1,4 +1,4 @@
-// Copyright (C) 2013, Romain Goffe <romain.goffe@gmail.com>
+// Copyright (C) 2014, Romain Goffe <romain.goffe@gmail.com>
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License as
@@ -15,55 +15,44 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //******************************************************************************
-#include "histogram-dialog.hh"
+#include "histogram-widget.hh"
 
-#include <QDialogButtonBox>
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QHeaderView>
 #include <QBoxLayout>
-#include <QLabel>
 #include <QDebug>
-#include <QTimer>
 
-#include "main-window.hh"
 #include "histogram.hh"
 
-const QColor CHistogramDialog::_red(239, 41, 41);
-const QColor CHistogramDialog::_green(138, 226, 52);
-const QColor CHistogramDialog::_blue(114, 159, 207);
+const QColor CHistogramWidget::_red(239, 41, 41);
+const QColor CHistogramWidget::_green(138, 226, 52);
+const QColor CHistogramWidget::_blue(114, 159, 207);
 
-CHistogramDialog::CHistogramDialog(QWidget *p)
-  : QDialog(p)
-  , m_parent(qobject_cast<CMainWindow*>(p))
+CHistogramWidget::CHistogramWidget(QWidget *p_parent)
+  : QWidget(p_parent)
   , m_redHistogram(new CHistogram(_red))
   , m_greenHistogram(new CHistogram(_green))
   , m_blueHistogram(new CHistogram(_blue))
 {
-  setWindowTitle(tr("Histogram"));
+  setStyleSheet("background: transparent;");
+  setAttribute(Qt::WA_TranslucentBackground);
+  setWindowFlags(Qt::FramelessWindowHint);
 
-  QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok);
-  connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-
-  QBoxLayout *layout = new QVBoxLayout;
+  QVBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(m_redHistogram);
   layout->addWidget(m_greenHistogram);
   layout->addWidget(m_blueHistogram);
-  layout->addStretch();
-  layout->addWidget(buttons);
   setLayout(layout);
 
-  QTimer::singleShot(200, this, SLOT(update()));
+  resize(sizeHint());
 }
 
-CHistogramDialog::~CHistogramDialog()
+CHistogramWidget::~CHistogramWidget()
 {
 }
 
-void CHistogramDialog::setImage(QImage *image)
+void CHistogramWidget::setImage(QImage *image)
 {
   QImage copy = image->convertToFormat(QImage::Format_ARGB32);
-  QVector<int> redValues(256, 0), greenValues(256, 0), blueValues(256, 0);
+  QVector<uint> redValues(256, 0), greenValues(256, 0), blueValues(256, 0);
   for (int j = 0; j < image->height(); ++j)
     {
       QRgb *row = (QRgb *)copy.scanLine(j);
@@ -81,14 +70,7 @@ void CHistogramDialog::setImage(QImage *image)
   m_blueHistogram->setValues(blueValues);
 }
 
-QSize CHistogramDialog::sizeHint() const
+QSize CHistogramWidget::sizeHint() const
 {
-  return QSize(500, 200);
-}
-
-CMainWindow* CHistogramDialog::parent() const
-{
-  if (!m_parent)
-    qWarning() << "CHistogramDialog::parent invalid parent";
-  return m_parent;
+  return QSize(500, 300);
 }

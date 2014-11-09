@@ -33,13 +33,14 @@
 #include "main-window.hh"
 #include "position.hh"
 #include "matrix-model.hh"
-#include "histogram-dialog.hh"
+#include "histogram-widget.hh"
 
 CImageView::CImageView(QWidget *p)
   : QGraphicsView(p)
   , m_parent(qobject_cast<CMainWindow*>(p))
   , m_model(0)
   , m_image(0)
+  , m_histogramWidget(new CHistogramWidget(this))
   , m_scene(new QGraphicsScene)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
 {
@@ -57,6 +58,7 @@ CImageView::CImageView(QWidget *p)
 CImageView::~CImageView()
 {
   delete m_image;
+  delete m_histogramWidget;
   delete m_selectionBox;
   delete m_scene;
 }
@@ -87,7 +89,10 @@ void CImageView::createActions()
 
   m_histogramAct = new QAction(tr("&Histogram"), this);
   m_histogramAct->setStatusTip(tr("Histogram"));
-  connect(m_histogramAct, SIGNAL(triggered()), this, SLOT(histogram()));
+  m_histogramAct->setCheckable(true);
+  m_histogramAct->setChecked(false);
+  connect(m_histogramAct, SIGNAL(toggled(bool)), 
+	  this, SLOT(toggleHistogram(bool)));
 }
 
 QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
@@ -275,17 +280,12 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
   delete menu;
 }
 
-void CImageView::histogram()
+void CImageView::toggleHistogram(bool p_visible)
 {
-  if (!m_image)
-    return;
-
-  CHistogramDialog dialog(parent());
-  dialog.setImage(m_image);
-  dialog.exec();
+  m_histogramWidget->setVisible(p_visible);
 }
 
-void CImageView::draw(QImage * p_image)
+void CImageView::draw()
 {
   // reset scene
   m_scene->clear();
@@ -295,7 +295,11 @@ void CImageView::draw(QImage * p_image)
     delete m_image;
 
   // set p_image as current image
-  m_image = p_image;
+  m_image = imageFromCvMat(model()->data());
+
+  // rebuild histogram
+  m_histogramWidget->setImage(m_image);
+  m_histogramWidget->setVisible(m_histogramAct->isChecked());
 
   // rebuild selectionbox
   m_selectionBox = new QGraphicsRectItem(0, 0, 1, 1);
@@ -315,5 +319,5 @@ void CImageView::update(const QModelIndex & p_begin,
   Q_UNUSED(p_begin);
   Q_UNUSED(p_end);
 
-  draw(imageFromCvMat(model()->data()));
+  draw();
 }

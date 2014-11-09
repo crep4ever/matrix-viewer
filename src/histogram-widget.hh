@@ -1,4 +1,4 @@
-// Copyright (C) 2013, Romain Goffe <romain.goffe@gmail.com>
+// Copyright (C) 2014, Romain Goffe <romain.goffe@gmail.com>
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License as
@@ -16,14 +16,13 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __HISTOGRAM_DIALOG_HH__
-#define __HISTOGRAM_DIALOG_HH__
+#ifndef __HISTOGRAM_WIDGET_HH__
+#define __HISTOGRAM_WIDGET_HH__
 
-#include <QDialog>
+#include <QWidget>
 #include <QColor>
 #include <QSize>
 
-class CMainWindow;
 class CHistogram;
 
 /*!
@@ -32,18 +31,16 @@ class CHistogram;
   \brief CHistogramDialog is a dialog that wraps up the histogram of an image
 */
 
-class CHistogramDialog : public QDialog
+class CHistogramWidget : public QWidget
 {
   Q_OBJECT
 
 public:
   /// Constructor.
-  CHistogramDialog(QWidget *parent = 0);
+  CHistogramWidget(QWidget *parent = 0);
 
   /// Destructor.
-  virtual ~CHistogramDialog();
-
-  CMainWindow* parent() const;
+  virtual ~CHistogramWidget();
 
   void setImage(QImage *image);
 
@@ -51,7 +48,6 @@ protected:
   virtual QSize sizeHint() const;
 
 private:
-  CMainWindow *m_parent;
   CHistogram *m_redHistogram;
   CHistogram *m_greenHistogram;
   CHistogram *m_blueHistogram;

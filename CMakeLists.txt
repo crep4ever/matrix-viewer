@@ -30,7 +30,7 @@ set(MATRIX_VIEWER_SOURCES
   src/tab.cc
   src/position.cc
   src/histogram.cc
-  src/histogram-dialog.cc
+  src/histogram-widget.cc
   src/mfe.cc
   src/operations-widget.cc
   src/common-widgets.cc
@@ -52,7 +52,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/tab.hh
   src/position.hh
   src/histogram.hh
-  src/histogram-dialog.hh
+  src/histogram-widget.hh
   src/operations-widget.hh
   src/common-widgets.hh
   )

@@ -23,49 +23,34 @@
 #include <QVector>
 #include <QColor>
 
-class QResizeEvent;
-class QGraphicsView;
-class QGraphicsScene;
 class QBoxLayout;
+class QLabel;
 
 class CHistogram : public QWidget
 {
   Q_OBJECT
 
   public:
-  CHistogram(QWidget* parent = 0);
   CHistogram(const QColor & color, QWidget* parent = 0);
   virtual ~CHistogram();
 
-  void setValues(const QVector<int>& values);
-
-  QColor color() const;
-  void setColor(const QColor & color);
-
-  int count() const;
-  int min() const;
-  int max() const;
-  double mean() const;
-  double standardDeviation() const;
-
-protected:
-  virtual void resizeEvent(QResizeEvent * event);
+  void setValues(const QVector<uint>& values);
 
 private:
-  void update();
+  void drawPixmap();
+  void computeStats();
   QBoxLayout * makeAxisBar() const;
 
 private:
   QColor m_color;
+  QVector<uint> m_values;
 
-  QGraphicsScene *m_scene;
-  QGraphicsView *m_view;
-
-  int m_count;
-  int m_min;
-  int m_max;
-  double m_mean;
-  double m_standardDeviation;
+  QLabel *m_pixmapLabel;
+  QLabel * m_count;
+  QLabel * m_min;
+  QLabel * m_max;
+  QLabel * m_mean;
+  QLabel * m_standardDeviation;
 };
 
 #endif // __HISTOGRAM_HH__

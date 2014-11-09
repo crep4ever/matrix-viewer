@@ -19,109 +19,58 @@
 #include "histogram.hh"
 
 #include <QtCore/qmath.h>
-#include <QGraphicsView>
-#include <QGraphicsScene>
+#include <QPixmap>
+#include <QPainter>
 #include <QBoxLayout>
 #include <QLabel>
-#include <QPen>
-#include <QBrush>
 #include <QDebug>
-
-CHistogram::CHistogram(QWidget* parent) :
-  QWidget(parent)
-  , m_color(Qt::black)
-  , m_scene(new QGraphicsScene)
-  , m_view(new QGraphicsView)
-  , m_count(0)
-  , m_min(255)
-  , m_max(0)
-  , m_mean(0)
-  , m_standardDeviation(0)
-{
-}
 
 CHistogram::CHistogram(const QColor & color, QWidget* parent) :
   QWidget(parent)
   , m_color(color)
-  , m_scene(new QGraphicsScene)
-  , m_view(new QGraphicsView)
-  , m_count(0)
-  , m_min(255)
-  , m_max(0)
-  , m_mean(0)
-  , m_standardDeviation(0)
+  , m_values()
+  , m_pixmapLabel(new QLabel(this))
+  , m_count(new QLabel(this))
+  , m_min(new QLabel(this))
+  , m_max(new QLabel(this))
+  , m_mean(new QLabel(this))
+  , m_standardDeviation(new QLabel(this))
 {
-}
-
-CHistogram::~CHistogram()
-{
-}
-
-void CHistogram::update()
-{
-  m_view->setBackgroundRole(QPalette::Light);
-  m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  m_view->setScene(m_scene);
-
   QBoxLayout *vlayout1 = new QVBoxLayout;
-  vlayout1->addWidget(m_view);
+  vlayout1->addWidget(m_pixmapLabel);
   vlayout1->addLayout(makeAxisBar());
   vlayout1->addStretch();
 
   QBoxLayout *vlayout2 = new QVBoxLayout;
-  vlayout2->addWidget(new QLabel(tr("Min: %1").arg(m_min)));
-  vlayout2->addWidget(new QLabel(tr("Max: %1").arg(m_max)));
-  vlayout2->addWidget(new QLabel(tr("Mean: %1").arg(m_mean)));
+  vlayout2->addWidget(m_min);
+  vlayout2->addWidget(m_max);
+  vlayout2->addWidget(m_mean);
   vlayout2->addStretch();
 
   QBoxLayout *vlayout3 = new QVBoxLayout;
-  vlayout3->addWidget(new QLabel(tr("Count: %1").arg(m_count)));
-  vlayout3->addWidget(new QLabel(tr("StdDev: %1").arg(m_standardDeviation)));
+  vlayout3->addWidget(m_count);
+  vlayout3->addWidget(m_standardDeviation);
   vlayout3->addStretch();
 
   QBoxLayout *layout = new QHBoxLayout;
   layout->addLayout(vlayout1);
+  layout->addStretch();
   layout->addLayout(vlayout2);
   layout->addLayout(vlayout3);
 
   setLayout(layout);
 }
 
-QColor CHistogram::color() const
+CHistogram::~CHistogram()
 {
-  return m_color;
 }
 
-void CHistogram::setColor(const QColor & color)
+void CHistogram::setValues(const QVector<uint>& p_values)
 {
-  m_color = color;
-}
+  m_values = p_values;
 
-void CHistogram::setValues(const QVector<int>& values)
-{
-  uint squareSum = 0;
-  uint sum = 0;
-
-  for (int i = 0; i < values.size(); ++i)
-    {
-      if (values[i] > 0)
-	{
-	  m_scene->addRect(QRect(i, 0, 1, -values[i]), Qt::NoPen, QBrush(m_color));
-	  sum += i * values[i];
-	  squareSum += i * i * values[i];
-	}
-
-      m_min = qMin(m_min, i);
-      m_max = qMax(m_max, i);
-      m_count += values[i];
-    }
-
-  m_mean = sum / (double) m_count;
-  const double meanSquare = squareSum / (double) m_count;
-  m_standardDeviation = qSqrt(qAbs(meanSquare - m_mean * m_mean));
-
-  update();
+  drawPixmap();
+  computeStats();
 }
 
 QBoxLayout * CHistogram::makeAxisBar() const
@@ -144,33 +93,76 @@ QBoxLayout * CHistogram::makeAxisBar() const
   return layout;
 }
 
-void CHistogram::resizeEvent(QResizeEvent * event)
+void CHistogram::drawPixmap()
 {
-  QWidget::resizeEvent(event);
-  m_view->fitInView(m_scene->sceneRect());
+  // normalize histogram
+  uint max = 0;
+  for (int i = 0; i < m_values.size(); ++i)
+    {
+      if (m_values[i] > max)
+	max = m_values[i];
+    }
+  
+  QVector<qreal> normalizedValues(m_values.size(), 0);
+  if (max > 0.0)
+    {
+      for (int i = 0; i < 256; ++i)
+	{
+	  normalizedValues[i] = m_values[i] / (qreal) max;
+	}
+    }
+
+  QPixmap pixmap(300, 50);
+  QPainter painter(&pixmap);
+
+  const qreal width  = pixmap.width();
+  const qreal height = pixmap.height();
+  const qreal barWidth = width / (qreal)normalizedValues.size();
+
+  for (int i = 0; i < normalizedValues.size(); ++i)
+    {
+      const qreal barHeight = normalizedValues[i] * height;
+
+      // draw bar
+      painter.fillRect(barWidth * i, height - barHeight, /* origin */
+		       barWidth * (i + 1), height, /* size */
+		       m_color);
+
+      // fill the rest of the pixmap
+      painter.fillRect(barWidth * i, 0, /* origin */
+		       barWidth * (i + 1), height - barHeight, /* size */
+		       Qt::white);
+    }
+
+  m_pixmapLabel->setPixmap(pixmap);
 }
 
-int CHistogram::count() const
+void CHistogram::computeStats()
 {
-  return m_count;
-}
+  uint squareSum = 0;
+  uint sum = 0;
+  int min = 255;
+  int max = 0;
+  int count = 0;
 
-int CHistogram::min() const
-{
-  return m_min;
-}
+  for (int i = 0; i < m_values.size(); ++i)
+    {
+      sum += i * m_values[i];
+      squareSum += i * i * m_values[i];
+      
+      min = qMin(min, i);
+      max = qMax(max, i);
+      count += m_values[i];
+    }
 
-int CHistogram::max() const
-{
-  return m_max;
-}
+  double mean = sum / (double) count;
+  const double meanSquare = squareSum / (double) count;
+  double standardDeviation = qSqrt(qAbs(meanSquare - mean * mean));
 
-double CHistogram::mean() const
-{
-  return m_mean;
-}
-
-double CHistogram::standardDeviation() const
-{
-  return m_standardDeviation;
+  // update labels
+  m_count->setText(tr("Count: %1").arg(count));
+  m_min->setText(tr("Min: %1").arg(min));
+  m_max->setText(tr("Max: %1").arg(max));
+  m_mean->setText(tr("Mean: %1").arg(mean));
+  m_standardDeviation->setText(tr("StdDev: %1").arg(standardDeviation));
 }
