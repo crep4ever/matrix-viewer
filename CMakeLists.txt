@@ -31,7 +31,7 @@ set(MATRIX_VIEWER_SOURCES
   src/position.cc
   src/histogram.cc
   src/histogram-widget.cc
-  src/mfe.cc
+  src/mfe.hh
   src/operations-widget.cc
   src/common-widgets.cc
   )
