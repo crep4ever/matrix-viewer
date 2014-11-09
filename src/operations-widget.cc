@@ -38,9 +38,9 @@ COperationWidget::COperationWidget(const QString & p_title,
 				   CMatrixModel * p_model,
 				   QWidget* p_parent) :
   QWidget(p_parent)
+  , m_backup(p_model->data())
   , m_title(p_title)
   , m_model(p_model)
-  , m_backup(p_model->data())
   , m_parametersLayout(new QFormLayout)
 {
   QGroupBox *operationGroupBox = new QGroupBox(p_title);
