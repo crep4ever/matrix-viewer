@@ -25,7 +25,7 @@
 
 #include "config.hh"
 
-#include "mfe.cc"
+#include "mfe.hh"
 
 #ifdef ENABLE_OPENMP
 #include <omp.h>
@@ -307,37 +307,40 @@ bool CMatrixConverter::saveToRaw(const QString & filename)
 
 bool CMatrixConverter::loadFromMfe(const QString & filename)
 {
-  MFE mfe;
-  if (!mfe.read(filename))
+  try
     {
-      qWarning() << "MFE serialization: can't read matrix: " << filename;
+      MFE mfe;
+      mfe.read(filename);
+      m_data = mfe.data();
+      m_format = Format_Mfe;
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << "OpenCV error while reading MFE matrix";
+      qWarning() << "file: " << filename;
+      qWarning() << "error: " << e.what();
       return false;
     }
-
-  m_data = mfe.data();
-
-  m_format = Format_Mfe;
 
   return true;
 }
 
 bool CMatrixConverter::saveToMfe(const QString & filename)
 {
-  MFE mfe;
-  mfe.setData(m_data);
-  mfe.setComment("MatrixViewer");
-  return mfe.write(filename);
-}
-
-void CMatrixConverter::print() const
-{
-  for (int i = 0; i < m_data.rows; ++i)
+  try
     {
-      for (int j = 0; j < m_data.cols; ++j)
-	{
-	  std::cout << m_data.at< double >(i, j);
-	}
-      std::cout << std::endl;
+      MFE mfe;
+      mfe.setData(m_data);
+      mfe.setComment("MatrixViewer");
+      mfe.write(filename);
     }
-}
+  catch (cv::Exception & e)
+    {
+      qWarning() << "OpenCV error while reading MFE matrix";
+      qWarning() << "file: " << filename;
+      qWarning() << "error: " << e.what();
+      return false;
+    }
 
+  return true;
+}

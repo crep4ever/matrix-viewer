@@ -60,8 +60,6 @@ public:
   cv::Mat data() const;
   void setData(const cv::Mat & matrix);
 
-  void print() const;
-
   bool save(const QString & filename);
   bool load(const QString & filename);
 
