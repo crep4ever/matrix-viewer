@@ -28,7 +28,7 @@ class QLabel;
 /*!
   \file position.hh
   \class CPosition
-  \brief CPosition is a small widget that displays the value matrix at an editable row/column position 
+  \brief CPosition is a small widget that displays the value matrix at an editable row/column position
 */
 class CPosition : public QWidget
 {

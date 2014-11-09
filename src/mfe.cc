@@ -29,7 +29,7 @@
 #pragma pack(1)
 struct MFEHeader
 {
-  MFEHeader() 
+  MFEHeader()
   {
     format[0] = 'n';
     format[1] = '/';
@@ -58,7 +58,7 @@ class MFE
 
 public:
 
-  MFE() :  
+  MFE() :
     m_header(),
     m_comment(""),
     m_data()
@@ -109,7 +109,7 @@ public:
     stream.open(p_path.toStdString().c_str(),
                 std::ofstream::out | std::ofstream::binary);
 
-    
+
 
     // header
     stream.write(reinterpret_cast<char*>(&m_header),
@@ -131,9 +131,9 @@ public:
   bool read(const QString & p_path)
   {
     std::ifstream stream;
-    stream.open(p_path.toStdString().c_str(), 
+    stream.open(p_path.toStdString().c_str(),
                 std::ifstream::in | std::ifstream::binary);
-    
+
     // header
     int size = sizeof(MFEHeader);
     stream.read(reinterpret_cast<char*>(&m_header), size);
