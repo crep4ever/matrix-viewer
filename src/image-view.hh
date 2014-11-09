@@ -88,7 +88,7 @@ protected:
 
 private:
   void createActions();
-  
+
   CMainWindow *m_parent;
   CMatrixModel *m_model;
 

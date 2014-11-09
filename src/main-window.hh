@@ -22,8 +22,6 @@
 #include <QMainWindow>
 #include <QDir>
 
-#include <opencv2/opencv.hpp>
-
 class QTabWidget;
 class QToolBar;
 class CProgressBar;
@@ -63,7 +61,6 @@ public:
   CTab* currentWidget() const;
   CMatrixView* currentView() const;
   CMatrixModel* currentModel() const;
-  cv::Mat currentData() const;
 
   CPosition* positionWidget() const;
 
@@ -79,7 +76,7 @@ private slots:
   void saveAs();
   void closeTab(int index);
   void changeTab(int index);
-  void compare();
+  void operations();
 
   //application
   void preferences();
@@ -136,7 +133,7 @@ private:
   QAction *m_openAct;
   QAction *m_saveAct;
   QAction *m_saveAsAct;
-  QAction *m_compareAct;
+  QAction *m_operationsAct;
 
   QAction *m_dataViewAct;
   QAction *m_imageViewAct;
@@ -145,6 +142,7 @@ private:
   QString m_openPath;
   QString m_savePath;
 
+public:
   static const QStringList _filters;
 };
 

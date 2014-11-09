@@ -24,15 +24,16 @@ set(MATRIX_VIEWER_SOURCES
   src/matrix-view.cc
   src/image-view.cc
   src/matrix-converter.cc
-  src/compare-dialog.cc
+  src/operations-dialog.cc
   src/properties-dialog.cc
   src/tab-widget.cc
   src/tab.cc
-  src/delegate.cc
   src/position.cc
   src/histogram.cc
   src/histogram-dialog.cc
   src/mfe.cc
+  src/operations-widget.cc
+  src/common-widgets.cc
   )
 
 # header (moc)
@@ -45,14 +46,15 @@ set(MATRIX_VIEWER_QT_HEADER
   src/matrix-view.hh
   src/image-view.hh
   src/matrix-converter.hh
-  src/compare-dialog.hh
+  src/operations-dialog.hh
   src/properties-dialog.hh
   src/tab-widget.hh
   src/tab.hh
-  src/delegate.hh
   src/position.hh
   src/histogram.hh
   src/histogram-dialog.hh
+  src/operations-widget.hh
+  src/common-widgets.hh
   )
 
 # matrix profiles

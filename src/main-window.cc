@@ -46,7 +46,7 @@
 #include "matrix-view.hh"
 #include "image-view.hh"
 #include "matrix-converter.hh"
-#include "compare-dialog.hh"
+#include "operations-dialog.hh"
 #include "tab-widget.hh"
 #include "tab.hh"
 #include "position.hh"
@@ -151,10 +151,10 @@ void CMainWindow::createActions()
   m_saveAsAct->setStatusTip(tr("Save the current data file with a different name"));
   connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-  m_compareAct = new QAction(tr("&Compare"), this);
-  m_compareAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/compare.png"));
-  m_compareAct->setStatusTip(tr("Compare with another data file"));
-  connect(m_compareAct, SIGNAL(triggered()), this, SLOT(compare()));
+  m_operationsAct = new QAction(tr("&Operations"), this);
+  m_operationsAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/compare.png"));
+  m_operationsAct->setStatusTip(tr("Apply common operations"));
+  connect(m_operationsAct, SIGNAL(triggered()), this, SLOT(operations()));
 
   m_documentationAct = new QAction(tr("Online &Documentation"), this);
   m_documentationAct->setShortcut(QKeySequence::HelpContents);
@@ -322,14 +322,6 @@ CMatrixModel* CMainWindow::currentModel() const
   return qobject_cast<CMatrixModel*>(currentView()->model());
 }
 
-cv::Mat CMainWindow::currentData() const
-{
-  if (!currentModel())
-    return cv::Mat();
-
-  return currentModel()->data();
-}
-
 CPosition* CMainWindow::positionWidget() const
 {
   return m_position;
@@ -371,7 +363,7 @@ void CMainWindow::createMenus()
   fileMenu->addAction(m_saveAct);
   fileMenu->addAction(m_saveAsAct);
   fileMenu->addSeparator();
-  fileMenu->addAction(m_compareAct);
+  fileMenu->addAction(m_operationsAct);
   fileMenu->addAction(m_loadProfileAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_preferencesAct);
@@ -394,7 +386,7 @@ void CMainWindow::createToolBar()
   m_mainToolBar->setMovable(false);
   m_mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   m_mainToolBar->addAction(m_openAct);
-  m_mainToolBar->addAction(m_compareAct);
+  m_mainToolBar->addAction(m_operationsAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_previousFileAct);
@@ -441,12 +433,10 @@ void CMainWindow::about()
 		     .arg(description).arg(version).arg(authors));
 }
 
-void CMainWindow::compare()
+void CMainWindow::operations()
 {
-  CCompareDialog dialog(this);
+  COperationsDialog dialog(this);
   dialog.exec();
-  toggleDataView(m_dataViewAct->isChecked());
-  toggleImageView(m_imageViewAct->isChecked());
 }
 
 void CMainWindow::loadProfile()
@@ -640,4 +630,3 @@ void CMainWindow::changeTab(int index)
 	      currentWidget(), SLOT(selectItem(int, int)));
     }
 }
-
