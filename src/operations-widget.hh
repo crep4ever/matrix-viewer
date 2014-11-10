@@ -63,6 +63,31 @@ private:
 };
 
 /*
+  Format
+*/
+
+class CFormatWidget : public COperationWidget
+{
+  Q_OBJECT
+
+public:
+  CFormatWidget(const QString & p_title,
+		CMatrixModel * p_model,
+		QWidget* p_parent = 0);
+
+  virtual ~CFormatWidget();
+  virtual void reset();
+
+private slots:
+  void convert();
+
+private:
+  QComboBox *m_typeWidget;
+  QDoubleSpinBox *m_alphaWidget;
+  QDoubleSpinBox *m_betaWidget;
+};
+
+/*
   Scalar operations
 */
 

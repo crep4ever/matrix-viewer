@@ -77,6 +77,55 @@ void COperationWidget::addParameter(const QString & p_label,
 }
 
 /*
+  Format
+*/
+
+CFormatWidget::CFormatWidget(const QString & p_title,
+			     CMatrixModel * p_model,
+			     QWidget* p_parent) :
+  COperationWidget(p_title, p_model, p_parent)
+  , m_typeWidget(new QComboBox)
+  , m_alphaWidget(new QDoubleSpinBox)
+  , m_betaWidget(new QDoubleSpinBox)
+{
+  m_typeWidget->addItem("8U");
+  m_typeWidget->addItem("8S");
+  m_typeWidget->addItem("16U");
+  m_typeWidget->addItem("16S");
+  m_typeWidget->addItem("32S");
+  m_typeWidget->addItem("32F");
+  m_typeWidget->addItem("64F");
+
+  QPushButton *apply = new QPushButton(tr("Apply"), this);
+  connect(apply, SIGNAL(clicked()), this, SLOT(convert()));
+
+  addParameter(tr("data type"), m_typeWidget);
+  addParameter(tr("scale"), m_alphaWidget);
+  addParameter(tr("shift"), m_betaWidget);
+  addParameter("", apply);
+
+}
+
+CFormatWidget::~CFormatWidget()
+{
+}
+
+void CFormatWidget::reset()
+{
+  m_typeWidget->setCurrentIndex(model()->type() % 8);
+  m_alphaWidget->setValue(1);
+  m_betaWidget->setValue(0);
+}
+
+void CFormatWidget::convert()
+{
+  model()->convertTo(m_typeWidget->currentIndex() + 8 * (model()->channels() - 1),
+		     m_alphaWidget->value(),
+		     m_betaWidget->value());
+}
+
+
+/*
   Scalar operations
 */
 

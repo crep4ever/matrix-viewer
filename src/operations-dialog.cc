@@ -48,6 +48,7 @@ COperationsDialog::COperationsDialog(QWidget *parent)
   m_categoriesWidget->setCurrentRow(0);
 
   m_operationsWidget = new QStackedWidget(this);
+  m_operationsWidget->addWidget(new CFormatWidget(tr("Format"), model(), this));
   m_operationsWidget->addWidget(new CScalarWidget(tr("Scalar"), model(), this));
   m_operationsWidget->addWidget(new CMatrixWidget(tr("Matrix"), model(), this));
   m_operationsWidget->addWidget(new CTransformationsWidget(tr("Transform"), model(), this));
