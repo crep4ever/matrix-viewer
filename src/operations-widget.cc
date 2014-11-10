@@ -195,8 +195,8 @@ CNormalizeWidget::~CNormalizeWidget()
 
 void CNormalizeWidget::reset()
 {
-  m_alphaWidget->setValue(0);
-  m_betaWidget->setValue(1);
+  m_alphaWidget->setValue(1);
+  m_betaWidget->setValue(0);
   m_normWidget->setCurrentIndex(1);
 }
 
