@@ -287,6 +287,85 @@ void CMatrixModel::setProfile(const QString & profile)
   Operations
 */
 
+int CMatrixModel::total() const
+{
+  int res = 0;
+
+  try
+    {
+      res = m_data.total();
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("OpenCV error: %1").arg(e.what());
+    }
+
+  return res;
+}
+
+int CMatrixModel::countNonZeros() const
+{
+  int res = 0;
+
+  try
+    {
+      res = cv::countNonZero(m_data);
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("OpenCV error: %1").arg(e.what());
+    }
+
+  return res;
+}
+
+void CMatrixModel::minMaxLoc(double* p_minVal, double* p_maxVal,
+			     cv::Point* p_minLoc, cv::Point* p_maxLoc)
+{
+  try
+    {
+      cv::minMaxLoc(m_data, p_minVal, p_maxVal, p_minLoc, p_maxLoc);
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("OpenCV error: %1").arg(e.what());
+    }
+}
+
+void CMatrixModel::meanStdDev(double* p_mean,
+			      double* p_stddev)
+{
+  try
+    {
+      cv::Scalar m, s;
+      cv::meanStdDev(m_data, mean, stddev);
+      *p_mean = mean[0];     //first channel
+      *p_stddev = stddev[0]; //first channel
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("OpenCV error: %1").arg(e.what());
+    }
+}
+
+void CMatrixModel::convertTo(const int p_type,
+			     const double p_alpha,
+			     const double p_beta)
+{
+  if (p_type != type())
+    {
+      try
+	{
+	  m_data.convertTo(m_data, p_type, p_alpha, p_beta);
+	  emit(dataChanged(QModelIndex(), QModelIndex()));
+	}
+      catch (cv::Exception & e)
+	{
+	  qWarning() << tr("OpenCV error: %1").arg(e.what());
+	}
+    }
+}
+
 void CMatrixModel::add(double p_value)
 {
   if (p_value != 0)

@@ -59,7 +59,19 @@ public:
   int type() const;
   QString typeString() const;
 
+  int total() const;
+  int countNonZeros() const;
+  void minMaxLoc(double* p_minVal, double* p_maxVal = 0,
+		 cv::Point* p_minLoc = 0, cv::Point* p_maxLoc = 0);
+
+  void meanStdDev(double* mean, double* stddev);
+
 public slots:
+
+  // format
+  void convertTo(const int p_type,
+		 const double p_alpha,
+		 const double p_beta);
 
   // scalar
   void add(double p_value);
