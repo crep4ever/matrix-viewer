@@ -47,7 +47,7 @@ public slots:
 
 public:
   /// Constructor.
-  CMainWindow(QWidget *parent=0);
+  CMainWindow(QWidget *parent = 0);
 
   /// Destructor.
   ~CMainWindow();
@@ -63,6 +63,8 @@ public:
   CMatrixModel* currentModel() const;
 
   CPosition* positionWidget() const;
+
+  void showMessage(const QString & p_message) const;
 
 protected:
   /*!

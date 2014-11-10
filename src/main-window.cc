@@ -237,7 +237,7 @@ void CMainWindow::nextFile()
 	}
     }
 
-  statusBar()->showMessage(tr("No next file found"));
+  showMessage(tr("No next file found"));
 }
 
 void CMainWindow::previousFile()
@@ -262,7 +262,7 @@ void CMainWindow::previousFile()
 	}
     }
 
-  statusBar()->showMessage(tr("No previous file found"));
+  showMessage(tr("No previous file found"));
 }
 
 void CMainWindow::toggleDataView(bool value)
@@ -437,7 +437,7 @@ void CMainWindow::operations()
 {
   if (!currentModel())
     {
-      statusBar()->showMessage(tr("Can't apply operations without matrix"));
+      showMessage(tr("Can't apply operations without matrix"));
       return;
     }
 
@@ -449,7 +449,7 @@ void CMainWindow::loadProfile()
 {
   if (!currentModel())
     {
-      statusBar()->showMessage(tr("Can't load profiles for empty matrix"));
+      showMessage(tr("Can't load profiles for empty matrix"));
       return;
     }
 
@@ -493,7 +493,7 @@ QString CMainWindow::findProfile(const QString & filename) const
 
       if (xml.hasError())
         {
-          statusBar()->showMessage(tr("Badly formed xml document: %1").arg(profile));
+          showMessage(tr("Badly formed xml document: %1").arg(profile));
         }
 
       file.close();
@@ -548,7 +548,7 @@ void CMainWindow::open(const QString & filename)
   connect(tab, SIGNAL(labelChanged(const QString&)),
 	  m_mainWidget, SLOT(changeTabText(const QString&)));
 
-  statusBar()->showMessage(filename);
+  showMessage(filename);
   writeSettings(); // updates openPath
 }
 
@@ -567,7 +567,7 @@ void CMainWindow::save(const QString & filename)
 {
   if (!currentWidget() || filename.isEmpty())
     {
-      statusBar()->showMessage(tr("Can't save empty matrix"));
+      showMessage(tr("Can't save empty matrix"));
       return;
     }
 
@@ -578,7 +578,7 @@ void CMainWindow::save(const QString & filename)
   converter.setData(currentModel()->data());
   converter.save(filename);
 
-  statusBar()->showMessage(tr("Save: %1").arg(filename));
+  showMessage(tr("Save: %1").arg(filename));
 }
 
 void CMainWindow::save()
@@ -591,7 +591,7 @@ void CMainWindow::saveAs()
 {
   if (!currentModel())
     {
-      statusBar()->showMessage(tr("Can't save empty matrix"));
+      showMessage(tr("Can't save empty matrix"));
       return;
     }
 
@@ -635,4 +635,9 @@ void CMainWindow::changeTab(int index)
       connect(positionWidget(), SIGNAL(positionChanged(int, int)),
 	      currentWidget(), SLOT(selectItem(int, int)));
     }
+}
+
+void CMainWindow::showMessage(const QString & p_message) const
+{
+  statusBar()->showMessage(p_message);
 }
