@@ -352,7 +352,7 @@ void CMatrixModel::convertTo(const int p_type,
 			     const double p_alpha,
 			     const double p_beta)
 {
-  if (p_type != type())
+  if (p_type != type() || p_alpha != 1 || p_beta != 0)
     {
       try
 	{
