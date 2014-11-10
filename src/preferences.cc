@@ -225,7 +225,7 @@ void ImportRawPage::readSettings()
   QSettings settings;
   settings.beginGroup("raw");
   m_imageType->setCurrentIndex(settings.value("type", 0).toInt());
-  m_imageWidth->setValue(settings.value("width", 2592).toInt());
+  m_imageWidth->setValue(settings.value("width", 2160).toInt());
   m_imageHeight->setValue(settings.value("height", 1944).toInt());
   m_littleEndianByteOrder->setChecked(settings.value("little-endian", true).toBool());
   settings.endGroup();
