@@ -337,7 +337,7 @@ void CMatrixModel::meanStdDev(double* p_mean,
 {
   try
     {
-      cv::Scalar m, s;
+      cv::Scalar mean, stddev;
       cv::meanStdDev(m_data, mean, stddev);
       *p_mean = mean[0];     //first channel
       *p_stddev = stddev[0]; //first channel
