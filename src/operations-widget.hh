@@ -200,6 +200,7 @@ private slots:
   void colorMap(const QString & p_type);
 
 private:
+  CPoint2DWidget *m_rangeWidget;
   QComboBox *m_colorMapWidget;
 };
 

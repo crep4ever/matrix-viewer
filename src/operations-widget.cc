@@ -314,8 +314,16 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
 				 CMatrixModel * p_model,
 				 QWidget* p_parent) :
   COperationWidget(p_title, p_model, p_parent)
+  , m_rangeWidget(0)
   , m_colorMapWidget(new QComboBox)
 {
+  if (model()->channels() == 1)
+    {
+      m_rangeWidget = new CPoint2DWidget;
+      m_rangeWidget->setLabels(tr("min"), tr("max"));
+      addParameter(tr("range"), m_rangeWidget);
+    }
+  
   m_colorMapWidget->addItem("NONE");
   m_colorMapWidget->addItem("AUTUMN");
   m_colorMapWidget->addItem("BONE");
@@ -329,7 +337,6 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
   m_colorMapWidget->addItem("HSV");
   m_colorMapWidget->addItem("PINK");
   m_colorMapWidget->addItem("HOT");
-  m_colorMapWidget->setCurrentIndex(0);
 
   addParameter(tr("color map"), m_colorMapWidget);
 
@@ -344,11 +351,34 @@ CColorMapWidget::~CColorMapWidget()
 void CColorMapWidget::reset()
 {
   m_colorMapWidget->setCurrentIndex(0);
+
+  if (model()->channels() == 1)
+    {
+      double min = 0, max = 0;
+      model()->minMaxLoc(&min, &max);
+      m_rangeWidget->setPoint(QPointF(min, max));
+    }
 }
 
 void CColorMapWidget::colorMap(const QString & p_type)
 {
-  model()->setData(m_backup.clone());
+  cv::Mat m = m_backup.clone();
+
+  if (model()->channels() == 1)
+    {
+      const double min = m_rangeWidget->point().x();
+      const double max = m_rangeWidget->point().y();
+
+      cv::Mat minMask = m < min;
+      m.setTo(min, minMask);
+
+      cv::Mat maxMask = m > max;
+      m.setTo(max, maxMask);
+
+      cv::normalize(m, m, 0, 255, cv::NORM_MINMAX, CV_8U);
+    }
+
+  model()->setData(m); 
 
   if (p_type == "NONE")
     return;
