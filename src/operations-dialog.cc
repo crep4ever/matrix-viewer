@@ -44,7 +44,7 @@ COperationsDialog::COperationsDialog(QWidget *parent)
   m_categoriesWidget->setIconSize(QSize(62, 62));
   m_categoriesWidget->setMovement(QListView::Static);
   m_categoriesWidget->setSpacing(12);
-  m_categoriesWidget->setFixedWidth(140);
+  m_categoriesWidget->setFixedWidth(125);
   m_categoriesWidget->setCurrentRow(0);
 
   m_operationsWidget = new QStackedWidget(this);

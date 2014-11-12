@@ -362,6 +362,13 @@ void CColorMapWidget::reset()
 
 void CColorMapWidget::colorMap(const QString & p_type)
 {
+#if (CV_MAJOR_VERSION == 2) and (CV_MINOR_VERSION <= 3)
+  Q_UNUSED(p_type);
+  qWarning() << tr("cv::applyColorMap requires a more recent version of OpenCV.");
+  qWarning() << tr("Current OpenCV version: %1.%2").arg(QString::number(CV_MAJOR_VERSION)).arg(QString::number(CV_MINOR_VERSION));
+  qWarning() << tr("Minimum required OpenCV version: 2.4");
+  return;
+#else
   cv::Mat m = m_backup.clone();
 
   if (model()->channels() == 1)
@@ -434,6 +441,7 @@ void CColorMapWidget::colorMap(const QString & p_type)
     }
 
   model()->applyColorMap(colorMap);
+#endif
 }
 
 /*

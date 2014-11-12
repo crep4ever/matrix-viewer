@@ -510,6 +510,11 @@ void CMatrixModel::multiplyMatrix(const cv::Mat & p_other)
 
 void CMatrixModel::applyColorMap(const int p_colorMap)
 {
+#if (CV_MAJOR_VERSION == 2) and (CV_MINOR_VERSION <= 3)
+  Q_UNUSED(p_colorMap);
+  qWarning() << tr("cv::applyColorMap requires a more recent version of OpenCV.");
+  qWarning() << tr("Current OpenCV version: %1.%2").arg(QString::number(CV_MAJOR_VERSION)).arg(QString::number(CV_MINOR_VERSION));
+#else
   try
     {
       cv::applyColorMap(m_data, m_data, p_colorMap);
@@ -519,6 +524,7 @@ void CMatrixModel::applyColorMap(const int p_colorMap)
     {
       qWarning() << tr("OpenCV error: %1").arg(e.what());
     }
+#endif
 }
 
 void CMatrixModel::threshold(const double p_threshold,
