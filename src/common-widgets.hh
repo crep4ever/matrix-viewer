@@ -22,6 +22,7 @@
 #include <QWidget>
 #include <QPointF>
 
+class QLabel;
 class QDoubleSpinBox;
 
 class CPoint2DWidget : public QWidget
@@ -34,6 +35,8 @@ public:
 
   QPointF point() const;
   void setPoint(const QPointF & p_point);
+  void setLabels(const QString & p_x,
+		 const QString & p_y);
 
 public slots:
   void updateXValue(double p_value);
@@ -41,8 +44,10 @@ public slots:
 
 private:
   QPointF m_point;
-  QDoubleSpinBox *m_xinput;
-  QDoubleSpinBox *m_yinput;
+  QLabel *p_xLabel;
+  QLabel *p_yLabel;
+  QDoubleSpinBox *m_xInput;
+  QDoubleSpinBox *m_yInput;
 };
 
 
