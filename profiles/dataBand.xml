@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix>
+  <regexp>
+    *[bB]and[pP]osition*
+  </regexp>
+
+  <columns>
+    <column id="0" label="Band id" />
+    <column id="1" label="Step" />
+    <column id="2" label="Step y index" />
+    <column id="3" label="Center X" />
+    <column id="4" label="Center Y" />
+    <column id="5" label="Y range start" />
+    <column id="6" label="Y range end" />
+    <column id="7" label="Origin X" />
+    <column id="8" label="Origin Y" />
+
+  </columns>
+
+</matrix>
+
