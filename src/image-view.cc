@@ -109,16 +109,16 @@ QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
       double min = 0, max = 0;
       cv::minMaxLoc(data, &min, &max);
       if ((max <= 1) && (max > 0) && (min >= 0)) // assuming range 0-1
-	{
-	  data *= 255; //scale up
-	}
+        {
+          data *= 255; //scale up
+        }
       else // try to keep dynamic of image
-	{
-	  double min2 = 0, max2 = 0;
-	  cv::Mat tmp = data - min;
-	  cv::minMaxLoc(tmp, &min2, &max2);
-	  data = tmp * 255 / max2;
-	}
+        {
+          double min2 = 0, max2 = 0;
+          cv::Mat tmp = data - min;
+          cv::minMaxLoc(tmp, &min2, &max2);
+          data = tmp * 255 / max2;
+        }
     }
 
   try
