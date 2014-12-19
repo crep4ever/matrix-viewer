@@ -131,18 +131,25 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 
 bool CMatrixModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  switch (role)
+  if (role == Qt::EditRole)
     {
-    case Qt::EditRole:
-	data().at< double >(index.row(), index.column()) = value.toDouble();
-	emit(dataChanged(QModelIndex(), QModelIndex()));
-	return true;
+      if (channels() > 1)
+        {
+          qWarning() << "Edition on multi-channel matrices not supported yet";
+          return false;
+        }
 
-    default:
-      qDebug() << "setdata role not supported yet";
+      cv::Mat tmp;
+      m_data.convertTo(tmp, CV_64FC1);
+      tmp.at< double >(index.row(), index.column()) = value.toDouble();
+      tmp.convertTo(m_data, m_data.type());
+
+      emit(dataChanged(QModelIndex(), QModelIndex()));
+      return true;
     }
 
- return false;
+  qWarning() << "setdata role not supported yet";
+  return false;
 }
 
 QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int role) const
