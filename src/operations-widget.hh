@@ -48,13 +48,17 @@ public:
   CMatrixModel * model() const;
   int channels() const;
 
+public slots:
   virtual void reset() = 0;
+  virtual void apply() = 0;
 
+protected:
   void addParameter(const QString & p_label,
-		    QWidget * p_widget);
+                    QWidget * p_widget);
 
 protected:
   cv::Mat m_backup;
+  QPushButton *m_applyButton;
 
 private:
   QString m_title;
@@ -76,10 +80,8 @@ public:
 		QWidget* p_parent = 0);
 
   virtual ~CFormatWidget();
-  virtual void reset();
-
-private slots:
-  void convert();
+  void reset();
+  void apply();
 
 private:
   QComboBox *m_typeWidget;
@@ -101,7 +103,8 @@ public:
 		QWidget* p_parent = 0);
 
   virtual ~CScalarWidget();
-  virtual void reset();
+  void reset();
+  void apply();
 
 private:
   QDoubleSpinBox *m_addWidget;
@@ -122,10 +125,8 @@ class CRotationWidget : public COperationWidget
 		  QWidget* p_parent = 0);
 
   virtual ~CRotationWidget();
-  virtual void reset();
-
-private slots:
-  void rotate();
+  void reset();
+  void apply();
 
 private:
   CPoint2DWidget *m_centerWidget;
@@ -147,10 +148,8 @@ class CNormalizeWidget : public COperationWidget
 		   QWidget* p_parent = 0);
 
   virtual ~CNormalizeWidget();
-  virtual void reset();
-
-private slots:
-  void normalize();
+  void reset();
+  void apply();
 
 private:
   QDoubleSpinBox *m_alphaWidget;
@@ -172,7 +171,8 @@ class CTransformationsWidget : public COperationWidget
 			 QWidget* p_parent = 0);
 
   virtual ~CTransformationsWidget();
-  virtual void reset();
+  void reset();
+  void apply();
 
 private:
   QPushButton *m_transposeWidget;
@@ -194,10 +194,8 @@ class CColorMapWidget : public COperationWidget
 		  QWidget* p_parent = 0);
 
   virtual ~CColorMapWidget();
-  virtual void reset();
-
-private slots:
-  void colorMap(const QString & p_type);
+  void reset();
+  void apply();
 
 private:
   CPoint2DWidget *m_rangeWidget;
@@ -218,10 +216,8 @@ class CThresholdWidget : public COperationWidget
 		   QWidget* p_parent = 0);
 
   virtual ~CThresholdWidget();
-  virtual void reset();
-
-private slots:
-  void threshold();
+  void reset();
+  void apply();
 
 private:
   QDoubleSpinBox *m_thresholdValueWidget;
@@ -244,7 +240,8 @@ class CMatrixWidget : public COperationWidget
 		QWidget* p_parent = 0);
 
   virtual ~CMatrixWidget();
-  virtual void reset();
+  void reset();
+  void apply();
 
 private slots:
   void absDiff();

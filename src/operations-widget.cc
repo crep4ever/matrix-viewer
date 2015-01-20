@@ -42,15 +42,19 @@ COperationWidget::COperationWidget(const QString & p_title,
 				   QWidget* p_parent) :
   QWidget(p_parent)
   , m_backup(p_model->data())
+  , m_applyButton(new QPushButton(tr("Apply"), this))
   , m_title(p_title)
   , m_model(p_model)
   , m_parametersLayout(new QFormLayout)
 {
+  connect(m_applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+
   QGroupBox *operationGroupBox = new QGroupBox(p_title);
   operationGroupBox->setLayout(m_parametersLayout);
 
   QBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(operationGroupBox);
+  layout->addWidget(m_applyButton);
   setLayout(layout);
 }
 
@@ -99,14 +103,9 @@ CFormatWidget::CFormatWidget(const QString & p_title,
   m_typeWidget->addItem("32F");
   m_typeWidget->addItem("64F");
 
-  QPushButton *apply = new QPushButton(tr("Apply"), this);
-  connect(apply, SIGNAL(clicked()), this, SLOT(convert()));
-
   addParameter(tr("data type"), m_typeWidget);
   addParameter(tr("scale"), m_alphaWidget);
   addParameter(tr("shift"), m_betaWidget);
-  addParameter("", apply);
-
 }
 
 CFormatWidget::~CFormatWidget()
@@ -120,7 +119,7 @@ void CFormatWidget::reset()
   m_betaWidget->setValue(0);
 }
 
-void CFormatWidget::convert()
+void CFormatWidget::apply()
 {
   model()->convertTo(m_typeWidget->currentIndex() + 8 * (model()->channels() - 1),
 		     m_alphaWidget->value(),
@@ -148,12 +147,6 @@ CScalarWidget::CScalarWidget(const QString & p_title,
 
   addParameter(tr("add"), m_addWidget);
   addParameter(tr("multiply"), m_multiplyWidget);
-
-  connect(m_addWidget, SIGNAL(valueChanged(double)),
-	  model(), SLOT(add(double)));
-
-  connect(m_multiplyWidget, SIGNAL(valueChanged(double)),
-	  model(), SLOT(multiply(double)));
 }
 
 CScalarWidget::~CScalarWidget()
@@ -164,6 +157,12 @@ void CScalarWidget::reset()
 {
   m_addWidget->setValue(0);
   m_multiplyWidget->setValue(1);
+}
+
+void CScalarWidget::apply()
+{
+  model()->add(m_addWidget->value());
+  model()->multiply(m_multiplyWidget->value());
 }
 
 /*
@@ -181,13 +180,9 @@ CRotationWidget::CRotationWidget(const QString & p_title,
   m_angleWidget->setRange(-360, 360);
   m_angleWidget->setDecimals(SPIN_BOX_DECIMALS);
 
-  QPushButton *apply = new QPushButton(tr("Apply"), this);
-  connect(apply, SIGNAL(clicked()), this, SLOT(rotate()));
-
   addParameter(tr("center"), m_centerWidget);
   addParameter(tr("angle"), m_angleWidget);
   addParameter(tr("scale"), m_scaleWidget);
-  addParameter("", apply);
 }
 
 CRotationWidget::~CRotationWidget()
@@ -204,16 +199,16 @@ void CRotationWidget::reset()
   m_scaleWidget->setValue(1);
 }
 
-void CRotationWidget::rotate()
+void CRotationWidget::apply()
 {
   model()->setData(m_backup.clone());
 
   const cv::Point center(m_centerWidget->point().x(),
-			 m_centerWidget->point().y());
+                         m_centerWidget->point().y());
 
   model()->rotate(center,
-		  m_angleWidget->value(),
-		  m_scaleWidget->value());
+                  m_angleWidget->value(),
+                  m_scaleWidget->value());
 }
 
 /*
@@ -239,13 +234,9 @@ CNormalizeWidget::CNormalizeWidget(const QString & p_title,
   m_normWidget->addItem("INF");
   m_normWidget->setCurrentIndex(1);
 
-  QPushButton *apply = new QPushButton(tr("Apply"), this);
-  connect(apply, SIGNAL(clicked()), this, SLOT(normalize()));
-
   addParameter(tr("alpha"), m_alphaWidget);
   addParameter(tr("beta"), m_betaWidget);
   addParameter(tr("norm"), m_normWidget);
-  addParameter("", apply);
 }
 
 CNormalizeWidget::~CNormalizeWidget()
@@ -259,7 +250,7 @@ void CNormalizeWidget::reset()
   m_normWidget->setCurrentIndex(1);
 }
 
-void CNormalizeWidget::normalize()
+void CNormalizeWidget::apply()
 {
   model()->setData(m_backup.clone());
 
@@ -287,13 +278,15 @@ void CNormalizeWidget::normalize()
 */
 
 CTransformationsWidget::CTransformationsWidget(const QString & p_title,
-					       CMatrixModel * p_model,
-					       QWidget* p_parent) :
+                                               CMatrixModel * p_model,
+                                               QWidget* p_parent) :
   COperationWidget(p_title, p_model, p_parent)
   , m_transposeWidget(new QPushButton(tr("Transpose"), this))
   , m_verticalFlipWidget(new QPushButton(tr("Vertical flip"), this))
   , m_horizontalFlipWidget(new QPushButton(tr("Horizontal flip"), this))
 {
+  m_applyButton->hide();
+
   addParameter("", m_transposeWidget);
   addParameter("", m_verticalFlipWidget);
   addParameter("", m_horizontalFlipWidget);
@@ -315,6 +308,11 @@ CTransformationsWidget::~CTransformationsWidget()
 void CTransformationsWidget::reset()
 {
 }
+
+void CTransformationsWidget::apply()
+{ 
+}
+
 
 /*
   Color map
@@ -349,9 +347,6 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
   m_colorMapWidget->addItem("HOT");
 
   addParameter(tr("color map"), m_colorMapWidget);
-
-  connect(m_colorMapWidget, SIGNAL(currentIndexChanged(const QString &)),
-	  this, SLOT(colorMap(const QString &)));
 }
 
 CColorMapWidget::~CColorMapWidget()
@@ -370,10 +365,9 @@ void CColorMapWidget::reset()
     }
 }
 
-void CColorMapWidget::colorMap(const QString & p_type)
+void CColorMapWidget::apply()
 {
 #if (CV_MAJOR_VERSION == 2) and (CV_MINOR_VERSION <= 3)
-  Q_UNUSED(p_type);
   qWarning() << tr("cv::applyColorMap requires a more recent version of OpenCV.");
   qWarning() << tr("Current OpenCV version: %1.%2").arg(QString::number(CV_MAJOR_VERSION)).arg(QString::number(CV_MINOR_VERSION));
   qWarning() << tr("Minimum required OpenCV version: 2.4");
@@ -397,55 +391,57 @@ void CColorMapWidget::colorMap(const QString & p_type)
 
   model()->setData(m); 
 
-  if (p_type == "NONE")
+  const QString type = m_colorMapWidget->currentText();
+
+  if (type == "NONE")
     return;
 
   int colorMap = 0;
-  if (p_type == "AUTUMN")
+  if (type == "AUTUMN")
     {
       colorMap = cv::COLORMAP_AUTUMN;
     }
-  else if (p_type == "BONE")
+  else if (type == "BONE")
     {
       colorMap = cv::COLORMAP_BONE;
     }
-  else if (p_type == "JET")
+  else if (type == "JET")
     {
       colorMap = cv::COLORMAP_JET;
     }
-  else if (p_type == "WINTER")
+  else if (type == "WINTER")
     {
       colorMap = cv::COLORMAP_WINTER;
     }
-  else if (p_type == "RAINBOW")
+  else if (type == "RAINBOW")
     {
       colorMap = cv::COLORMAP_RAINBOW;
     }
-  else if (p_type == "OCEAN")
+  else if (type == "OCEAN")
     {
       colorMap = cv::COLORMAP_OCEAN;
     }
-  else if (p_type == "SUMMER")
+  else if (type == "SUMMER")
     {
       colorMap = cv::COLORMAP_SUMMER;
     }
-  else if (p_type == "SPRING")
+  else if (type == "SPRING")
     {
       colorMap = cv::COLORMAP_SPRING;
     }
-  else if (p_type == "COOL")
+  else if (type == "COOL")
     {
       colorMap = cv::COLORMAP_COOL;
     }
-  else if (p_type == "HSV")
+  else if (type == "HSV")
     {
       colorMap = cv::COLORMAP_HSV;
     }
-  else if (p_type == "PINK")
+  else if (type == "PINK")
     {
       colorMap = cv::COLORMAP_PINK;
     }
-  else if (p_type == "HOT")
+  else if (type == "HOT")
     {
       colorMap = cv::COLORMAP_HOT;
     }
@@ -477,14 +473,10 @@ CThresholdWidget::CThresholdWidget(const QString & p_title,
   m_typeWidget->addItem("TOZERO_INV");
   m_typeWidget->setCurrentIndex(0);
 
-  QPushButton *apply = new QPushButton(tr("Apply"), this);
-  connect(apply, SIGNAL(clicked()), this, SLOT(threshold()));
-
   addParameter(tr("threshold value"), m_thresholdValueWidget);
   addParameter(tr("max value"), m_maxValueWidget);
   addParameter(tr("type"), m_typeWidget);
   addParameter(tr("otsu"), m_otsuWidget);
-  addParameter("", apply);
 }
 
 CThresholdWidget::~CThresholdWidget()
@@ -499,7 +491,7 @@ void CThresholdWidget::reset()
   m_otsuWidget->setChecked(false);
 }
 
-void CThresholdWidget::threshold()
+void CThresholdWidget::apply()
 {
   model()->setData(m_backup.clone());
 
@@ -548,6 +540,8 @@ CMatrixWidget::CMatrixWidget(const QString & p_title,
   , m_multiplyElementsWidget(new QPushButton(tr("Element-wise multiply"), this))
   , m_multiplyMatrixWidget(new QPushButton(tr("Matrix multiply"), this))
 {
+  m_applyButton->hide();
+
   m_fileChooserWidget->setCaption(tr("Pick other data file"));
   m_fileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
 
@@ -573,6 +567,10 @@ CMatrixWidget::~CMatrixWidget()
 void CMatrixWidget::reset()
 {
   m_fileChooserWidget->setPath(QDir::homePath());
+}
+
+void CMatrixWidget::apply()
+{
 }
 
 void CMatrixWidget::absDiff()
