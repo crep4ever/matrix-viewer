@@ -362,14 +362,14 @@ void CMatrixModel::convertTo(const int p_type,
   if (p_type != type() || p_alpha != 1 || p_beta != 0)
     {
       try
-	{
-	  m_data.convertTo(m_data, p_type, p_alpha, p_beta);
-	  emit(dataChanged(QModelIndex(), QModelIndex()));
-	}
+        {
+          m_data.convertTo(m_data, p_type, p_alpha, p_beta);
+          emit(dataChanged(QModelIndex(), QModelIndex()));
+        }
       catch (cv::Exception & e)
-	{
-	  qWarning() << tr("OpenCV error: %1").arg(e.what());
-	}
+        {
+          qWarning() << tr("OpenCV error: %1").arg(e.what());
+        }
     }
 }
 
