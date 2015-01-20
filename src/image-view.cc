@@ -232,10 +232,10 @@ void CImageView::selectItem(int row, int col)
     {
       parent()->positionWidget()->setRow(row);
       parent()->positionWidget()->setCol(col);
-      QColor pixel(m_image->pixel(col, row));
-      parent()->positionWidget()->setValue
-	(QString("%1 | %2 | %3")
-	 .arg(pixel.red()).arg(pixel.green()).arg(pixel.blue()));
+
+      const QModelIndex index = m_model->index(row, col);
+      const QString value = m_model->data(index, Qt::DisplayRole).toString();
+      parent()->positionWidget()->setValue(value);
     }
 }
 
