@@ -34,6 +34,9 @@
 #include "file-chooser.hh"
 #include "common-widgets.hh"
 
+#define SPIN_BOX_DECIMALS 10 // max is DBL_MAX_10_EXP + DBL_DIG = 323
+
+
 COperationWidget::COperationWidget(const QString & p_title,
 				   CMatrixModel * p_model,
 				   QWidget* p_parent) :
@@ -138,7 +141,10 @@ CScalarWidget::CScalarWidget(const QString & p_title,
 {
 
   m_addWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_addWidget->setDecimals(SPIN_BOX_DECIMALS);
+
   m_multiplyWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_multiplyWidget->setDecimals(SPIN_BOX_DECIMALS);
 
   addParameter(tr("add"), m_addWidget);
   addParameter(tr("multiply"), m_multiplyWidget);
@@ -173,6 +179,7 @@ CRotationWidget::CRotationWidget(const QString & p_title,
   , m_scaleWidget(new QDoubleSpinBox)
 {
   m_angleWidget->setRange(-360, 360);
+  m_angleWidget->setDecimals(SPIN_BOX_DECIMALS);
 
   QPushButton *apply = new QPushButton(tr("Apply"), this);
   connect(apply, SIGNAL(clicked()), this, SLOT(rotate()));
@@ -222,7 +229,10 @@ CNormalizeWidget::CNormalizeWidget(const QString & p_title,
   , m_normWidget(new QComboBox)
 {
   m_alphaWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_alphaWidget->setDecimals(SPIN_BOX_DECIMALS);
+
   m_betaWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_betaWidget->setDecimals(SPIN_BOX_DECIMALS);
 
   m_normWidget->addItem("L1");
   m_normWidget->addItem("L2");
