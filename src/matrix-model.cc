@@ -446,13 +446,17 @@ void CMatrixModel::horizontalFlip()
 
 
 void CMatrixModel::rotate(const cv::Point & p_center,
-			  const double p_angle_dg,
-			  const double p_scaleFactor)
+                          const double p_angle_dg,
+                          const double p_scaleFactor)
 {
   try
     {
       cv::Mat rotation = getRotationMatrix2D(p_center, p_angle_dg, p_scaleFactor);
-      cv::warpAffine(m_data, m_data, rotation, m_data.size());
+
+      cv::Mat dst;
+      cv::warpAffine(m_data, dst, rotation, m_data.size());
+      m_data = dst;
+
       emit(dataChanged(QModelIndex(), QModelIndex()));
     }
   catch (cv::Exception & e)
@@ -462,8 +466,8 @@ void CMatrixModel::rotate(const cv::Point & p_center,
 }
 
 void CMatrixModel::normalize(const double p_alpha,
-			     const double p_beta,
-			     const int p_norm)
+                             const double p_beta,
+                             const int p_norm)
 {
   try
     {
