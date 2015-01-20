@@ -61,6 +61,7 @@ set(MATRIX_VIEWER_QT_HEADER
 set(MATRIX_VIEWER_PROFILES
   profiles/cameras.xml
   profiles/projectors.xml
+  profiles/dataBand.xml
   profiles/planes.xml
   profiles/tool.xml
   profiles/lines.xml
