@@ -221,7 +221,7 @@ bool CMatrixConverter::loadFromImage(const QString & filename)
 {
   try
     {
-      m_data = cv::imread(filename.toStdString());
+      m_data = cv::imread(filename.toStdString(), -1);
     }
   catch (cv::Exception & e)
     {
@@ -260,7 +260,7 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
   QSettings settings;
   settings.beginGroup("raw");
   int type = settings.value("type", 0).toInt();
-  int width = settings.value("width", 2592).toInt();
+  int width = settings.value("width", 2160).toInt();
   int height = settings.value("height", 1944).toInt();
   settings.endGroup();
 
