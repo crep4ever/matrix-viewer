@@ -34,6 +34,7 @@ set(MATRIX_VIEWER_SOURCES
   src/mfe.hh
   src/operations-widget.cc
   src/common-widgets.cc
+  src/parser.cc
   )
 
 # header (moc)
@@ -55,6 +56,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/histogram-widget.hh
   src/operations-widget.hh
   src/common-widgets.hh
+  src/parser.hh
   )
 
 # matrix profiles

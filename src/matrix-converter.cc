@@ -35,12 +35,19 @@ CMatrixConverter::CMatrixConverter()
   : QObject()
   , m_data()
   , m_format(Format_Unknown)
+  , m_rawType(0)
+  , m_rawWidth(0)
+  , m_rawHeight(0)
 {
 }
 
 CMatrixConverter::CMatrixConverter(const QString & filename)
   : QObject()
   , m_data()
+  , m_format(Format_Unknown)
+  , m_rawType(0)
+  , m_rawWidth(0)
+  , m_rawHeight(0)
 {
   if (!load(filename))
     qWarning() << "Can't load file: " << filename;
@@ -49,6 +56,31 @@ CMatrixConverter::CMatrixConverter(const QString & filename)
 
 CMatrixConverter::~CMatrixConverter()
 {
+}
+
+void CMatrixConverter::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("raw");
+  m_rawType = settings.value("type", 0).toInt();
+  m_rawWidth = settings.value("width", 2160).toInt();
+  m_rawHeight = settings.value("height", 1944).toInt();
+  settings.endGroup();
+}
+
+void CMatrixConverter::setRawWidth(const int p_value)
+{
+  m_rawWidth = p_value;
+}
+
+void CMatrixConverter::setRawHeight(const int p_value)
+{
+  m_rawHeight = p_value;
+}
+
+void CMatrixConverter::setRawType(const int p_value)
+{
+  m_rawType = p_value;
 }
 
 bool CMatrixConverter::load(const QString & filename)
@@ -257,19 +289,12 @@ bool CMatrixConverter::saveToImage(const QString & filename)
 
 bool CMatrixConverter::loadFromRaw(const QString & filename)
 {
-  QSettings settings;
-  settings.beginGroup("raw");
-  int type = settings.value("type", 0).toInt();
-  int width = settings.value("width", 2160).toInt();
-  int height = settings.value("height", 1944).toInt();
-  settings.endGroup();
-
-  if (type == 0)
+  if (m_rawType == 0)
     {
-      unsigned short *buffer = new unsigned short[width * height];
+      unsigned short *buffer = new unsigned short[m_rawWidth * m_rawHeight];
       if (FILE* fd = fopen(filename.toStdString().c_str(), "rb"))
         {
-          fread(buffer, sizeof(unsigned short), width * height, fd);
+          fread(buffer, sizeof(unsigned short), m_rawWidth * m_rawHeight, fd);
         }
       else
         {
@@ -278,7 +303,7 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
           return false;
         }
 
-      cv::Mat data(cv::Size(width, height), CV_16U, buffer);
+      cv::Mat data(cv::Size(m_rawWidth, m_rawHeight), CV_16U, buffer);
 
       qDebug() << data.type() << data.channels();
       const double ratio = 127.5 / 511.5; // conversion from 10bits to 8 bits

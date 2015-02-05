@@ -66,6 +66,13 @@ public:
   bool isFormatData() const;
   bool isFormatImage() const;
 
+  void readSettings();
+
+  void setRawWidth(const int p_value);
+  void setRawHeight(const int p_value);
+  void setRawType(const int p_value);
+
+
 private:
   bool loadFromTxt(const QString & filename);
   bool saveToTxt(const QString & filename);
@@ -84,6 +91,11 @@ private:
 
   cv::Mat m_data;
   FileFormat m_format;
+
+  int m_rawType;
+  int m_rawWidth;
+  int m_rawHeight;
+
 };
 
 #endif  // __MATRIX_CONVERTER_HH__

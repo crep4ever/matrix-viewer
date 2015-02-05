@@ -34,6 +34,7 @@
 
 #include "config.hh"
 #include "main-window.hh"
+#include "parser.hh"
 
 namespace // anonymous namespace
 {
@@ -48,6 +49,60 @@ namespace // anonymous namespace
             filename.endsWith(".raw"));
   }
 }
+
+void printUsage()
+{
+  QTextStream out(stdout);
+  out << endl;
+
+  out << "********************************************************" << endl;
+  out << "Description: Display and edit matrix data such as images" << endl;
+  out << endl;
+
+  out << "--------------------------------------------------------" << endl;
+  out << "GUI mode" << endl;
+  out << "Usage: " << QCoreApplication::applicationName() << " FILES " << endl;
+  out << endl;
+
+  out << "FILES: list of compatible matrix data files" << endl;
+  out << endl;
+
+  out << "--------------------------------------------------------" << endl;
+  out << "CLI mode" << endl;
+  out << "Usage: " << QCoreApplication::applicationName() << " --converter [OPTIONS] FILES FORMATS" << endl;
+  out << endl;
+
+  out << "FILES: list of 2D images" << endl;
+  out << endl;
+
+  out << "FORMATS: output formats from the following list:" << endl;
+  out << "\t--txt \t" << "Text format: first row = [nbcolumns nbrows]; second row = [data]." << endl;
+  out << "\t--xml \t" << "OpenCV serialization in xml format." << endl;
+  out << "\t--jpg \t" << "JPEG format." << endl;
+  out << "\t--bmp \t" << "BMP format." << endl;
+  out << "\t--png \t" << "PNG format." << endl;
+  out << "\t--bin \t" << "Boost serialization of Image2D classes." << endl;
+  out << "\t--raw \t" << "Raw images (16bits unsigned, little-endian byte order)." << endl;
+  out << "\t--mfe \t" << "Matrix Format Exchange." << endl;
+  out << endl;
+
+  out << "OPTIONS:" << endl;
+  out << "\t-o, --output-directory <DIRECTORY>\t" << "Specify an existing DIRECTORY where converted images should be saved." << endl;
+  out << "\t--raw-width <VALUE>\t\t\t" << "Specify an integer VALUE for width of raw images (default is 2160)." << endl;
+  out << "\t--raw-height <VALUE>\t\t\t" << "Specify an integer VALUE for height of raw images (default is 1944)." << endl;
+  out << endl;
+  out << "********************************************************" << endl;
+  out << endl;
+}
+
+void printVersion()
+{
+  QTextStream out(stdout);
+  out << QCoreApplication::applicationName()
+      << " " << QCoreApplication::applicationVersion()
+      << endl;
+}
+
 
 /// Main routine of the application
 int main(int argc, char *argv[])
@@ -75,10 +130,20 @@ int main(int argc, char *argv[])
   QStringList arguments = QApplication::arguments();
   bool helpFlag = false;;
   bool versionFlag = false;
+  bool cliMode = false;
+
   if (arguments.contains("-h") || arguments.contains("--help"))
-    helpFlag = true;
-  else if (arguments.contains("--version"))
-    versionFlag = true;
+    {
+      helpFlag = true;
+    }
+  else if (arguments.contains("--version") || arguments.contains("-v"))
+    {
+      versionFlag = true;
+    }
+  else if (arguments.contains("--convert")) // CLI option
+    {
+      cliMode = true;
+    }
 
   // Localization
   QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8")) ;
@@ -88,9 +153,13 @@ int main(int argc, char *argv[])
 
   translationDirectory = QDir(MATRIX_VIEWER_DATA_PATH);
   if (translationDirectory.exists())
-    directory = translationDirectory.absoluteFilePath("lang");
+    {
+      directory = translationDirectory.absoluteFilePath("lang");
+    }
   else
-    directory = QDir::current().absoluteFilePath("lang");
+    {
+      directory = QDir::current().absoluteFilePath("lang");
+    }
 
   QTranslator translator;
   translator.load(translationFilename, directory);
@@ -98,22 +167,20 @@ int main(int argc, char *argv[])
 
   if (helpFlag)
     {
-      QTextStream out(stdout);
-      out << "Usage: " << QApplication::applicationName() << "[OPTION]" << endl
-	  << "Options:" << endl
-	  << "    " << "-h, --help"
-	  << "    " << "--version"
-	  << " " << QApplication::applicationVersion()
-	  << endl;
+      printUsage();
       return 0;
     }
-  else if (versionFlag)
+
+  if (versionFlag)
     {
-      QTextStream out(stdout);
-      out << QApplication::applicationName()
-	  << " " << QApplication::applicationVersion()
-	  << endl;
+      printVersion();
       return 0;
+    }
+  
+  if (cliMode)
+    {
+      CParser parser(QCoreApplication::arguments());
+      return parser.execute();
     }
 
   CMainWindow mainWindow;
