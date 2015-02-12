@@ -156,16 +156,16 @@ QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int 
 {
   if (role == Qt::DisplayRole)
     {
-    if (orientation == Qt::Horizontal)
-      {
-	return section < m_horizontalHeaderLabels.size() ?
-	  m_horizontalHeaderLabels.at(section) : QString::number(section);
-      }
-    else if (orientation == Qt::Vertical)
-      {
-	return section < m_verticalHeaderLabels.size() ?
-	  m_verticalHeaderLabels.at(section) : QString::number(section);
-      }
+      if (orientation == Qt::Horizontal)
+        {
+          return section < m_horizontalHeaderLabels.size() ?
+            m_horizontalHeaderLabels.at(section) : QString::number(section);
+        }
+      else if (orientation == Qt::Vertical)
+        {
+          return section < m_verticalHeaderLabels.size() ?
+            m_verticalHeaderLabels.at(section) : QString::number(section);
+        }
     }
   return QVariant();
 }
@@ -260,20 +260,20 @@ void CMatrixModel::setProfile(const QString & profile)
   while (!xml.atEnd())
     {
       if (xml.readNext())
-	{
-	  if (xml.name() == "column")
-	    {
-	      QString label = xml.attributes().value("label").toString().simplified();
-	      if (!label.isEmpty())
-		m_horizontalHeaderLabels << label;
-	    }
-	  else if (xml.name() == "row")
-	    {
-	      QString label = xml.attributes().value("label").toString().simplified();
-	      if (!label.isEmpty())
-		m_verticalHeaderLabels << label;
-	    }
-	}
+        {
+          if (xml.name() == "column")
+            {
+              QString label = xml.attributes().value("label").toString().simplified();
+              if (!label.isEmpty())
+                m_horizontalHeaderLabels << label;
+            }
+          else if (xml.name() == "row")
+            {
+              QString label = xml.attributes().value("label").toString().simplified();
+              if (!label.isEmpty())
+                m_verticalHeaderLabels << label;
+            }
+        }
     }
 
   if (xml.hasError())
