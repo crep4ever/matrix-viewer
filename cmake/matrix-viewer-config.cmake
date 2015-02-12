@@ -17,6 +17,7 @@ if (CMAKE_BUILD_TYPE MATCHES "Release")
   message(STATUS "Compiling in Release mode")
   add_definitions(-O2 -march=native)
 elseif( CMAKE_COMPILER_IS_GNUCXX )
+  message(STATUS "Compiling in Debug mode with GCC")
   # Add additional GCC options.
   add_definitions(
     -ggdb3 -fno-strict-aliasing -Wall -Wextra
@@ -26,6 +27,7 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
     -Wmissing-format-attribute -Wformat-security
     )
 elseif( CMAKE_CXX_COMPILER MATCHES "clang" )
+  message(STATUS "Compiling in Debug mode with Clang")
   add_definitions( -Wall -Wextra )
 endif()
 
