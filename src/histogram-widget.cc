@@ -19,7 +19,7 @@
 
 #include <QBoxLayout>
 #include <QDebug>
-
+#include <QPainter>
 #include "histogram.hh"
 
 const QColor CHistogramWidget::_red(239, 41, 41);
@@ -72,4 +72,12 @@ void CHistogramWidget::setImage(QImage *image)
 QSize CHistogramWidget::sizeHint() const
 {
   return QSize(500, 300);
+}
+
+void CHistogramWidget::paintEvent(QPaintEvent* /*event*/)
+{
+  QColor backgroundColor = palette().dark().color();
+  backgroundColor.setAlpha(150);
+  QPainter customPainter(this);
+  customPainter.fillRect(rect(), backgroundColor);
 }

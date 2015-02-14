@@ -23,6 +23,7 @@
 #include <QColor>
 #include <QSize>
 
+class QPaintEvent;
 class CHistogram;
 
 /*!
@@ -46,6 +47,7 @@ public:
 
 protected:
   virtual QSize sizeHint() const;
+  void paintEvent(QPaintEvent* event);
 
 private:
   CHistogram *m_redHistogram;
