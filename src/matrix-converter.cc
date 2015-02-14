@@ -294,7 +294,13 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
       unsigned short *buffer = new unsigned short[m_rawWidth * m_rawHeight];
       if (FILE* fd = fopen(filename.toStdString().c_str(), "rb"))
         {
-          fread(buffer, sizeof(unsigned short), m_rawWidth * m_rawHeight, fd);
+          size_t readBytes = fread(buffer, sizeof(unsigned short), m_rawWidth * m_rawHeight, fd);
+	  if (readBytes == 0)
+	    {
+	      qWarning() << tr("Nothing to read from raw image file: %1").arg(filename);
+	      delete [] buffer;
+	      return false;
+	    }
         }
       else
         {
