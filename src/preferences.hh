@@ -128,25 +128,27 @@ private:
 };
 
 /**
- * \class ImportRawPage
- * \brief ImportRawPage defines parameters to import raw image files
+ * \class ImportImagePage
+ * \brief ImportImagePage defines parameters to import image files
  */
-class ImportRawPage : public Page
+class ImagePage : public Page
 {
   Q_OBJECT
 
 public:
   /// Constructor.
-  ImportRawPage(QWidget *parent=0);
+  ImagePage(QWidget *parent=0);
 
 private:
   void readSettings();
   void writeSettings();
 
-  QComboBox *m_imageType;
-  QSpinBox *m_imageWidth;
-  QSpinBox *m_imageHeight;
-  QCheckBox *m_littleEndianByteOrder;
+  QCheckBox *m_stretchDynamic;
+
+  QComboBox *m_rawType;
+  QSpinBox *m_rawWidth;
+  QSpinBox *m_rawHeight;
+  QCheckBox *m_rawLittleEndianByteOrder;
 };
 
 #endif // __PREFERENCES_HH__

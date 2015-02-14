@@ -61,10 +61,10 @@ CMatrixConverter::~CMatrixConverter()
 void CMatrixConverter::readSettings()
 {
   QSettings settings;
-  settings.beginGroup("raw");
-  m_rawType = settings.value("type", 0).toInt();
-  m_rawWidth = settings.value("width", 2160).toInt();
-  m_rawHeight = settings.value("height", 1944).toInt();
+  settings.beginGroup("image");
+  m_rawType = settings.value("raw-type", 0).toInt();
+  m_rawWidth = settings.value("raw-width", 2160).toInt();
+  m_rawHeight = settings.value("raw-height", 1944).toInt();
   settings.endGroup();
 }
 

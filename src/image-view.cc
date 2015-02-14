@@ -98,27 +98,22 @@ void CImageView::createActions()
 
 QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
 {
-  cv::Mat data = mat.clone();
+  QSettings settings;
+  settings.beginGroup("image");
+  bool stretch = settings.value("stretch-dynamic", true).toBool();
+  settings.endGroup();
 
-  if (mat.type() == CV_16U) // assuming range 0-65535
-    {
-      data /= 256;
-    }
-  else if (mat.type() == CV_32F || mat.type() == CV_64F)
+  cv::Mat data;
+  if (stretch)
     {
       double min = 0, max = 0;
-      cv::minMaxLoc(data, &min, &max);
-      if ((max <= 1) && (max > 0) && (min >= 0)) // assuming range 0-1
-        {
-          data *= 255; //scale up
-        }
-      else // try to keep dynamic of image
-        {
-          double min2 = 0, max2 = 0;
-          cv::Mat tmp = data - min;
-          cv::minMaxLoc(tmp, &min2, &max2);
-          data = tmp * 255 / max2;
-        }
+      cv::Mat tmp = mat - min;
+      cv::minMaxLoc(tmp, &min, &max);
+      data = tmp * 255 / max;
+    }
+  else
+    {
+      data = mat;
     }
 
   try

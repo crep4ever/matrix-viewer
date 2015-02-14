@@ -52,7 +52,7 @@ ConfigDialog::ConfigDialog(QWidget* parent)
 
   m_pagesWidget = new QStackedWidget(this);
   m_pagesWidget->addWidget(new DisplayPage(this));
-  m_pagesWidget->addWidget(new ImportRawPage(this));
+  m_pagesWidget->addWidget(new ImagePage(this));
 
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Close);
   connect(buttons, SIGNAL(rejected()), this, SLOT(close()));
@@ -89,11 +89,11 @@ void ConfigDialog::createIcons()
   displayButton->setTextAlignment(Qt::AlignHCenter);
   displayButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-  QListWidgetItem *importRawButton = new QListWidgetItem(m_contentsWidget);
-  importRawButton->setIcon(QIcon::fromTheme("image-x-generic"));
-  importRawButton->setText(tr("Raw images"));
-  importRawButton->setTextAlignment(Qt::AlignHCenter);
-  importRawButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+  QListWidgetItem *imageButton = new QListWidgetItem(m_contentsWidget);
+  imageButton->setIcon(QIcon::fromTheme("image-x-generic"));
+  imageButton->setText(tr("Image"));
+  imageButton->setTextAlignment(Qt::AlignHCenter);
+  imageButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
   connect(m_contentsWidget,
           SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
@@ -193,51 +193,68 @@ void DisplayPage::writeSettings()
   settings.endGroup();
 }
 
-// Import Raw Page
+// Image Page
 
-ImportRawPage::ImportRawPage(QWidget *parent)
+ImagePage::ImagePage(QWidget *parent)
   : Page(parent)
 {
-  m_imageType = new QComboBox;
-  m_imageType->addItem(tr("16-bit unsigned"));
+  QGroupBox *displayGroupBox = new QGroupBox(tr("Display options"));
+  m_stretchDynamic = new QCheckBox;
+  m_stretchDynamic->setEnabled(true);
 
-  m_imageWidth = new QSpinBox;
-  m_imageWidth->setMaximum(20000);
+  QFormLayout *displayLayout = new QFormLayout;
+  displayLayout->addRow(tr("Stretch dynamic"), m_stretchDynamic);
+  displayGroupBox->setLayout(displayLayout);
 
-  m_imageHeight = new QSpinBox;
-  m_imageHeight->setMaximum(20000);
+  QGroupBox *rawGroupBox = new QGroupBox(tr("Raw images"));
+  m_rawType = new QComboBox;
+  m_rawType->addItem(tr("16-bit unsigned"));
 
-  m_littleEndianByteOrder = new QCheckBox;
-  m_littleEndianByteOrder->setEnabled(false);
+  m_rawWidth = new QSpinBox;
+  m_rawWidth->setMaximum(20000);
 
-  QFormLayout *mainLayout = new QFormLayout;
-  mainLayout->addRow(tr("Type"), m_imageType);
-  mainLayout->addRow(tr("Width"), m_imageWidth);
-  mainLayout->addRow(tr("Height"), m_imageHeight);
-  mainLayout->addRow(tr("Little-endian byte order"), m_littleEndianByteOrder);
+  m_rawHeight = new QSpinBox;
+  m_rawHeight->setMaximum(20000);
+
+  m_rawLittleEndianByteOrder = new QCheckBox;
+  m_rawLittleEndianByteOrder->setEnabled(false);
+
+  QFormLayout *rawLayout = new QFormLayout;
+  rawLayout->addRow(tr("Type"), m_rawType);
+  rawLayout->addRow(tr("Width"), m_rawWidth);
+  rawLayout->addRow(tr("Height"), m_rawHeight);
+  rawLayout->addRow(tr("Little-endian byte order"), m_rawLittleEndianByteOrder);
+  rawGroupBox->setLayout(rawLayout);
+
+  QBoxLayout *mainLayout = new QVBoxLayout;
+  mainLayout->addWidget(rawGroupBox);
+  mainLayout->addWidget(displayGroupBox);
+
   setLayout(mainLayout);
 
   readSettings();
 }
 
-void ImportRawPage::readSettings()
+void ImagePage::readSettings()
 {
   QSettings settings;
-  settings.beginGroup("raw");
-  m_imageType->setCurrentIndex(settings.value("type", 0).toInt());
-  m_imageWidth->setValue(settings.value("width", 2160).toInt());
-  m_imageHeight->setValue(settings.value("height", 1944).toInt());
-  m_littleEndianByteOrder->setChecked(settings.value("little-endian", true).toBool());
+  settings.beginGroup("image");
+  m_stretchDynamic->setChecked(settings.value("stretch-dynamic", true).toBool());
+  m_rawType->setCurrentIndex(settings.value("raw-type", 0).toInt());
+  m_rawWidth->setValue(settings.value("raw-width", 2160).toInt());
+  m_rawHeight->setValue(settings.value("raw-height", 1944).toInt());
+  m_rawLittleEndianByteOrder->setChecked(settings.value("raw-little-endian", true).toBool());
   settings.endGroup();
 }
 
-void ImportRawPage::writeSettings()
+void ImagePage::writeSettings()
 {
   QSettings settings;
-  settings.beginGroup("raw");
-  settings.setValue("type", m_imageType->currentIndex());
-  settings.setValue("width", m_imageWidth->value());
-  settings.setValue("height", m_imageHeight->value());
-  settings.setValue("little-endian", m_littleEndianByteOrder->isChecked());
+  settings.beginGroup("image");
+  settings.setValue("stretch-dynamic", m_stretchDynamic->isChecked());
+  settings.setValue("raw-type", m_rawType->currentIndex());
+  settings.setValue("raw-width", m_rawWidth->value());
+  settings.setValue("raw-height", m_rawHeight->value());
+  settings.setValue("raw-little-endian", m_rawLittleEndianByteOrder->isChecked());
   settings.endGroup();
 }
