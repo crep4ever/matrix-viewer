@@ -56,7 +56,6 @@ set(MATRIX_VIEWER_QT_HEADER
   src/histogram-widget.hh
   src/operations-widget.hh
   src/common-widgets.hh
-  src/parser.hh
   )
 
 # matrix profiles
