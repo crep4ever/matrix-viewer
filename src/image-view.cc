@@ -113,7 +113,7 @@ QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
     }
   else
     {
-      data = mat;
+      data = mat.clone();
     }
 
   try
