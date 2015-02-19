@@ -69,7 +69,7 @@ void printUsage()
 
   out << "--------------------------------------------------------" << endl;
   out << "CLI mode" << endl;
-  out << "Usage: " << QCoreApplication::applicationName() << " --converter [OPTIONS] FILES FORMATS" << endl;
+  out << "Usage: " << QCoreApplication::applicationName() << " --convert [OPTIONS] FILES FORMATS" << endl;
   out << endl;
 
   out << "FILES: list of 2D images" << endl;
