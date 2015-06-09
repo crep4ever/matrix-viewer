@@ -16,6 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 #include "operations-dialog.hh"
+#include <unistd.h>
 
 #include <QStackedWidget>
 #include <QListWidget>
@@ -79,13 +80,11 @@ COperationsDialog::COperationsDialog(QWidget *parent)
   mainLayout->addWidget(buttons);
 
   setLayout(mainLayout);
-resize(600, 400);
+  resize(600, 400);
 
   // save a backup of the model data
   // that can be restored by the reset button
   m_backupData = model()->data().clone();
-
-  reset();
 }
 
 COperationsDialog::~COperationsDialog()

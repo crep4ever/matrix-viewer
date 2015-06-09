@@ -113,7 +113,7 @@ QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
     }
   else
     {
-      data = mat;
+      data = mat.clone();
     }
 
   try
@@ -150,7 +150,6 @@ void CImageView::setModel(CMatrixModel * model)
 
       update();
     }
-
 }
 
 CMainWindow* CImageView::parent() const
@@ -177,8 +176,8 @@ void CImageView::mousePressEvent(QMouseEvent *event)
 {
   const QPointF scenePoint = mapToScene(event->pos());
   // ensure scenePoint is within the scene range
-  if (scenePoint.x() < sceneRect().width() &&
-      scenePoint.y() < sceneRect().height())
+  if (0 < scenePoint.x() && scenePoint.x() < sceneRect().width() &&
+      0 < scenePoint.y() && scenePoint.y() < sceneRect().height())
     {
       selectItem(scenePoint.y(), scenePoint.x());
     }
