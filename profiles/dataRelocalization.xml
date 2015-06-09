@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix>
+  <regexp>
+    *[rR]elocali[zs]ation*
+  </regexp>
+
+  <columns>
+    <column id="0" label="type" />
+    <column id="1" label="index" />
+    <column id="2" label="Parent type" />
+    <column id="3" label="Parent index" />
+    <column id="4" label="X min" />
+    <column id="5" label="X max" />
+    <column id="6" label="Y min" />
+    <column id="7" label="Y max" />
+    <column id="8" label="band mask" />
+    <column id="9" label="X position of ciROI patch" />
+    <column id="10" label="Y position of ciROI patch" />
+    <column id="11" label="First deposit of bridge" />
+    <column id="12" label="Second deposit of bridge" />
+    <column id="13" label="X min no margin" />
+    <column id="14" label="X max no margin" />
+    <column id="15" label="Y min no margin" />
+    <column id="16" label="Y max no margin" />
+    <column id="17" label="X center in machine" />
+    <column id="18" label="Y center in machine" />
+    <column id="19" label="Z center in machine" />
+    <column id="20" label="consistency" />
+    <column id="21" label="triangulation error" />
+    <column id="22" label="matching score" />
+    <column id="23" label="distance" />
+    <column id="24" label="stddev" />
+  </columns>
+
+</matrix>
+
