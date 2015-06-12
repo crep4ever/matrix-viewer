@@ -7,13 +7,18 @@
   <columns>
     <column id="0" label="Band id" />
     <column id="1" label="Step" />
-    <column id="2" label="Step y index" />
-    <column id="3" label="Center X" />
-    <column id="4" label="Center Y" />
-    <column id="5" label="Y range start" />
-    <column id="6" label="Y range end" />
+    <column id="2" label="Band index in step" />
+    <column id="3" label="Head X" />
+    <column id="4" label="Head Y" />
+    <column id="5" label="Head Ymin" />
+    <column id="6" label="Head Ymax" />
     <column id="7" label="Origin X" />
     <column id="8" label="Origin Y" />
+    <column id="9" label="Acquisition order" />
+    <column id="10" label="Expected reloc type" />
+    <column id="11" label="Available reloc type" />
+    <column id="12" label="Current transform type" />
+    <column id="13" label="Priority" />
 
   </columns>
 
