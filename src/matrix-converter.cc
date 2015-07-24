@@ -109,12 +109,8 @@ bool CMatrixConverter::save(const QString & filename)
     return saveToRaw(filename);
   else if (filename.endsWith(".mfe"))
     return saveToMfe(filename);
-  else if (filename.endsWith(".bmp"))
-    return saveToImage(filename);
   else
-    qWarning() << tr("Unsupported save format for file:") << filename;
-
-  return false;
+    return saveToImage(filename);
 }
 
 cv::Mat CMatrixConverter::data() const
@@ -311,7 +307,6 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
 
       cv::Mat data(cv::Size(m_rawWidth, m_rawHeight), CV_16U, buffer);
 
-      qDebug() << data.type() << data.channels();
       const double ratio = 127.5 / 511.5; // conversion from 10bits to 8 bits
       m_data = data * ratio;
       m_data.convertTo(m_data, CV_8UC1);
