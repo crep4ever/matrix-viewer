@@ -66,6 +66,7 @@ set(MATRIX_VIEWER_PROFILES
   profiles/planes.xml
   profiles/tool.xml
   profiles/lines.xml
+  profiles/dataRelocalization.xml
   )
 
 
