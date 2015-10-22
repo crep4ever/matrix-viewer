@@ -552,3 +552,16 @@ void CMatrixModel::threshold(const double p_threshold,
       qWarning() << tr("OpenCV error: %1").arg(e.what());
     }
 }
+
+void CMatrixModel::merge(const std::vector<cv::Mat> & p_layers)
+{
+  try
+    {
+      cv::merge(p_layers, m_data);
+      emit(dataChanged(QModelIndex(), QModelIndex()));
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << tr("OpenCV error: %1").arg(e.what());
+    }
+}

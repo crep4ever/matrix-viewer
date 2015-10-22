@@ -26,6 +26,7 @@
 #include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QSettings>
 #include <QDebug>
 
 #include "main-window.hh"
@@ -539,11 +540,15 @@ CMatrixWidget::CMatrixWidget(const QString & p_title,
   , m_absDiffWidget(new QPushButton(tr("Absolute difference"), this))
   , m_multiplyElementsWidget(new QPushButton(tr("Element-wise multiply"), this))
   , m_multiplyMatrixWidget(new QPushButton(tr("Matrix multiply"), this))
+  , m_openPath(QDir::homePath())
 {
   m_applyButton->hide();
 
+  readSettings();
+
   m_fileChooserWidget->setCaption(tr("Pick other data file"));
   m_fileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_fileChooserWidget->setPath(m_openPath);
 
   addParameter("", m_fileChooserWidget);
   addParameter("", m_absDiffWidget);
@@ -562,11 +567,11 @@ CMatrixWidget::CMatrixWidget(const QString & p_title,
 
 CMatrixWidget::~CMatrixWidget()
 {
+  m_fileChooserWidget->setPath(m_openPath);
 }
 
 void CMatrixWidget::reset()
 {
-  m_fileChooserWidget->setPath(QDir::homePath());
 }
 
 void CMatrixWidget::apply()
@@ -584,6 +589,8 @@ void CMatrixWidget::absDiff()
   model()->setData(m_backup.clone());
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->absdiff(converter.data());
+
+  writeSettings();
 }
 
 void CMatrixWidget::multiplyElements()
@@ -596,6 +603,8 @@ void CMatrixWidget::multiplyElements()
 
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->multiplyElements(converter.data());
+
+  writeSettings();
 }
 
 void CMatrixWidget::multiplyMatrix()
@@ -608,6 +617,103 @@ void CMatrixWidget::multiplyMatrix()
 
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->multiplyMatrix(converter.data());
+
+  writeSettings();
+}
+
+void CMatrixWidget::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("general");
+  m_openPath = settings.value("openPath", QDir::homePath()).toString();
+  settings.endGroup();
 }
 
 
+void CMatrixWidget::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup( "general" );
+  settings.setValue( "openPath", m_openPath );
+  settings.endGroup();
+}
+
+/*
+  Channels
+*/
+
+CChannelsWidget::CChannelsWidget(const QString & p_title,
+			   CMatrixModel * p_model,
+			   QWidget* p_parent) :
+  COperationWidget(p_title, p_model, p_parent)
+  , m_redFileChooserWidget(new CFileChooser(this))
+  , m_greenFileChooserWidget(new CFileChooser(this))
+  , m_blueFileChooserWidget(new CFileChooser(this))
+  , m_openPath(QDir::homePath())
+{
+  readSettings();
+
+  m_redFileChooserWidget->setCaption(tr("Red"));
+  m_redFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_redFileChooserWidget->setPath(m_openPath);
+
+  m_greenFileChooserWidget->setCaption(tr("Green"));
+  m_greenFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_greenFileChooserWidget->setPath(m_openPath);
+
+  m_blueFileChooserWidget->setCaption(tr("Blue"));
+  m_blueFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_blueFileChooserWidget->setPath(m_openPath);
+
+  addParameter("", m_redFileChooserWidget);
+  addParameter("", m_greenFileChooserWidget);
+  addParameter("", m_blueFileChooserWidget);
+}
+
+CChannelsWidget::~CChannelsWidget()
+{
+}
+
+void CChannelsWidget::reset()
+{
+  m_redFileChooserWidget->setPath(QDir::homePath());
+  m_greenFileChooserWidget->setPath(QDir::homePath());
+  m_blueFileChooserWidget->setPath(QDir::homePath());
+}
+
+void CChannelsWidget::apply()
+{
+  model()->setData(m_backup.clone());
+
+  std::vector<cv::Mat> channels;
+  CMatrixConverter rConverter(m_redFileChooserWidget->path());
+  channels.push_back(rConverter.data());
+
+  CMatrixConverter gConverter(m_greenFileChooserWidget->path());
+  channels.push_back(gConverter.data());
+
+  CMatrixConverter bConverter(m_blueFileChooserWidget->path());
+  channels.push_back(bConverter.data());
+
+  model()->merge(channels);
+
+  writeSettings();
+}
+
+
+void CChannelsWidget::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("general");
+  m_openPath = settings.value("openPath", QDir::homePath()).toString();
+  settings.endGroup();
+}
+
+
+void CChannelsWidget::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup( "general" );
+  settings.setValue( "openPath", m_openPath );
+  settings.endGroup();
+}

@@ -73,6 +73,8 @@ public slots:
 		 const double p_alpha,
 		 const double p_beta);
 
+  void merge(const std::vector<cv::Mat> & p_layers);
+
   // scalar
   void add(double p_value);
 

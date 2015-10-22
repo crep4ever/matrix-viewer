@@ -249,10 +249,44 @@ private slots:
   void multiplyMatrix();
 
 private:
+  void readSettings();
+  void writeSettings();
+
+private:
   CFileChooser *m_fileChooserWidget;
   QPushButton *m_absDiffWidget;
   QPushButton *m_multiplyElementsWidget;
   QPushButton *m_multiplyMatrixWidget;
+  QString m_openPath;
+};
+
+/*
+  Multi-channels
+*/
+
+class CChannelsWidget : public COperationWidget
+{
+  Q_OBJECT
+
+  public:
+  CChannelsWidget(const QString & p_title,
+                  CMatrixModel * p_model,
+                  QWidget* p_parent = 0);
+
+  virtual ~CChannelsWidget();
+  void reset();
+  void apply();
+
+private:
+  void readSettings();
+  void writeSettings();
+
+private:
+  CFileChooser *m_redFileChooserWidget;
+  CFileChooser *m_greenFileChooserWidget;
+  CFileChooser *m_blueFileChooserWidget;
+
+  QString m_openPath;
 };
 
 
