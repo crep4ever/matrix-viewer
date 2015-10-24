@@ -21,6 +21,8 @@
 #include <QXmlStreamReader>
 #include <QFile>
 
+#include "logger.hh"
+
 CMatrixModel::CMatrixModel()
   : QAbstractTableModel()
   , m_data()
@@ -163,12 +165,12 @@ QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int 
       if (orientation == Qt::Horizontal)
         {
           return section < m_horizontalHeaderLabels.size() ?
-            m_horizontalHeaderLabels.at(section) : QString::number(section);
+			   m_horizontalHeaderLabels.at(section) : QString::number(section);
         }
       else if (orientation == Qt::Vertical)
         {
           return section < m_verticalHeaderLabels.size() ?
-            m_verticalHeaderLabels.at(section) : QString::number(section);
+			   m_verticalHeaderLabels.at(section) : QString::number(section);
         }
     }
   return QVariant();
@@ -308,7 +310,7 @@ int CMatrixModel::total() const
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 
   return res;
@@ -324,7 +326,7 @@ int CMatrixModel::countNonZeros() const
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 
   return res;
@@ -339,7 +341,7 @@ void CMatrixModel::minMaxLoc(double* p_minVal, double* p_maxVal,
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -355,7 +357,7 @@ void CMatrixModel::meanStdDev(double* p_mean,
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -372,7 +374,7 @@ void CMatrixModel::convertTo(const int p_type,
         }
       catch (cv::Exception & e)
         {
-          qWarning() << tr("OpenCV error: %1").arg(e.what());
+	  qWarning() << e;
         }
     }
 }
@@ -388,7 +390,7 @@ void CMatrixModel::add(double p_value)
 	}
       catch (cv::Exception & e)
 	{
-	  qWarning() << tr("OpenCV error: %1").arg(e.what());
+	  qWarning() << e;
 	}
     }
 }
@@ -404,7 +406,7 @@ void CMatrixModel::multiply(double p_value)
 	}
       catch (cv::Exception & e)
 	{
-	  qWarning() << tr("OpenCV error: %1").arg(e.what());
+	  qWarning() << e;
 	}
     }
 }
@@ -418,7 +420,7 @@ void CMatrixModel::transpose()
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -431,7 +433,7 @@ void CMatrixModel::verticalFlip()
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -444,7 +446,7 @@ void CMatrixModel::horizontalFlip()
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -465,7 +467,7 @@ void CMatrixModel::rotate(const cv::Point & p_center,
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -480,7 +482,7 @@ void CMatrixModel::normalize(const double p_alpha,
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -493,7 +495,7 @@ void CMatrixModel::absdiff(const cv::Mat & p_other)
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -506,7 +508,7 @@ void CMatrixModel::multiplyElements(const cv::Mat & p_other)
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -519,7 +521,7 @@ void CMatrixModel::multiplyMatrix(const cv::Mat & p_other)
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
 
@@ -528,7 +530,9 @@ void CMatrixModel::applyColorMap(const int p_colorMap)
 #if (CV_MAJOR_VERSION == 2) and (CV_MINOR_VERSION <= 3)
   Q_UNUSED(p_colorMap);
   qWarning() << tr("cv::applyColorMap requires a more recent version of OpenCV.");
-  qWarning() << tr("Current OpenCV version: %1.%2").arg(QString::number(CV_MAJOR_VERSION)).arg(QString::number(CV_MINOR_VERSION));
+  qWarning() << tr("Current OpenCV version: %1.%2")
+    .arg(QString::number(CV_MAJOR_VERSION))
+    .arg(QString::number(CV_MINOR_VERSION));
 #else
   try
     {
@@ -537,7 +541,7 @@ void CMatrixModel::applyColorMap(const int p_colorMap)
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 #endif
 }
@@ -553,6 +557,6 @@ void CMatrixModel::threshold(const double p_threshold,
     }
   catch (cv::Exception & e)
     {
-      qWarning() << tr("OpenCV error: %1").arg(e.what());
+      qWarning() << e;
     }
 }
