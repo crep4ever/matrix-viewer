@@ -21,6 +21,7 @@
 
 #include <QDialog>
 #include <QList>
+#include <QMutex>
 #include <QDebug>
 
 #include "benchmark-result.hh"
@@ -28,11 +29,11 @@
 class QTabWidget;
 class QCheckBox;
 class QSpinBox;
-class QProgressBar;
 class QTextEdit;
 
 class CMainWindow;
 class CMatrixModel;
+class CProgressBar;
 
 /*!
   \file  benchmark-dialog.hh
@@ -57,6 +58,10 @@ public:
 public slots:
 
   void run();
+  void handleResult(const BenchmarkResult & p_res);
+
+  void cancel();
+  void save();
 
   void selectAll();
   void unselectAll();
@@ -65,17 +70,21 @@ private slots:
   void updateProgressRange();
 
 private:
+  void readSettings();
+  void writeSettings();
 
   void addHeaderInfo();
   int countOperations() const;
-  
+
   CMainWindow *m_parent;
   QTabWidget *m_tabs;
-  QSpinBox *m_iterations;
+  CProgressBar *m_progressBar;
   QList<QCheckBox*> m_operations;
-  QProgressBar *m_progressBar;
-  QList<BenchmarkResult> m_results;
+  QSpinBox *m_iterations;
   QTextEdit *m_report;
+  QString m_savePath;
+  bool m_cancelRequested;
+  int m_progress;
 };
 
 #endif  // __BENCHMARK_DIALOG_HH__

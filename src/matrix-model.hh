@@ -21,7 +21,6 @@
 
 #include <QAbstractTableModel>
 #include <QStringList>
-#include "benchmark-result.hh"
 #include <opencv2/opencv.hpp>
 
 /*!
@@ -56,7 +55,7 @@ public:
   void setProfile(const QString & profile);
 
   static QStringList benchmark_operations();
-  
+
   // OpenCV wrappers
   int channels() const;
   int type() const;
@@ -110,14 +109,13 @@ public slots:
 		 const double p_maxValue,
 		 const int p_type);
 
-public:
-  BenchmarkResult benchmark(const QString & p_name,
-			    const int p_iterations = 1);
 private:
 
   cv::Mat m_data;
   QStringList m_horizontalHeaderLabels;
   QStringList m_verticalHeaderLabels;
 };
+
+
 
 #endif  // __MATRIX_MODEL_HH__

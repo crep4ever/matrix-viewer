@@ -560,3 +560,20 @@ void CMatrixModel::threshold(const double p_threshold,
       qWarning() << e;
     }
 }
+
+QStringList CMatrixModel::benchmark_operations()
+{
+  QStringList res;
+  res << "total";
+  res << "countNonZeros";
+  res << "minMaxLoc";
+  res << "meanStdDev";
+  res << "add";
+  res << "multiply";
+  res << "transpose";
+  res << "verticalFlip";
+  res << "horizontalFlip";
+  res << "rotate";
+  res << "normalize";
+  return res;
+}

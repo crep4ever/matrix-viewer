@@ -17,7 +17,11 @@
 //******************************************************************************
 #include "benchmark-dialog.hh"
 
+#include <unistd.h>
+
 #include <QDialogButtonBox>
+#include <QFileDialog>
+#include <QFileInfo>
 #include <QAction>
 #include <QSpinBox>
 #include <QCheckBox>
@@ -30,21 +34,29 @@
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QSysInfo>
+#include <QMutexLocker>
 #include <QDebug>
 
 #include "main-window.hh"
+#include "tab.hh"
 #include "matrix-model.hh"
+#include "progress-bar.hh"
+#include "benchmark-thread.hh"
 
 CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
   : QDialog(parent)
   , m_parent(qobject_cast<CMainWindow*>(parent))
   , m_tabs(new QTabWidget)
-  , m_iterations(new QSpinBox)
+  , m_progressBar(new CProgressBar)
   , m_operations()
-  , m_progressBar(new QProgressBar)
+  , m_iterations(new QSpinBox)
   , m_report(new QTextEdit)
+  , m_savePath(QDir::homePath())
+  , m_cancelRequested(false)
+  , m_progress(0)
 {
   setWindowTitle(tr("Benchmark"));
+  readSettings();
 
   // -----------------------------------------
   // Operations tab
@@ -80,7 +92,8 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
 
   // Progress bar
   updateProgressRange();
-  
+  connect(m_progressBar, SIGNAL(canceled()), this, SLOT(cancel()));
+
   // Context menu actions
   scrollArea->setContextMenuPolicy(Qt::ActionsContextMenu);
 
@@ -97,12 +110,12 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
   runButton->setDefault(true);
   connect(runButton, SIGNAL(clicked()), this, SLOT(run()));
 
-//  QPushButton *reportButton = new QPushButton(tr("Results"));
-//  reportButton->setEnabled(false);
-//  connect(reportButton, SIGNAL(clicked()), this, SLOT(report()));
+  QPushButton *exportButton = new QPushButton(tr("&Export"));
+  connect(exportButton, SIGNAL(clicked()), this, SLOT(save()));
 
   QDialogButtonBox *buttons = new QDialogButtonBox;
-  buttons->addButton(runButton, QDialogButtonBox::ActionRole);
+  buttons->addButton(exportButton, QDialogButtonBox::ActionRole);
+  buttons->addButton(runButton, QDialogButtonBox::ApplyRole);
 
   QBoxLayout *operationsLayout = new QVBoxLayout;
   operationsLayout->addLayout(parametersLayout);
@@ -115,9 +128,11 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
   // Report tab
   // -----------------------------------------
 
+  m_report->setReadOnly(true);
+
   QBoxLayout *reportLayout = new QVBoxLayout;
   reportLayout->addWidget(m_report);
-  
+
   QWidget *reportTab = new QWidget;
   reportTab->setLayout(reportLayout);
 
@@ -128,18 +143,34 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
 
   m_tabs->addTab(operationsTab, tr("Operations"));
   m_tabs->addTab(reportTab, tr("Report"));
-  
+
   QBoxLayout *mainLayout = new QVBoxLayout;
   mainLayout->addWidget(m_tabs);
   mainLayout->addWidget(m_progressBar);
   mainLayout->addWidget(buttons);
-  
+
   setLayout(mainLayout);
   resize(600, 500);
 }
 
 CBenchmarkDialog::~CBenchmarkDialog()
 {
+}
+
+void CBenchmarkDialog::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("general");
+  m_savePath = settings.value("savePath", QDir::homePath()).toString();
+  settings.endGroup();
+}
+
+void CBenchmarkDialog::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup( "general" );
+  settings.setValue( "savePath", m_savePath );
+  settings.endGroup();
 }
 
 
@@ -157,26 +188,59 @@ CMatrixModel* CBenchmarkDialog::model() const
 
 void CBenchmarkDialog::run()
 {
+  m_cancelRequested = false;
+
   m_tabs->setCurrentIndex(1);
-  
+
   m_progressBar->reset();
 
   m_report->clear();
   addHeaderInfo();
 
-  int progress = 0;
+  m_progress = 0;
+
+  // Ensure that dataChanged is not emitted
+  // as it would update matrix and image views
+  model()->blockSignals(true);
+
   foreach (QCheckBox *checkBox, m_operations)
     {
-      if (checkBox->isChecked())
+      if (!m_cancelRequested && checkBox->isChecked())
 	{
-	  BenchmarkResult r = model()->benchmark(checkBox->text(),
-						 m_iterations->value());
-	  m_progressBar->setValue(++progress);
+	  BenchmarkThread worker(checkBox->text(),
+				 m_iterations->value(),
+				 model());
 
-	  m_report->append(QString("<b>%1</b>").arg(checkBox->text()));
-	  m_report->append(r.toString());
+	  connect(&worker, SIGNAL(resultReady(const BenchmarkResult &)),
+		  this, SLOT(handleResult(const BenchmarkResult &)));
+
+	  connect(m_progressBar, SIGNAL(canceled()),
+		  &worker, SLOT(cancel()));
+
+	  worker.run();
 	}
     }
+
+  // Restore normal signal use
+  model()->blockSignals(false);
+  parent()->currentWidget()->setModified(false);
+}
+
+
+void CBenchmarkDialog::handleResult(const BenchmarkResult & p_result)
+{
+  m_progressBar->setValue(++m_progress);
+
+  m_report->append(QString("<b>%1 (%2)</b>")
+		   .arg(p_result.title())
+		   .arg(p_result.statusStr()));
+
+  m_report->append(p_result.timeStr());
+}
+
+void CBenchmarkDialog::cancel()
+{
+  m_cancelRequested = true;
 }
 
 void CBenchmarkDialog::selectAll()
@@ -233,15 +297,14 @@ void CBenchmarkDialog::addHeaderInfo()
   QString rule = QString("-----------------------------------------------------------");
 
   m_report->append(rule);
-    
+
   QString cvInfo = tr("OpenCV: %1.%2.%3")
     .arg(QString::number(CV_MAJOR_VERSION))
     .arg(QString::number(CV_MINOR_VERSION))
     .arg(QString::number(CV_SUBMINOR_VERSION));;
 
   m_report->append(cvInfo);
-  m_report->append("\n");
-  
+
   QString modelInfo = tr("Matrix: %1 x %2 %3C%4")
     .arg(QString::number(model()->rowCount()))
     .arg(QString::number(model()->columnCount()))
@@ -249,13 +312,43 @@ void CBenchmarkDialog::addHeaderInfo()
     .arg(QString::number(model()->channels()));
 
   m_report->append(modelInfo);
-  m_report->append("\n");
-  
+
   QString benchmarkInfo = tr("Benchmark: %1 operations with %2 iterations")
     .arg(QString::number(countOperations()))
     .arg(QString::number(m_iterations->value()));
-  
+
   m_report->append(benchmarkInfo);
 
   m_report->append(rule);
 }
+
+
+void CBenchmarkDialog::save()
+{
+  QString filename = QFileDialog::getSaveFileName(this,
+                                                  tr("Save benchmark report"),
+                                                  m_savePath,
+                                                  tr("Data files (*.txt *.html)"));
+  QFileInfo fi(filename);
+  if (filename.isEmpty())
+    return;
+
+  m_savePath = fi.absolutePath();
+  QFile data(filename);
+  if (data.open(QFile::WriteOnly | QFile::Truncate))
+    {
+      QTextStream out(&data);
+      if (fi.completeSuffix() == "html")
+	{
+	  out << m_report->toHtml();
+	}
+      else
+	{
+	  out << m_report->toPlainText();
+	}
+    }
+
+  writeSettings(); //update savePath
+}
+
+
