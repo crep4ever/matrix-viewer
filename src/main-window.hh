@@ -79,6 +79,7 @@ private slots:
   void closeTab(int index);
   void changeTab(int index);
   void operations();
+  void benchmark();
 
   //application
   void preferences();
@@ -136,6 +137,7 @@ private:
   QAction *m_saveAct;
   QAction *m_saveAsAct;
   QAction *m_operationsAct;
+  QAction *m_benchmarkAct;
 
   QAction *m_dataViewAct;
   QAction *m_imageViewAct;

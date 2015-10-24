@@ -21,10 +21,12 @@ set(MATRIX_VIEWER_SOURCES
   src/progress-bar.cc
   src/file-chooser.cc
   src/matrix-model.cc
+  src/matrix-model-benchmark.cc
   src/matrix-view.cc
   src/image-view.cc
   src/matrix-converter.cc
   src/operations-dialog.cc
+  src/benchmark-dialog.cc
   src/properties-dialog.cc
   src/tab-widget.cc
   src/tab.cc
@@ -48,6 +50,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/image-view.hh
   src/matrix-converter.hh
   src/operations-dialog.hh
+  src/benchmark-dialog.hh
   src/properties-dialog.hh
   src/tab-widget.hh
   src/tab.hh

@@ -47,6 +47,7 @@
 #include "image-view.hh"
 #include "matrix-converter.hh"
 #include "operations-dialog.hh"
+#include "benchmark-dialog.hh"
 #include "tab-widget.hh"
 #include "tab.hh"
 #include "position.hh"
@@ -155,6 +156,10 @@ void CMainWindow::createActions()
   m_operationsAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/compare.png"));
   m_operationsAct->setStatusTip(tr("Apply common operations"));
   connect(m_operationsAct, SIGNAL(triggered()), this, SLOT(operations()));
+
+  m_benchmarkAct = new QAction(tr("&Benchmark"), this);
+  m_benchmarkAct->setStatusTip(tr("Run OpenCV benchmark on current matrix"));
+  connect(m_benchmarkAct, SIGNAL(triggered()), this, SLOT(benchmark()));
 
   m_documentationAct = new QAction(tr("Online &Documentation"), this);
   m_documentationAct->setShortcut(QKeySequence::HelpContents);
@@ -387,6 +392,7 @@ void CMainWindow::createToolBar()
   m_mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   m_mainToolBar->addAction(m_openAct);
   m_mainToolBar->addAction(m_operationsAct);
+  m_mainToolBar->addAction(m_benchmarkAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_previousFileAct);
@@ -442,6 +448,18 @@ void CMainWindow::operations()
     }
 
   COperationsDialog dialog(this);
+  dialog.exec();
+}
+
+void CMainWindow::benchmark()
+{
+  if (!currentModel())
+    {
+      showMessage(tr("Can't apply benchmark without matrix"));
+      return;
+    }
+
+  CBenchmarkDialog dialog(this);
   dialog.exec();
 }
 
