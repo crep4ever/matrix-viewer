@@ -58,6 +58,9 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 {
   switch (role)
     {
+    case Qt::TextAlignmentRole:
+      return Qt::AlignCenter;
+
     case Qt::EditRole:
     case Qt::DisplayRole:
       {

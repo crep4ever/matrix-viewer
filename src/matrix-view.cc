@@ -21,6 +21,7 @@
 #include <QSettings>
 #include <QAction>
 #include <QMenu>
+#include <QHeaderView>
 #include <QDebug>
 
 #include "main-window.hh"
@@ -36,6 +37,8 @@ CMatrixView::CMatrixView(QWidget *p)
   setSortingEnabled(true);
   setEditTriggers(QAbstractItemView::DoubleClicked);
   setSelectionMode(QAbstractItemView::SingleSelection);
+
+  horizontalHeader()->setDefaultSectionSize(120);
 
   m_adjustColumnsAct = new QAction(tr("&Adjust columns"), this);
   m_adjustColumnsAct->setStatusTip(tr("Adjust columns of the table view to contents"));
