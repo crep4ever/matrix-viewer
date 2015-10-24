@@ -95,6 +95,9 @@ CFormatWidget::CFormatWidget(const QString & p_title,
   , m_alphaWidget(new QDoubleSpinBox)
   , m_betaWidget(new QDoubleSpinBox)
 {
+  m_alphaWidget->setValue(1);
+  m_betaWidget->setValue(0);
+
   m_typeWidget->addItem("8U");
   m_typeWidget->addItem("8S");
   m_typeWidget->addItem("16U");
