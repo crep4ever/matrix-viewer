@@ -58,6 +58,7 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 {
   switch (role)
     {
+    case Qt::EditRole:
     case Qt::DisplayRole:
       {
 	cv::Vec2b point2b;
