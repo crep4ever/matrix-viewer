@@ -313,7 +313,7 @@ void CTransformationsWidget::reset()
 }
 
 void CTransformationsWidget::apply()
-{ 
+{
 }
 
 
@@ -334,7 +334,7 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
       m_rangeWidget->setLabels(tr("min"), tr("max"));
       addParameter(tr("range"), m_rangeWidget);
     }
-  
+
   m_colorMapWidget->addItem("NONE");
   m_colorMapWidget->addItem("AUTUMN");
   m_colorMapWidget->addItem("BONE");
@@ -392,7 +392,7 @@ void CColorMapWidget::apply()
       cv::normalize(m, m, 0, 255, cv::NORM_MINMAX, CV_8U);
     }
 
-  model()->setData(m); 
+  model()->setData(m);
 
   const QString type = m_colorMapWidget->currentText();
 

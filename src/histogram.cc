@@ -102,7 +102,7 @@ void CHistogram::drawPixmap()
       if (m_values[i] > max)
 	max = m_values[i];
     }
-  
+
   QVector<qreal> normalizedValues(m_values.size(), 0);
   if (max > 0.0)
     {
@@ -149,7 +149,7 @@ void CHistogram::computeStats()
     {
       sum += i * m_values[i];
       squareSum += i * i * m_values[i];
-      
+
       min = qMin(min, i);
       max = qMax(max, i);
       count += m_values[i];

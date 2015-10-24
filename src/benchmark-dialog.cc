@@ -30,11 +30,8 @@
 #include <QBoxLayout>
 #include <QFormLayout>
 #include <QPushButton>
-#include <QProgressBar>
 #include <QTabWidget>
 #include <QTextEdit>
-#include <QSysInfo>
-#include <QMutexLocker>
 #include <QDebug>
 
 #include "main-window.hh"

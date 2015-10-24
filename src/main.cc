@@ -184,9 +184,7 @@ int main(int argc, char *argv[])
       return parser.execute();
     }
 
- int metatype_id = qRegisterMetaType<BenchmarkResult>("BenchmarkResult");
-
-
+  qRegisterMetaType<BenchmarkResult>("BenchmarkResult");
 
   CMainWindow mainWindow;
   mainWindow.show();

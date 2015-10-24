@@ -21,7 +21,6 @@
 
 #include <QDialog>
 #include <QList>
-#include <QMutex>
 #include <QDebug>
 
 #include "benchmark-result.hh"

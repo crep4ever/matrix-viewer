@@ -92,7 +92,7 @@ void CImageView::createActions()
   m_histogramAct->setStatusTip(tr("Histogram"));
   m_histogramAct->setCheckable(true);
   m_histogramAct->setChecked(false);
-  connect(m_histogramAct, SIGNAL(toggled(bool)), 
+  connect(m_histogramAct, SIGNAL(toggled(bool)),
 	  this, SLOT(toggleHistogram(bool)));
 }
 
