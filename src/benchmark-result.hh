@@ -19,57 +19,54 @@
 #ifndef __BENCHMARK_RESULT_HH__
 #define __BENCHMARK_RESULT_HH__
 
+#include <QObject>
 #include <QString>
 #include <QDebug>
 
-
-struct BenchmarkResult
+class BenchmarkResult : public QObject
 {
-  BenchmarkResult() : m_nsMin(0), m_nsMax(0), m_nsAvg(0){};
-  ~BenchmarkResult(){};
+  Q_OBJECT
+public:
 
-  QString toString() const
-  {
-    QString unit = "ns";
-    double min = m_nsMin;
-    double max = m_nsMax;
-    double avg = m_nsAvg;
+  enum Status
+    {
+      Ignored,
+      Canceled,
+      Error,
+      Success
+    };
 
-    const double us = 1000;
-    const double ms = us * 1000;
-    const double s  = ms * 1000;
-    if (min > s)
-      {
-	min /= s;
-	max /= s;
-	avg /= s;
-	unit = "s";
-      }
-    else if (min > ms)
-      {
-	min /= ms;
-	max /= ms;
-	avg /= ms;
-	unit = "ms";
-      }
-    else if (min > us)
-      {
-	min /= us;
-	max /= us;
-	avg /= us;
-	unit = "µs";
-      }
-    
-    return QString("avg: %1 %4\nmin: %2 %4\nmax: %3 %4\n")
-      .arg(avg)
-      .arg(min)
-      .arg(max)
-      .arg(unit);
-  }
-  
+  BenchmarkResult();
+  BenchmarkResult(const QString & p_name);
+  BenchmarkResult(const BenchmarkResult & p_other);
+  ~BenchmarkResult();
+
+  const QString & title() const;
+  void setTitle(const QString & p_str);
+
+  double nsMin() const;
+  void setNsMin(const double p_value);
+
+  double nsMax() const;
+  void setNsMax(const double p_value);
+
+  double nsAvg() const;
+  void setNsAvg(const double p_value);
+
+  Status status() const;
+  void setStatus(const Status s);
+  QString statusStr() const;
+
+  QString timeStr() const;
+
+private:
+  QString m_title;
   double m_nsMin;
   double m_nsMax;
   double m_nsAvg;
+  Status m_status;
 };
 
-#endif
+Q_DECLARE_METATYPE(BenchmarkResult)
+
+#endif // __BENCHMARK_RESULT_HH__

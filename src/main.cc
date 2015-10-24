@@ -35,6 +35,7 @@
 #include "config.hh"
 #include "main-window.hh"
 #include "parser.hh"
+#include "benchmark-result.hh"
 
 namespace // anonymous namespace
 {
@@ -176,12 +177,16 @@ int main(int argc, char *argv[])
       printVersion();
       return 0;
     }
-  
+
   if (cliMode)
     {
       CParser parser(QCoreApplication::arguments());
       return parser.execute();
     }
+
+ int metatype_id = qRegisterMetaType<BenchmarkResult>("BenchmarkResult");
+
+
 
   CMainWindow mainWindow;
   mainWindow.show();
