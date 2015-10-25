@@ -24,6 +24,7 @@ set(MATRIX_VIEWER_SOURCES
   src/matrix-view.cc
   src/image-view.cc
   src/matrix-converter.cc
+  src/operation.cc
   src/operations-dialog.cc
   src/benchmark-thread.cc
   src/benchmark-result.cc

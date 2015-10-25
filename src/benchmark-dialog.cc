@@ -37,6 +37,7 @@
 #include "main-window.hh"
 #include "tab.hh"
 #include "matrix-model.hh"
+#include "operation.hh"
 #include "progress-bar.hh"
 #include "benchmark-thread.hh"
 
@@ -68,12 +69,13 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
   parametersLayout->addRow(tr("Iterations:"), m_iterations);
 
   // Checkbox list of operations
-  const QStringList names = model()->benchmark_operations();
+  const QList<Operation> & benchmarkOperations = Operation::list_benchmark();
 
   QVBoxLayout *namesLayout = new QVBoxLayout;
-  foreach(const QString & name, names)
+  foreach(const Operation & o, benchmarkOperations)
     {
-      QCheckBox *item = new QCheckBox(name);
+      QCheckBox *item = new QCheckBox(o.name());
+      item->setToolTip(o.description());
       item->setChecked(true);
       connect(item, SIGNAL(clicked()), this, SLOT(updateProgressRange()));
       m_operations.append(item);

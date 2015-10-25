@@ -54,8 +54,6 @@ public:
 
   void setProfile(const QString & profile);
 
-  static QStringList benchmark_operations();
-
   // OpenCV wrappers
   int channels() const;
   int type() const;
