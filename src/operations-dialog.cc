@@ -58,6 +58,7 @@ COperationsDialog::COperationsDialog(QWidget *parent)
   m_operationsWidget->addWidget(new CNormalizeWidget(tr("Normalize"), model(), m_parent));
   m_operationsWidget->addWidget(new CThresholdWidget(tr("Threshold"), model(), m_parent));
   m_operationsWidget->addWidget(new CColorMapWidget(tr("ColorMap"), model(), m_parent));
+  m_operationsWidget->addWidget(new CChannelsWidget(tr("Channels"), model(), m_parent));
   createIcons();
 
   QPushButton *okButton = new QPushButton(tr("&OK"));

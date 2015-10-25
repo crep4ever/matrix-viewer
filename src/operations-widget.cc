@@ -691,3 +691,76 @@ void CMatrixWidget::multiplyMatrix()
 }
 
 
+/*
+  Channels
+*/
+
+CChannelsWidget::CChannelsWidget(const QString & p_title,
+				 CMatrixModel * p_model,
+				 QWidget* p_parent) :
+  COperationWidget(p_title, p_model, p_parent)
+  , m_redFileChooserWidget(new CFileChooser(this))
+  , m_greenFileChooserWidget(new CFileChooser(this))
+  , m_blueFileChooserWidget(new CFileChooser(this))
+  , m_redOpenPath(m_openPath)
+  , m_greenOpenPath(m_openPath)
+  , m_blueOpenPath(m_openPath)
+{
+  m_applyButton->setText(tr("Merge"));
+
+  m_redFileChooserWidget->setCaption(tr("Select red channel"));
+  m_redFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_redFileChooserWidget->setPath(m_redOpenPath);
+
+  m_greenFileChooserWidget->setCaption(tr("Select green channel"));
+  m_greenFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_greenFileChooserWidget->setPath(m_blueOpenPath);
+
+  m_blueFileChooserWidget->setCaption(tr("Select blue channel"));
+  m_blueFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_blueFileChooserWidget->setPath(m_greenOpenPath);
+
+  addParameter("Red", m_redFileChooserWidget);
+  addParameter("Green", m_greenFileChooserWidget);
+  addParameter("Blue", m_blueFileChooserWidget);
+}
+
+CChannelsWidget::~CChannelsWidget()
+{
+}
+
+void CChannelsWidget::reset()
+{
+  m_redFileChooserWidget->setPath(m_redOpenPath);
+  m_greenFileChooserWidget->setPath(m_greenOpenPath);
+  m_blueFileChooserWidget->setPath(m_blueOpenPath);
+  COperationWidget::reset();
+}
+
+void CChannelsWidget::apply()
+{
+  m_redOpenPath   = m_redFileChooserWidget->path();
+  m_greenOpenPath = m_greenFileChooserWidget->path();
+  m_blueOpenPath  = m_blueFileChooserWidget->path();
+
+  if (m_redOpenPath.isEmpty()   ||
+      m_greenOpenPath.isEmpty() ||
+      m_blueOpenPath.isEmpty())
+    {
+      qWarning() << tr("Empty filenames");
+      return;
+    }
+
+  model()->setData(m_backup.clone());
+  
+  QList<cv::Mat> channels;
+  channels << CMatrixConverter(m_redOpenPath).data();
+  channels << CMatrixConverter(m_greenOpenPath).data();
+  channels << CMatrixConverter(m_blueOpenPath).data();
+
+  model()->merge(channels);
+
+  m_openPath = m_redOpenPath;
+  writeSettings(); // update openPath
+}
+
