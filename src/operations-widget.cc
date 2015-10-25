@@ -343,12 +343,14 @@ CTransformationsWidget::CTransformationsWidget(const QString & p_title,
   , m_transposeWidget(new QPushButton(tr("Transpose"), this))
   , m_verticalFlipWidget(new QPushButton(tr("Vertical flip"), this))
   , m_horizontalFlipWidget(new QPushButton(tr("Horizontal flip"), this))
+  , m_mulTransposeWidget(new QPushButton(tr("Multiply by transposed"), this))
 {
   m_applyButton->hide();
 
   addParameter("", m_transposeWidget);
   addParameter("", m_verticalFlipWidget);
   addParameter("", m_horizontalFlipWidget);
+  addParameter("", m_mulTransposeWidget);
 
   connect(m_transposeWidget, SIGNAL(clicked()),
 	  model(), SLOT(transpose()));
@@ -358,6 +360,9 @@ CTransformationsWidget::CTransformationsWidget(const QString & p_title,
 
   connect(m_horizontalFlipWidget, SIGNAL(clicked()),
 	  model(), SLOT(horizontalFlip()));
+
+  connect(m_mulTransposeWidget, SIGNAL(clicked()),
+	  model(), SLOT(mulTranspose()));
 }
 
 CTransformationsWidget::~CTransformationsWidget()
@@ -752,7 +757,7 @@ void CChannelsWidget::apply()
     }
 
   model()->setData(m_backup.clone());
-  
+
   QList<cv::Mat> channels;
   channels << CMatrixConverter(m_redOpenPath).data();
   channels << CMatrixConverter(m_greenOpenPath).data();

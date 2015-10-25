@@ -132,5 +132,10 @@ QList<Operation> Operation::list_benchmark()
   o.setUrl("http://docs.opencv.org/modules/core/doc/operations_on_arrays.html#normalize");
   list << Operation(o);
 
+  o.setName("mulTranspose");
+  o.setDescription("Multiplication by transposed (m * m.t())");
+  o.setUrl("http://docs.opencv.org/modules/core/doc/operations_on_arrays.html#void%20mulTransposed%28InputArray%20src,%20OutputArray%20dst,%20bool%20aTa,%20InputArray%20delta,%20double%20scale,%20int%20dtype%29");
+  list << Operation(o);
+
   return list;
 }

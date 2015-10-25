@@ -192,6 +192,7 @@ private:
   QPushButton *m_transposeWidget;
   QPushButton *m_verticalFlipWidget;
   QPushButton *m_horizontalFlipWidget;
+  QPushButton *m_mulTransposeWidget;
 };
 
 /*

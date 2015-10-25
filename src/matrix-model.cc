@@ -426,6 +426,19 @@ void CMatrixModel::transpose()
     }
 }
 
+void CMatrixModel::mulTranspose()
+{
+  try
+    {
+      cv::mulTransposed(m_data, m_data, false);
+      emit(dataChanged(QModelIndex(), QModelIndex()));
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << e;
+    }
+}
+
 void CMatrixModel::verticalFlip()
 {
   try

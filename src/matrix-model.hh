@@ -84,6 +84,8 @@ public slots:
   // transform
   void transpose();
 
+  void mulTranspose();
+
   void verticalFlip();
 
   void horizontalFlip();

@@ -150,6 +150,13 @@ void BenchmarkThread::run()
 	  ns = timer.nsecsElapsed();
 	  m_model->setData(backup.clone());
 	}
+      else if (m_name == "mulTranspose")
+	{
+	  timer.start();
+	  m_model->mulTranspose();
+	  ns = timer.nsecsElapsed();
+	  m_model->setData(backup.clone());
+	}
       else
 	{
 	  qWarning() << "unsupported operation " << m_name;
