@@ -259,8 +259,8 @@ void CRotationWidget::apply()
 {
   model()->setData(m_backup.clone());
 
-  const cv::Point center(m_centerWidget->point().x(),
-                         m_centerWidget->point().y());
+  const cv::Point2f center(m_centerWidget->point().x(),
+			   m_centerWidget->point().y());
 
   model()->rotate(center,
                   m_angleWidget->value(),

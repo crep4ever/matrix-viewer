@@ -133,8 +133,6 @@ int CParser::execute()
         }
       else if (QFile(arg).exists())
         {
-          CMatrixConverter converter;
-
           // -------------------------------------------
           // Load input file
           // -------------------------------------------

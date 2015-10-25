@@ -26,6 +26,8 @@
 CMatrixModel::CMatrixModel()
   : QAbstractTableModel()
   , m_data()
+  , m_horizontalHeaderLabels()
+  , m_verticalHeaderLabels()
 {
 }
 
@@ -300,9 +302,9 @@ void CMatrixModel::setProfile(const QString & profile)
   Operations
 */
 
-int CMatrixModel::total() const
+size_t CMatrixModel::total() const
 {
-  int res = 0;
+  size_t res = 0;
 
   try
     {
@@ -451,7 +453,7 @@ void CMatrixModel::horizontalFlip()
 }
 
 
-void CMatrixModel::rotate(const cv::Point & p_center,
+void CMatrixModel::rotate(const cv::Point2f & p_center,
                           const double p_angle_dg,
                           const double p_scaleFactor)
 {

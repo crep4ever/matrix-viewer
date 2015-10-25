@@ -20,11 +20,27 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
   message(STATUS "Compiling in Debug mode with GCC")
   # Add additional GCC options.
   add_definitions(
-    -ggdb3 -fno-strict-aliasing -Wall -Wextra
-    -Wchar-subscripts -Wundef -Wcast-align -Wwrite-strings
-    -Wsign-compare -Wunused -Wuninitialized -Winit-self
-    -Wpointer-arith -Wredundant-decls -Wformat-nonliteral
-    -Wmissing-format-attribute -Wformat-security
+    -g -O -Wall -pedantic
+    -pedantic-errors -Wextra -Wcast-align
+    -Wcast-qual -Wchar-subscripts -Wcomment
+    -Wdisabled-optimization
+    -Werror -Wformat -Wformat=2
+    -Wformat-nonliteral -Wformat-security
+    -Wformat-y2k
+    -Wimport  -Winit-self -Winline
+    -Winvalid-pch
+    -Wunsafe-loop-optimizations -Wlong-long -Wmissing-braces
+    -Wmissing-field-initializers -Wmissing-format-attribute
+    -Wmissing-include-dirs -Wmissing-noreturn
+    -Wpacked  -Wparentheses  -Wpointer-arith
+    -Wredundant-decls -Wreturn-type
+    -Wsequence-point  -Wshadow -Wsign-compare  -Wstack-protector
+    -Wstrict-aliasing -Wstrict-aliasing=2 -Wswitch
+    -Wswitch-enum -Wtrigraphs  -Wuninitialized
+    -Wunknown-pragmas -Wunreachable-code -Wunused
+    -Wunused-function -Wunused-label -Wunused-parameter
+    -Wunused-value -Wunused-variable -Wvariadic-macros
+    -Wvolatile-register-var  -Wwrite-strings
     )
 elseif( CMAKE_CXX_COMPILER MATCHES "clang" )
   message(STATUS "Compiling in Debug mode with Clang")

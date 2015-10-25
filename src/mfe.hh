@@ -29,17 +29,17 @@
 #pragma pack(1)
 struct MFEHeader
 {
-  MFEHeader()
+  MFEHeader() :
+    format(),
+    offset(0),
+    type(0),
+    cols(0),
+    rows(0),
+    depth(0)
   {
     format[0] = 'n';
     format[1] = '/';
     format[2] = 'a';
-
-    offset = 0;
-    type = 0;
-    cols = 0;
-    rows = 0;
-    depth = 0;
   }
 
   ~MFEHeader()
@@ -80,7 +80,7 @@ public:
     m_header.format[0] = 'M';
     m_header.format[1] = 'F';
     m_header.format[2] = 'E';
-    m_header.offset = m_comment.size() + sizeof(MFEHeader);
+    m_header.offset = (int32_t) m_comment.size() + (int32_t) sizeof(MFEHeader);
     m_header.type  = p_mat.type();
     m_header.cols  = p_mat.cols;
     m_header.rows  = p_mat.rows;
@@ -95,7 +95,7 @@ public:
   void setComment(const std::string & p_str)
   {
     m_comment = p_str;
-    m_header.offset = m_comment.size() + sizeof(MFEHeader);
+    m_header.offset = (int32_t) m_comment.size() + (int32_t) sizeof(MFEHeader);
   }
 
   std::string comment() const
@@ -132,11 +132,11 @@ public:
                 std::ifstream::in | std::ifstream::binary);
 
     // header
-    int size = sizeof(MFEHeader);
+    int32_t size = (int32_t) sizeof(MFEHeader);
     stream.read(reinterpret_cast<char*>(&m_header), size);
 
     // comment
-    size = m_header.offset - sizeof(MFEHeader);
+    size = (int32_t) m_header.offset - (int32_t) sizeof(MFEHeader);
     char* comment = new char[size + 1];
     stream.read(comment, size);
     comment[size] = '\0';
@@ -144,7 +144,7 @@ public:
 
     // data
     m_data.create(m_header.rows, m_header.cols, m_header.type);
-    size = m_header.rows * m_header.cols * m_data.elemSize();
+    size = (int32_t) m_header.rows * (int32_t) m_header.cols * (int32_t) m_data.elemSize();
     stream.read(reinterpret_cast<char*>(m_data.data), size);
 
     stream.close();

@@ -341,10 +341,10 @@ void CBenchmarkDialog::save()
     return;
 
   m_savePath = fi.absolutePath();
-  QFile data(filename);
-  if (data.open(QFile::WriteOnly | QFile::Truncate))
+  QFile file(filename);
+  if (file.open(QFile::WriteOnly | QFile::Truncate))
     {
-      QTextStream out(&data);
+      QTextStream out(&file);
       if (fi.completeSuffix() == "html")
 	{
 	  out << m_report->toHtml();

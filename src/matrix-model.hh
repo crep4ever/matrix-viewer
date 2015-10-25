@@ -61,7 +61,7 @@ public:
   int type() const;
   QString typeString() const;
 
-  int total() const;
+  size_t total() const;
   int countNonZeros() const;
   void minMaxLoc(double* p_minVal, double* p_maxVal = 0,
 		 cv::Point* p_minLoc = 0, cv::Point* p_maxLoc = 0);
@@ -87,7 +87,7 @@ public slots:
 
   void horizontalFlip();
 
-  void rotate(const cv::Point & p_center,
+  void rotate(const cv::Point2f & p_center,
 	      const double p_angle_dg,
 	      const double p_scaleFactor);
 

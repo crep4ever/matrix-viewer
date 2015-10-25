@@ -137,9 +137,9 @@ void BenchmarkThread::run()
       else if (m_name == "rotate")
 	{
 	  timer.start();
-	  const float x = m_model->columnCount() / 2.0;
-	  const float y = m_model->rowCount() / 2.0;
-	  m_model->rotate(cv::Point(x, y), 60, 1);
+	  const float x = (float) (m_model->columnCount() / 2.0);
+	  const float y = (float) (m_model->rowCount() / 2.0);
+	  m_model->rotate(cv::Point2f(x, y), 60, 1);
 	  ns = timer.nsecsElapsed();
 	  m_model->setData(backup.clone());
 	}

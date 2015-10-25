@@ -26,6 +26,7 @@ BenchmarkResult::BenchmarkResult()
   , m_nsMin(0)
   , m_nsMax(0)
   , m_nsAvg(0)
+  , m_status(Ignored)
 {
 }
 
@@ -35,6 +36,7 @@ BenchmarkResult::BenchmarkResult(const QString & p_name)
   , m_nsMin(0)
   , m_nsMax(0)
   , m_nsAvg(0)
+  , m_status(Ignored)
 {
 }
 
@@ -44,6 +46,7 @@ BenchmarkResult::BenchmarkResult(const BenchmarkResult & p_other)
   , m_nsMin(p_other.nsMin())
   , m_nsMax(p_other.nsMax())
   , m_nsAvg(p_other.nsAvg())
+  , m_status(p_other.status())
 {
 }
 
@@ -110,7 +113,6 @@ QString BenchmarkResult::statusStr() const
 
     case Error:
       return "error";
-
 
     case Canceled:
       return "canceled";

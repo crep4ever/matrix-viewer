@@ -91,7 +91,6 @@ set(MATRIX_VIEWER_RCS
 find_package(OpenCV REQUIRED)
 
 find_package(Qt4 REQUIRED)
-set(QT_USE_QTSVG true)
 
 include(${QT_USE_FILE})
 

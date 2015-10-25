@@ -30,7 +30,7 @@ public:
 
   enum Status
     {
-      Ignored,
+      Ignored = 0,
       Canceled,
       Error,
       Success

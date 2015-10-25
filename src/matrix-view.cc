@@ -31,6 +31,8 @@
 CMatrixView::CMatrixView(QWidget *p)
   : QTableView(p)
   , m_parent(qobject_cast<CMainWindow*>(p))
+  , m_adjustColumnsAct(0)
+  , m_propertiesAct(0)
 {
   setAlternatingRowColors(true);
   setShowGrid(true);

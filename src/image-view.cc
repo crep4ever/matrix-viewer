@@ -44,6 +44,11 @@ CImageView::CImageView(QWidget *p)
   , m_histogramNeedsRedraw(true)
   , m_scene(new QGraphicsScene)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
+  , m_zoomInAct(0)
+  , m_zoomOutAct(0)
+  , m_normalSizeAct(0)
+  , m_fitToWindowAct(0)
+  , m_histogramAct(0)
 {
   setDragMode(QGraphicsView::ScrollHandDrag);
   setBackgroundRole(QPalette::Dark);
@@ -179,7 +184,7 @@ void CImageView::mousePressEvent(QMouseEvent *event)
   if (0 < scenePoint.x() && scenePoint.x() < sceneRect().width() &&
       0 < scenePoint.y() && scenePoint.y() < sceneRect().height())
     {
-      selectItem(scenePoint.y(), scenePoint.x());
+      selectItem((int) scenePoint.y(), (int) scenePoint.x());
     }
 
   QGraphicsView::mousePressEvent(event);
