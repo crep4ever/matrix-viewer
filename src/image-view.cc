@@ -306,6 +306,12 @@ void CImageView::draw()
   // set p_image as current image
   m_image = imageFromCvMat(model()->data());
 
+  // update position widget in main window
+  if (model()->type() == CV_8UC3)
+    {
+      parent()->positionWidget()->setValueDescription(tr("BGR"));
+    }
+
   // rebuild histogram
   if (m_histogramAct->isChecked())
     {
