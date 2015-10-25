@@ -145,7 +145,8 @@ CFormatWidget::CFormatWidget(const QString & p_title,
   m_typeWidget->addItem("32S");
   m_typeWidget->addItem("32F");
   m_typeWidget->addItem("64F");
-
+  m_typeWidget->setCurrentIndex(model()->type() % 8);
+  
   addParameter(tr("data type"), m_typeWidget);
   addParameter(tr("scale"), m_alphaWidget);
   addParameter(tr("shift"), m_betaWidget);
@@ -185,10 +186,12 @@ CScalarWidget::CScalarWidget(const QString & p_title,
 
   m_addWidget->setRange(-DBL_MAX, DBL_MAX);
   m_addWidget->setDecimals(SPIN_BOX_DECIMALS);
-
+  m_addWidget->setValue(0);
+  
   m_multiplyWidget->setRange(-DBL_MAX, DBL_MAX);
   m_multiplyWidget->setDecimals(SPIN_BOX_DECIMALS);
-
+  m_multiplyWidget->setValue(1);
+ 
   addParameter(tr("add"), m_addWidget);
   addParameter(tr("multiply"), m_multiplyWidget);
 }
@@ -222,9 +225,16 @@ CRotationWidget::CRotationWidget(const QString & p_title,
   , m_angleWidget(new QDoubleSpinBox)
   , m_scaleWidget(new QDoubleSpinBox)
 {
+  const float x = model()->data().cols / 2.0;
+  const float y = model()->data().rows / 2.0;
+  m_centerWidget->setPoint(QPointF(x, y));
+
   m_angleWidget->setRange(-360, 360);
   m_angleWidget->setDecimals(SPIN_BOX_DECIMALS);
-
+  m_angleWidget->setValue(0);
+  
+  m_scaleWidget->setValue(1);
+ 
   addParameter(tr("center"), m_centerWidget);
   addParameter(tr("angle"), m_angleWidget);
   addParameter(tr("scale"), m_scaleWidget);
@@ -395,7 +405,8 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
   m_colorMapWidget->addItem("HSV");
   m_colorMapWidget->addItem("PINK");
   m_colorMapWidget->addItem("HOT");
-
+  m_colorMapWidget->setCurrentIndex(0);
+  
   addParameter(tr("color map"), m_colorMapWidget);
 }
 
