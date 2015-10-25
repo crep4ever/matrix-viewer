@@ -393,12 +393,16 @@ void CMainWindow::createToolBar()
   m_mainToolBar->setMovable(false);
   m_mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   m_mainToolBar->addAction(m_openAct);
-  m_mainToolBar->addAction(m_operationsAct);
-  m_mainToolBar->addAction(m_benchmarkAct);
+  m_mainToolBar->addAction(m_saveAct);
+  m_mainToolBar->addAction(m_saveAsAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_previousFileAct);
   m_mainToolBar->addAction(m_nextFileAct);
+  m_mainToolBar->addSeparator();
+
+  m_mainToolBar->addAction(m_operationsAct);
+  m_mainToolBar->addAction(m_benchmarkAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_dataViewAct);
