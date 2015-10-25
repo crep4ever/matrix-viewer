@@ -57,7 +57,7 @@ public:
   // OpenCV wrappers
   int channels() const;
   int type() const;
-  QString typeString() const;
+  QString typeString(const bool full = false) const;
 
   size_t total() const;
   int countNonZeros() const;

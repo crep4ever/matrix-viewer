@@ -68,61 +68,76 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
     case Qt::EditRole:
     case Qt::DisplayRole:
       {
-	cv::Vec2b point2b;
-	cv::Vec3b point3b;
-	cv::Vec2f point2f;
-	cv::Vec3f point3f;
-	cv::Vec2d point2d;
-	cv::Vec3d point3d;
+	const int r = index.row();
+	const int c = index.column();
+
+	cv::Vec2b point2b; cv::Vec3b point3b;
+	cv::Vec2s point2s; cv::Vec3s point3s;
+	cv::Vec2s point2i; cv::Vec3s point3i;
+	cv::Vec2f point2f; cv::Vec3f point3f;
+	cv::Vec2d point2d; cv::Vec3d point3d;
+
 	switch(type())
 	  {
 	  case CV_8UC1:
-	    return data().at< uchar >(index.row(), index.column());
+	    return m_data.at< uchar >(r, c);
 
 	  case CV_8UC2:
-	    point2b = data().at< cv::Vec2b >(index.row(), index.column());
+	    point2b = m_data.at< cv::Vec2b >(r, c);
 	    return QString("%1 | %2").arg(point2b[0]).arg(point2b[1]);
 
 	  case CV_8UC3:
-	    point3b = data().at< cv::Vec3b >(index.row(), index.column());
+	    point3b = m_data.at< cv::Vec3b >(r, c);
 	    return QString("%1 | %2 | %3").arg(point3b[0]).arg(point3b[1]).arg(point3b[2]);
+
 
 	  case CV_16UC1:
-	    return data().at< unsigned short >(index.row(), index.column());
+	    return m_data.at< unsigned short >(r, c);
 
 	  case CV_16UC2:
-	    point2b = data().at< cv::Vec2b >(index.row(), index.column());
-	    return QString("%1 | %2").arg(point2b[0]).arg(point2b[1]);
+	    point2s = m_data.at< cv::Vec2s >(r, c);
+	    return QString("%1 | %2").arg(point2s[0]).arg(point2s[1]);
 
 	  case CV_16UC3:
-	    point3b = data().at< cv::Vec3b >(index.row(), index.column());
-	    return QString("%1 | %2 | %3").arg(point3b[0]).arg(point3b[1]).arg(point3b[2]);
+	    point3s = m_data.at< cv::Vec3s >(r, c);
+	    return QString("%1 | %2 | %3").arg(point3s[0]).arg(point3s[1]).arg(point3s[2]);
 
 
 	  case CV_32SC1:
-	    return data().at< int >(index.row(), index.column());
+	    return m_data.at< int >(r, c);
+
+	  case CV_32SC2:
+	    point2i = m_data.at< cv::Vec2i >(r, c);
+	    return QString("%1 | %2").arg(point2i[0]).arg(point2i[1]);
+
+	  case CV_32SC3:
+	    point3i = m_data.at< cv::Vec3i >(r, c);
+	    return QString("%1 | %2 | %3").arg(point3i[0]).arg(point3i[1]).arg(point3i[2]);
+
 
 	  case CV_32FC1:
-	    return data().at< float >(index.row(), index.column());
+	    return m_data.at< float >(r, c);
 
 	  case CV_32FC2:
-	    point2f = data().at< cv::Vec2f >(index.row(), index.column());
+	    point2f = m_data.at< cv::Vec2f >(r, c);
 	    return QString("%1 | %2").arg(point2f[0]).arg(point2f[1]);
 
 	  case CV_32FC3:
-	    point3f = data().at< cv::Vec3f >(index.row(), index.column());
+	    point3f = m_data.at< cv::Vec3f >(r, c);
 	    return QString("%1 | %2 | %3").arg(point3f[0]).arg(point3f[1]).arg(point3f[2]);
 
+
 	  case CV_64FC1:
-	    return data().at< double >(index.row(), index.column());
+	    return m_data.at< double >(r, c);
 
 	  case CV_64FC2:
-	    point2d = data().at< cv::Vec2d >(index.row(), index.column());
+	    point2d = m_data.at< cv::Vec2d >(r, c);
 	    return QString("%1 | %2").arg(point2d[0]).arg(point2d[1]);
 
 	  case CV_64FC3:
-	    point3d = data().at< cv::Vec3d >(index.row(), index.column());
+	    point3d = m_data.at< cv::Vec3d >(r, c);
 	    return QString("%1 | %2 | %3").arg(point3d[0]).arg(point3d[1]).arg(point3d[2]);
+
 
 	  default:
 	    return QVariant();
@@ -139,25 +154,117 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
 
 bool CMatrixModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  if (role == Qt::EditRole)
+  if (role != Qt::EditRole)
     {
-      if (channels() > 1)
-        {
-          qWarning() << "Edition on multi-channel matrices not supported yet";
-          return false;
-        }
-
-      cv::Mat tmp;
-      m_data.convertTo(tmp, CV_64FC1);
-      tmp.at< double >(index.row(), index.column()) = value.toDouble();
-      tmp.convertTo(m_data, m_data.type());
-
-      emit(dataChanged(QModelIndex(), QModelIndex()));
-      return true;
+      qWarning() << tr("Unsupported role: ") << role;
+      return false;
     }
 
-  qWarning() << "setdata role not supported yet";
-  return false;
+  QStringList tokens;
+  if (channels() > 1)
+    {
+      tokens = value.toString().split(" | ");
+      if (tokens.count() != channels())
+	{
+	  qWarning() << tr("Invalid value %1 for matrix of type %2")
+	    .arg(value.toString())
+	    .arg(typeString(true));
+	  return false;
+	}
+    }
+
+  const int r = index.row();
+  const int c = index.column();
+
+  switch(type())
+    {
+    case CV_8UC1:
+      m_data.at< uchar >(r, c) = (uchar) value.toInt();
+      break;
+
+    case CV_8UC2:
+      m_data.at< cv::Vec2b >(r, c) = cv::Vec2b((uchar) tokens[0].toInt(),
+					       (uchar) tokens[1].toInt());
+      break;
+
+    case CV_8UC3:
+      m_data.at< cv::Vec3b >(r, c) = cv::Vec3b((uchar) tokens[0].toInt(),
+					       (uchar) tokens[1].toInt(),
+					       (uchar) tokens[2].toInt());
+      break;
+
+
+    case CV_16UC1:
+      m_data.at< unsigned short >(r, c) = (unsigned short) value.toInt();
+      break;
+
+    case CV_16UC2:
+      m_data.at< cv::Vec2s >(r, c) = cv::Vec2s((unsigned short) tokens[0].toInt(),
+					       (unsigned short) tokens[1].toInt());
+      break;
+
+    case CV_16UC3:
+      m_data.at< cv::Vec3s >(r, c) = cv::Vec3s((unsigned short) tokens[0].toInt(),
+					       (unsigned short) tokens[1].toInt(),
+					       (unsigned short) tokens[2].toInt());
+      break;
+
+
+    case CV_32SC1:
+      m_data.at< int >(r, c) = value.toInt();
+      break;
+
+    case CV_32SC2:
+      m_data.at< cv::Vec2i >(r, c) = cv::Vec2i(tokens[0].toInt(),
+					       tokens[1].toInt());
+      break;
+
+    case CV_32SC3:
+      m_data.at< cv::Vec3i >(r, c) = cv::Vec3i(tokens[0].toInt(),
+					       tokens[1].toInt(),
+					       tokens[2].toInt());
+      break;
+
+
+    case CV_32FC1:
+      m_data.at< float >(r, c) = value.toFloat();
+      break;
+
+    case CV_32FC2:
+      m_data.at< cv::Vec2f >(r, c) = cv::Vec2f(tokens[0].toFloat(),
+					       tokens[1].toFloat());
+      break;
+
+    case CV_32FC3:
+      m_data.at< cv::Vec3f >(r, c) = cv::Vec3f(tokens[0].toFloat(),
+					       tokens[1].toFloat(),
+					       tokens[2].toFloat());
+      break;
+
+
+    case CV_64FC1:
+      m_data.at< double >(r, c) = value.toDouble();
+      break;
+
+    case CV_64FC2:
+      m_data.at< cv::Vec2d >(r, c) = cv::Vec2d(tokens[0].toDouble(),
+					       tokens[1].toDouble());
+      break;
+
+    case CV_64FC3:
+      m_data.at< cv::Vec3d >(r, c) = cv::Vec3d(tokens[0].toDouble(),
+					       tokens[1].toDouble(),
+					       tokens[2].toDouble());
+      break;
+
+
+    default:
+      qWarning() << tr("Unsupported edition of matrix of type ") << typeString(true);
+      return false;
+    }
+
+  emit(dataChanged(QModelIndex(), QModelIndex()));
+  return true;
 }
 
 QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -180,7 +287,7 @@ QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int 
 
 Qt::ItemFlags CMatrixModel::flags(const QModelIndex & index) const
 {
-  (void) index;
+  Q_UNUSED(index);
   return Qt::ItemIsSelectable | Qt::ItemIsEditable  | Qt::ItemIsEnabled;
 }
 
@@ -218,34 +325,50 @@ int CMatrixModel::type() const
   return m_data.type();
 }
 
-QString CMatrixModel::typeString() const
+QString CMatrixModel::typeString(const bool full) const
 {
+  QString res;
   switch (type() % 8)
     {
     case 0:
-      return "8U";
+      res = "8U";
+      break;
 
     case 1:
-      return "8S";
+      res = "8S";
+      break;
 
     case 2:
-      return "16U";
+      res = "16U";
+      break;
 
     case 3:
-      return "16S";
+      res = "16S";
+      break;
 
     case 4:
-      return "32S";
+      res = "32S";
+      break;
 
     case 5:
-      return "32F";
+      res = "32F";
+      break;
 
     case 6:
-      return "64F";
+      res = "64F";
+      break;
 
     default:
-      return "unknown";
+      res = "??";
+      break;
     }
+
+  if (full)
+    {
+      res += "C" + QString::number(channels());
+    }
+
+  return res;
 }
 
 void CMatrixModel::setProfile(const QString & profile)
