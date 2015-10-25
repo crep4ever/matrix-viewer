@@ -1,5 +1,5 @@
 # Description
-This is a Qt4/C++ client to visualize and edit matrix data from OpenCV serialization
+This is a graphical frontend in Qt4/C++ to OpenCV matrices format
 
 # Screenshot
 ![MatrixViewer](http://www.patacrep.com/data/images/matrix-viewer.png)
@@ -12,7 +12,9 @@ This is a Qt4/C++ client to visualize and edit matrix data from OpenCV serializa
 
 >     git clone git://github.com/crep4ever/matrix-viewer.git
 >     cd matrix-viewer
->     make && sudo make install
+>     mkdir build && cd build
+>     cmake -DCMAKE_BUILD_TYPE=Release .. && make
+>     sudo make install
 >     matrix-viewer
 
 # Integration with gdb
