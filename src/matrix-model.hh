@@ -73,6 +73,9 @@ public slots:
 		 const double p_alpha,
 		 const double p_beta);
 
+  // channels
+  void merge(const QList<cv::Mat> & p_channels);
+
   // scalar
   void add(double p_value);
 

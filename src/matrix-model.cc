@@ -563,3 +563,24 @@ void CMatrixModel::threshold(const double p_threshold,
     }
 }
 
+void CMatrixModel::merge(const QList<cv::Mat> & p_channels)
+{
+  try
+    {
+      std::vector<cv::Mat> channels(p_channels.size());
+      // RGB -> BGR
+      if (p_channels.size() == 3)
+	{
+	  channels[0] = p_channels[2];
+	  channels[1] = p_channels[1];
+	  channels[2] = p_channels[0];
+	}
+
+      cv::merge(channels, m_data);
+      emit(dataChanged(QModelIndex(), QModelIndex()));
+    }
+  catch (cv::Exception & e)
+    {
+      qWarning() << e;
+    }
+}
