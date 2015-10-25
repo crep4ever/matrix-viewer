@@ -623,10 +623,13 @@ void CMainWindow::saveAs()
                                                   tr("Save data file"),
                                                   m_savePath,
                                                   tr("Data files (*.xml *.txt *.bmp *jpg *.png *.raw *.mfe)"));
-  QFileInfo fi(filename);
-  m_savePath = fi.absolutePath();
-  save(filename);
-  writeSettings(); //update savePath
+  if (!filename.isEmpty())
+    {
+      QFileInfo fi(filename);
+      m_savePath = fi.absolutePath();
+      save(filename);
+      writeSettings(); //update savePath
+    }
 }
 
 
