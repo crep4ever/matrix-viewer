@@ -53,12 +53,18 @@ public slots:
   virtual void apply() = 0;
 
 protected:
-  void addParameter(const QString & p_label,
-                    QWidget * p_widget);
+  virtual void addParameter(const QString & p_label,
+			    QWidget * p_widget);
 
+  virtual void readSettings();
+  virtual void writeSettings();
+  
 protected:
   cv::Mat m_backup;
   QPushButton *m_applyButton;
+
+  QString m_openPath;
+  QString m_savePath;
 
 private:
   QString m_title;

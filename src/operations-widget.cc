@@ -26,6 +26,7 @@
 #include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QSettings>
 #include <QDebug>
 
 #include "main-window.hh"
@@ -43,10 +44,14 @@ COperationWidget::COperationWidget(const QString & p_title,
   QWidget(p_parent)
   , m_backup(p_model->data())
   , m_applyButton(new QPushButton(tr("Apply"), this))
+  , m_openPath(QDir::homePath())
+  , m_savePath(QDir::homePath())
   , m_title(p_title)
   , m_model(p_model)
   , m_parametersLayout(new QFormLayout)
 {
+  readSettings();
+    
   connect(m_applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
   QGroupBox *operationGroupBox = new QGroupBox(p_title);
@@ -82,6 +87,26 @@ void COperationWidget::addParameter(const QString & p_label,
 {
   m_parametersLayout->addRow(p_label, p_widget);
 }
+
+
+void COperationWidget::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("general");
+  m_openPath = settings.value("openPath", QDir::homePath()).toString();
+  m_savePath = settings.value("savePath", QDir::homePath()).toString();
+  settings.endGroup();
+}
+
+void COperationWidget::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup( "general" );
+  settings.setValue( "openPath", m_openPath );
+  settings.setValue( "savePath", m_savePath );
+  settings.endGroup();
+}
+
 
 /*
   Format
@@ -535,8 +560,8 @@ void CThresholdWidget::apply()
 */
 
 CMatrixWidget::CMatrixWidget(const QString & p_title,
-			   CMatrixModel * p_model,
-			   QWidget* p_parent) :
+			     CMatrixModel * p_model,
+			     QWidget* p_parent) :
   COperationWidget(p_title, p_model, p_parent)
   , m_fileChooserWidget(new CFileChooser(this))
   , m_absDiffWidget(new QPushButton(tr("Absolute difference"), this))
@@ -547,7 +572,8 @@ CMatrixWidget::CMatrixWidget(const QString & p_title,
 
   m_fileChooserWidget->setCaption(tr("Pick other data file"));
   m_fileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
-
+  m_fileChooserWidget->setPath(m_openPath);
+  
   addParameter("", m_fileChooserWidget);
   addParameter("", m_absDiffWidget);
   addParameter("", m_multiplyElementsWidget);
@@ -569,7 +595,7 @@ CMatrixWidget::~CMatrixWidget()
 
 void CMatrixWidget::reset()
 {
-  m_fileChooserWidget->setPath(QDir::homePath());
+  m_fileChooserWidget->setPath(m_openPath);
 }
 
 void CMatrixWidget::apply()
@@ -587,6 +613,9 @@ void CMatrixWidget::absDiff()
   model()->setData(m_backup.clone());
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->absdiff(converter.data());
+
+  m_openPath = m_fileChooserWidget->path();
+  writeSettings(); // update openPath
 }
 
 void CMatrixWidget::multiplyElements()
@@ -599,6 +628,9 @@ void CMatrixWidget::multiplyElements()
 
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->multiplyElements(converter.data());
+
+  m_openPath = m_fileChooserWidget->path();
+  writeSettings(); // update openPath
 }
 
 void CMatrixWidget::multiplyMatrix()
@@ -611,6 +643,9 @@ void CMatrixWidget::multiplyMatrix()
 
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->multiplyMatrix(converter.data());
+
+  m_openPath = m_fileChooserWidget->path();
+  writeSettings(); // update openPath
 }
 
 
