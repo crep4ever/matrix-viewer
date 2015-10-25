@@ -29,6 +29,8 @@ class QDoubleSpinBox;
 class QComboBox;
 class QPushButton;
 class QCheckBox;
+
+class CMainWindow;
 class CMatrixModel;
 class CPoint2DWidget;
 class CFileChooser;
@@ -40,7 +42,7 @@ class COperationWidget : public QWidget
 public:
   COperationWidget(const QString & p_title,
 		   CMatrixModel * p_model,
-		   QWidget* p_parent = 0);
+		   QWidget* p_parent);
 
   virtual ~COperationWidget();
 
@@ -49,7 +51,7 @@ public:
   int channels() const;
 
 public slots:
-  virtual void reset() = 0;
+  virtual void reset();
   virtual void apply() = 0;
 
 protected:
@@ -58,7 +60,13 @@ protected:
 
   virtual void readSettings();
   virtual void writeSettings();
-  
+
+  void setModified(bool p_modified);
+
+private:
+  CMainWindow *m_parent;
+  bool m_wasModified;
+
 protected:
   cv::Mat m_backup;
   QPushButton *m_applyButton;

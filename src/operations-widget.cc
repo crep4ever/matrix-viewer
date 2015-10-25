@@ -30,6 +30,7 @@
 #include <QDebug>
 
 #include "main-window.hh"
+#include "tab.hh"
 #include "matrix-model.hh"
 #include "matrix-converter.hh"
 #include "file-chooser.hh"
@@ -42,6 +43,8 @@ COperationWidget::COperationWidget(const QString & p_title,
 				   CMatrixModel * p_model,
 				   QWidget* p_parent) :
   QWidget(p_parent)
+  , m_parent(qobject_cast<CMainWindow*>(p_parent))
+  , m_wasModified(false)
   , m_backup(p_model->data())
   , m_applyButton(new QPushButton(tr("Apply"), this))
   , m_openPath(QDir::homePath())
@@ -51,7 +54,12 @@ COperationWidget::COperationWidget(const QString & p_title,
   , m_parametersLayout(new QFormLayout)
 {
   readSettings();
-    
+
+  if (m_parent && m_parent->currentWidget())
+    {
+      m_wasModified = m_parent->currentWidget()->isModified();
+    }
+
   connect(m_applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
   QGroupBox *operationGroupBox = new QGroupBox(p_title);
@@ -107,6 +115,13 @@ void COperationWidget::writeSettings()
   settings.endGroup();
 }
 
+void COperationWidget::reset()
+{
+  if (!m_wasModified && m_parent && m_parent->currentWidget())
+    {
+      m_parent->currentWidget()->setModified(false);
+    }
+}
 
 /*
   Format
@@ -145,6 +160,7 @@ void CFormatWidget::reset()
   m_typeWidget->setCurrentIndex(model()->type() % 8);
   m_alphaWidget->setValue(1);
   m_betaWidget->setValue(0);
+  COperationWidget::reset();
 }
 
 void CFormatWidget::apply()
@@ -185,6 +201,7 @@ void CScalarWidget::reset()
 {
   m_addWidget->setValue(0);
   m_multiplyWidget->setValue(1);
+  COperationWidget::reset();
 }
 
 void CScalarWidget::apply()
@@ -225,6 +242,7 @@ void CRotationWidget::reset()
 
   m_angleWidget->setValue(0);
   m_scaleWidget->setValue(1);
+  COperationWidget::reset();
 }
 
 void CRotationWidget::apply()
@@ -253,9 +271,11 @@ CNormalizeWidget::CNormalizeWidget(const QString & p_title,
 {
   m_alphaWidget->setRange(-DBL_MAX, DBL_MAX);
   m_alphaWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_alphaWidget->setValue(1);
 
   m_betaWidget->setRange(-DBL_MAX, DBL_MAX);
   m_betaWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_betaWidget->setValue(0);
 
   m_normWidget->addItem("L1");
   m_normWidget->addItem("L2");
@@ -276,6 +296,7 @@ void CNormalizeWidget::reset()
   m_alphaWidget->setValue(1);
   m_betaWidget->setValue(0);
   m_normWidget->setCurrentIndex(1);
+  COperationWidget::reset();
 }
 
 void CNormalizeWidget::apply()
@@ -335,6 +356,7 @@ CTransformationsWidget::~CTransformationsWidget()
 
 void CTransformationsWidget::reset()
 {
+  COperationWidget::reset();
 }
 
 void CTransformationsWidget::apply()
@@ -391,6 +413,8 @@ void CColorMapWidget::reset()
       model()->minMaxLoc(&min, &max);
       m_rangeWidget->setPoint(QPointF(min, max));
     }
+
+  COperationWidget::reset();
 }
 
 void CColorMapWidget::apply()
@@ -492,7 +516,10 @@ CThresholdWidget::CThresholdWidget(const QString & p_title,
   , m_otsuWidget(new QCheckBox)
 {
   m_thresholdValueWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_thresholdValueWidget->setValue(0);
+
   m_maxValueWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_maxValueWidget->setValue(255);
 
   m_typeWidget->addItem("BINARY");
   m_typeWidget->addItem("BINARY_INV");
@@ -500,6 +527,8 @@ CThresholdWidget::CThresholdWidget(const QString & p_title,
   m_typeWidget->addItem("TOZERO");
   m_typeWidget->addItem("TOZERO_INV");
   m_typeWidget->setCurrentIndex(0);
+
+  m_otsuWidget->setChecked(false);
 
   addParameter(tr("threshold value"), m_thresholdValueWidget);
   addParameter(tr("max value"), m_maxValueWidget);
@@ -517,6 +546,7 @@ void CThresholdWidget::reset()
   m_maxValueWidget->setValue(255);
   m_typeWidget->setCurrentIndex(0);
   m_otsuWidget->setChecked(false);
+  COperationWidget::reset();
 }
 
 void CThresholdWidget::apply()
@@ -573,7 +603,7 @@ CMatrixWidget::CMatrixWidget(const QString & p_title,
   m_fileChooserWidget->setCaption(tr("Pick other data file"));
   m_fileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
   m_fileChooserWidget->setPath(m_openPath);
-  
+
   addParameter("", m_fileChooserWidget);
   addParameter("", m_absDiffWidget);
   addParameter("", m_multiplyElementsWidget);
@@ -596,6 +626,7 @@ CMatrixWidget::~CMatrixWidget()
 void CMatrixWidget::reset()
 {
   m_fileChooserWidget->setPath(m_openPath);
+  COperationWidget::reset();
 }
 
 void CMatrixWidget::apply()

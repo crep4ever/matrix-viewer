@@ -28,6 +28,7 @@
 #include <QDebug>
 
 #include "main-window.hh"
+#include "tab.hh"
 #include "matrix-model.hh"
 #include "operations-widget.hh"
 
@@ -49,14 +50,14 @@ COperationsDialog::COperationsDialog(QWidget *parent)
   m_categoriesWidget->setCurrentRow(0);
 
   m_operationsWidget = new QStackedWidget(this);
-  m_operationsWidget->addWidget(new CFormatWidget(tr("Format"), model(), this));
-  m_operationsWidget->addWidget(new CScalarWidget(tr("Scalar"), model(), this));
-  m_operationsWidget->addWidget(new CMatrixWidget(tr("Matrix"), model(), this));
-  m_operationsWidget->addWidget(new CTransformationsWidget(tr("Transform"), model(), this));
-  m_operationsWidget->addWidget(new CRotationWidget(tr("Rotate"), model(), this));
-  m_operationsWidget->addWidget(new CNormalizeWidget(tr("Normalize"), model(), this));
-  m_operationsWidget->addWidget(new CThresholdWidget(tr("Threshold"), model(), this));
-  m_operationsWidget->addWidget(new CColorMapWidget(tr("ColorMap"), model(), this));
+  m_operationsWidget->addWidget(new CFormatWidget(tr("Format"), model(), m_parent));
+  m_operationsWidget->addWidget(new CScalarWidget(tr("Scalar"), model(), m_parent));
+  m_operationsWidget->addWidget(new CMatrixWidget(tr("Matrix"), model(), m_parent));
+  m_operationsWidget->addWidget(new CTransformationsWidget(tr("Transform"), model(), m_parent));
+  m_operationsWidget->addWidget(new CRotationWidget(tr("Rotate"), model(), m_parent));
+  m_operationsWidget->addWidget(new CNormalizeWidget(tr("Normalize"), model(), m_parent));
+  m_operationsWidget->addWidget(new CThresholdWidget(tr("Threshold"), model(), m_parent));
+  m_operationsWidget->addWidget(new CColorMapWidget(tr("ColorMap"), model(), m_parent));
   createIcons();
 
   QPushButton *okButton = new QPushButton(tr("&OK"));
