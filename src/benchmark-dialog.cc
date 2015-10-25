@@ -83,7 +83,7 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
   QWidget *checkboxContainer = new QWidget(this);
   checkboxContainer->setLayout(namesLayout);
 
-  QScrollArea *scrollArea = new QScrollArea;
+  QScrollArea *scrollArea = new QScrollArea(this);
   scrollArea->setWidgetResizable(true);
   scrollArea->setWidget(checkboxContainer);
 
@@ -152,6 +152,16 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
 
 CBenchmarkDialog::~CBenchmarkDialog()
 {
+  foreach (QCheckBox *checkBox, m_operations)
+    {
+      delete checkBox;
+    }
+
+  delete m_iterations;
+  delete m_report;
+
+  delete m_progressBar;
+  delete m_tabs;
 }
 
 void CBenchmarkDialog::readSettings()
