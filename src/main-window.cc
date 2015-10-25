@@ -153,11 +153,12 @@ void CMainWindow::createActions()
   connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
   m_operationsAct = new QAction(tr("&Operations"), this);
-  m_operationsAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/compare.png"));
+  m_operationsAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/operations.png"));
   m_operationsAct->setStatusTip(tr("Apply common operations"));
   connect(m_operationsAct, SIGNAL(triggered()), this, SLOT(operations()));
 
   m_benchmarkAct = new QAction(tr("&Benchmark"), this);
+  m_benchmarkAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/benchmarks.png"));
   m_benchmarkAct->setStatusTip(tr("Run OpenCV benchmark on current matrix"));
   connect(m_benchmarkAct, SIGNAL(triggered()), this, SLOT(benchmark()));
 
@@ -369,6 +370,7 @@ void CMainWindow::createMenus()
   fileMenu->addAction(m_saveAsAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_operationsAct);
+  fileMenu->addAction(m_benchmarkAct);
   fileMenu->addAction(m_loadProfileAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_preferencesAct);
