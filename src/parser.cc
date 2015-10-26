@@ -133,8 +133,6 @@ int CParser::execute()
         }
       else if (QFile(arg).exists())
         {
-          CMatrixConverter converter;
-
           // -------------------------------------------
           // Load input file
           // -------------------------------------------
@@ -151,7 +149,7 @@ int CParser::execute()
           // -------------------------------------------
 
           QFileInfo fi(input);
-          foreach (QString extension, extensions)
+          foreach (const QString & extension, extensions)
             {
               QString path = outputDir ? outputPath : fi.absolutePath();
               QString output = path + QDir::separator() + fi.baseName() + extension;

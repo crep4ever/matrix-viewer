@@ -48,6 +48,7 @@ public slots:
   void setRow(const uint row);
   void setCol(const uint col);
   void setValue(const QString & value);
+  void setValueDescription(const QString & desc);
   void changeRow(int row);
   void changeCol(int col);
 
@@ -58,6 +59,7 @@ private:
   QSpinBox* m_rowSpinBox;
   QSpinBox* m_colSpinBox;
   QLabel*   m_valueLabel;
+  QString   m_valueDescription;
 };
 
 #endif  // __POSITION_HH__

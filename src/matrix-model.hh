@@ -57,9 +57,9 @@ public:
   // OpenCV wrappers
   int channels() const;
   int type() const;
-  QString typeString() const;
+  QString typeString(const bool full = false) const;
 
-  int total() const;
+  size_t total() const;
   int countNonZeros() const;
   void minMaxLoc(double* p_minVal, double* p_maxVal = 0,
 		 cv::Point* p_minLoc = 0, cv::Point* p_maxLoc = 0);
@@ -73,7 +73,8 @@ public slots:
 		 const double p_alpha,
 		 const double p_beta);
 
-  void merge(const std::vector<cv::Mat> & p_layers);
+  // channels
+  void merge(const QList<cv::Mat> & p_channels);
 
   // scalar
   void add(double p_value);
@@ -83,11 +84,13 @@ public slots:
   // transform
   void transpose();
 
+  void mulTranspose();
+
   void verticalFlip();
 
   void horizontalFlip();
 
-  void rotate(const cv::Point & p_center,
+  void rotate(const cv::Point2f & p_center,
 	      const double p_angle_dg,
 	      const double p_scaleFactor);
 
@@ -115,5 +118,7 @@ private:
   QStringList m_horizontalHeaderLabels;
   QStringList m_verticalHeaderLabels;
 };
+
+
 
 #endif  // __MATRIX_MODEL_HH__

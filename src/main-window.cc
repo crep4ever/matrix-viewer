@@ -47,6 +47,7 @@
 #include "image-view.hh"
 #include "matrix-converter.hh"
 #include "operations-dialog.hh"
+#include "benchmark-dialog.hh"
 #include "tab-widget.hh"
 #include "tab.hh"
 #include "position.hh"
@@ -59,10 +60,26 @@ const QStringList CMainWindow::_filters = QStringList()
 CMainWindow::CMainWindow(QWidget *parent)
   : QMainWindow(parent)
   , m_mainWidget(new CTabWidget(this))
+  , m_mainToolBar(0)
   , m_progressBar(new CProgressBar(this))
   , m_position(new CPosition(this))
   , m_isToolBarDisplayed(true)
   , m_isStatusBarDisplayed(true)
+  , m_loadProfileAct(0)
+  , m_preferencesAct(0)
+  , m_documentationAct(0)
+  , m_bugsAct(0)
+  , m_aboutAct(0)
+  , m_exitAct(0)
+  , m_nextFileAct(0)
+  , m_previousFileAct(0)
+  , m_openAct(0)
+  , m_saveAct(0)
+  , m_saveAsAct(0)
+  , m_operationsAct(0)
+  , m_benchmarkAct(0)
+  , m_dataViewAct(0)
+  , m_imageViewAct(0)
   , m_openPath(QDir::homePath())
   , m_savePath(QDir::homePath())
 {
@@ -152,9 +169,14 @@ void CMainWindow::createActions()
   connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
   m_operationsAct = new QAction(tr("&Operations"), this);
-  m_operationsAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/compare.png"));
+  m_operationsAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/operations.png"));
   m_operationsAct->setStatusTip(tr("Apply common operations"));
   connect(m_operationsAct, SIGNAL(triggered()), this, SLOT(operations()));
+
+  m_benchmarkAct = new QAction(tr("&Benchmark"), this);
+  m_benchmarkAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/benchmarks.png"));
+  m_benchmarkAct->setStatusTip(tr("Run OpenCV benchmark on current matrix"));
+  connect(m_benchmarkAct, SIGNAL(triggered()), this, SLOT(benchmark()));
 
   m_documentationAct = new QAction(tr("Online &Documentation"), this);
   m_documentationAct->setShortcut(QKeySequence::HelpContents);
@@ -364,6 +386,7 @@ void CMainWindow::createMenus()
   fileMenu->addAction(m_saveAsAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_operationsAct);
+  fileMenu->addAction(m_benchmarkAct);
   fileMenu->addAction(m_loadProfileAct);
   fileMenu->addSeparator();
   fileMenu->addAction(m_preferencesAct);
@@ -386,11 +409,16 @@ void CMainWindow::createToolBar()
   m_mainToolBar->setMovable(false);
   m_mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   m_mainToolBar->addAction(m_openAct);
-  m_mainToolBar->addAction(m_operationsAct);
+  m_mainToolBar->addAction(m_saveAct);
+  m_mainToolBar->addAction(m_saveAsAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_previousFileAct);
   m_mainToolBar->addAction(m_nextFileAct);
+  m_mainToolBar->addSeparator();
+
+  m_mainToolBar->addAction(m_operationsAct);
+  m_mainToolBar->addAction(m_benchmarkAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_dataViewAct);
@@ -442,6 +470,18 @@ void CMainWindow::operations()
     }
 
   COperationsDialog dialog(this);
+  dialog.exec();
+}
+
+void CMainWindow::benchmark()
+{
+  if (!currentModel())
+    {
+      showMessage(tr("Can't apply benchmark without matrix"));
+      return;
+    }
+
+  CBenchmarkDialog dialog(this);
   dialog.exec();
 }
 
@@ -598,11 +638,14 @@ void CMainWindow::saveAs()
   QString filename = QFileDialog::getSaveFileName(this,
                                                   tr("Save data file"),
                                                   m_savePath,
-                                                  tr("Data files (*.xml *.txt *.bmp *.jpg *.png *.raw *.mfe)"));
-  QFileInfo fi(filename);
-  m_savePath = fi.absolutePath();
-  save(filename);
-  writeSettings(); //update savePath
+                                                  tr("Data files (*.xml *.txt *.bmp *jpg *.png *.raw *.mfe)"));
+  if (!filename.isEmpty())
+    {
+      QFileInfo fi(filename);
+      m_savePath = fi.absolutePath();
+      save(filename);
+      writeSettings(); //update savePath
+    }
 }
 
 

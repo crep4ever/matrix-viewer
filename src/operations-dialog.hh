@@ -62,7 +62,6 @@ public slots:
   */
   void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 
-
 private:
 
   void createActions();

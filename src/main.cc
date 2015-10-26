@@ -30,24 +30,23 @@
 #include <QLocale>
 #include <QDir>
 #include <QTextStream>
+#include <QMetaType>
 #include <QDebug>
 
 #include "config.hh"
 #include "main-window.hh"
 #include "parser.hh"
+#include "benchmark-result.hh"
 
-namespace // anonymous namespace
+bool isFilenameSupported(const QString & filename)
 {
-  bool isFilenameSupported(const QString & filename)
-  {
-    return (filename.endsWith(".xml") ||
-            filename.endsWith(".txt") ||
-            filename.endsWith(".bmp") ||
-            filename.endsWith(".png") ||
-            filename.endsWith(".jpg") ||
-            filename.endsWith(".mfe") ||
-            filename.endsWith(".raw"));
-  }
+  return (filename.endsWith(".xml") ||
+          filename.endsWith(".txt") ||
+          filename.endsWith(".bmp") ||
+          filename.endsWith(".png") ||
+          filename.endsWith(".jpg") ||
+          filename.endsWith(".mfe") ||
+          filename.endsWith(".raw"));
 }
 
 void printUsage()
@@ -176,12 +175,14 @@ int main(int argc, char *argv[])
       printVersion();
       return 0;
     }
-  
+
   if (cliMode)
     {
       CParser parser(QCoreApplication::arguments());
       return parser.execute();
     }
+
+  qRegisterMetaType<BenchmarkResult>("BenchmarkResult");
 
   CMainWindow mainWindow;
   mainWindow.show();

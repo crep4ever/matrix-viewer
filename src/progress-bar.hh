@@ -95,6 +95,16 @@ public slots:
   */
   void setValue(int value);
 
+  void setMinimum(int value);
+
+  void setMaximum(int value);
+
+  /*!
+    Rewinds the progress of the progress bar.
+    \sa QProgressBar::reset
+  */
+  void reset();
+
 signals:
   /*!
     This signal is emitted when the cancel button is clicked.

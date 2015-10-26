@@ -29,6 +29,8 @@ class QDoubleSpinBox;
 class QComboBox;
 class QPushButton;
 class QCheckBox;
+
+class CMainWindow;
 class CMatrixModel;
 class CPoint2DWidget;
 class CFileChooser;
@@ -40,7 +42,7 @@ class COperationWidget : public QWidget
 public:
   COperationWidget(const QString & p_title,
 		   CMatrixModel * p_model,
-		   QWidget* p_parent = 0);
+		   QWidget* p_parent);
 
   virtual ~COperationWidget();
 
@@ -49,16 +51,28 @@ public:
   int channels() const;
 
 public slots:
-  virtual void reset() = 0;
+  virtual void reset();
   virtual void apply() = 0;
 
 protected:
-  void addParameter(const QString & p_label,
-                    QWidget * p_widget);
+  virtual void addParameter(const QString & p_label,
+			    QWidget * p_widget);
+
+  virtual void readSettings();
+  virtual void writeSettings();
+
+  void setModified(bool p_modified);
+
+private:
+  CMainWindow *m_parent;
+  bool m_wasModified;
 
 protected:
   cv::Mat m_backup;
   QPushButton *m_applyButton;
+
+  QString m_openPath;
+  QString m_savePath;
 
 private:
   QString m_title;
@@ -178,6 +192,7 @@ private:
   QPushButton *m_transposeWidget;
   QPushButton *m_verticalFlipWidget;
   QPushButton *m_horizontalFlipWidget;
+  QPushButton *m_mulTransposeWidget;
 };
 
 /*
@@ -249,10 +264,6 @@ private slots:
   void multiplyMatrix();
 
 private:
-  void readSettings();
-  void writeSettings();
-
-private:
   CFileChooser *m_fileChooserWidget;
   QPushButton *m_absDiffWidget;
   QPushButton *m_multiplyElementsWidget;
@@ -261,7 +272,7 @@ private:
 };
 
 /*
-  Multi-channels
+  Channels
 */
 
 class CChannelsWidget : public COperationWidget
@@ -270,23 +281,20 @@ class CChannelsWidget : public COperationWidget
 
   public:
   CChannelsWidget(const QString & p_title,
-                  CMatrixModel * p_model,
-                  QWidget* p_parent = 0);
+		  CMatrixModel * p_model,
+		  QWidget* p_parent = 0);
 
   virtual ~CChannelsWidget();
   void reset();
   void apply();
 
 private:
-  void readSettings();
-  void writeSettings();
-
-private:
   CFileChooser *m_redFileChooserWidget;
   CFileChooser *m_greenFileChooserWidget;
   CFileChooser *m_blueFileChooserWidget;
-
-  QString m_openPath;
+  QString m_redOpenPath;
+  QString m_greenOpenPath;
+  QString m_blueOpenPath;
 };
 
 

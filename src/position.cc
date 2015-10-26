@@ -30,6 +30,7 @@ CPosition::CPosition(QWidget *parent)
   , m_rowSpinBox(new QSpinBox)
   , m_colSpinBox(new QSpinBox)
   , m_valueLabel(new QLabel)
+  , m_valueDescription(tr("Value"))
 {
   m_rowSpinBox->setMaximum(std::numeric_limits<int>::max());
   m_colSpinBox->setMaximum(std::numeric_limits<int>::max());
@@ -93,6 +94,11 @@ void CPosition::changeCol(int col)
 
 void CPosition::setValue(const QString & value)
 {
-  m_valueLabel->setText(tr("Value: %1").arg(value));
+  m_valueLabel->setText(tr("%1: %2").arg(m_valueDescription).arg(value));
+}
+
+void CPosition::setValueDescription(const QString & desc)
+{
+  m_valueDescription = desc;
 }
 

@@ -38,7 +38,7 @@ CProgressBar::CProgressBar(QWidget* parent)
   setLayout(layout);
   setContentsMargins(0, 0, 0, 0);
 
-  hide();
+  show();
 }
 
 CProgressBar::~CProgressBar()
@@ -49,7 +49,6 @@ CProgressBar::~CProgressBar()
 
 void CProgressBar::cancel()
 {
-  hide();
   emit(canceled());
 }
 
@@ -76,9 +75,24 @@ void CProgressBar::setRange(int start, int stop)
   m_progressBar->setRange(start, stop);
 }
 
+void CProgressBar::setMaximum(int value)
+{
+  m_progressBar->setMaximum(value);
+}
+
+void CProgressBar::setMinimum(int value)
+{
+  m_progressBar->setMinimum(value);
+}
+
 void CProgressBar::setValue(int value)
 {
   m_progressBar->setValue(value);
+}
+
+void CProgressBar::reset()
+{
+  m_progressBar->reset();
 }
 
 bool CProgressBar::isCancelable() const

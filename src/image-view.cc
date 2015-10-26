@@ -44,6 +44,11 @@ CImageView::CImageView(QWidget *p)
   , m_histogramNeedsRedraw(true)
   , m_scene(new QGraphicsScene)
   , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
+  , m_zoomInAct(0)
+  , m_zoomOutAct(0)
+  , m_normalSizeAct(0)
+  , m_fitToWindowAct(0)
+  , m_histogramAct(0)
 {
   setDragMode(QGraphicsView::ScrollHandDrag);
   setBackgroundRole(QPalette::Dark);
@@ -92,7 +97,7 @@ void CImageView::createActions()
   m_histogramAct->setStatusTip(tr("Histogram"));
   m_histogramAct->setCheckable(true);
   m_histogramAct->setChecked(false);
-  connect(m_histogramAct, SIGNAL(toggled(bool)), 
+  connect(m_histogramAct, SIGNAL(toggled(bool)),
 	  this, SLOT(toggleHistogram(bool)));
 }
 
@@ -179,7 +184,7 @@ void CImageView::mousePressEvent(QMouseEvent *event)
   if (0 < scenePoint.x() && scenePoint.x() < sceneRect().width() &&
       0 < scenePoint.y() && scenePoint.y() < sceneRect().height())
     {
-      selectItem(scenePoint.y(), scenePoint.x());
+      selectItem((int) scenePoint.y(), (int) scenePoint.x());
     }
 
   QGraphicsView::mousePressEvent(event);
@@ -300,6 +305,12 @@ void CImageView::draw()
 
   // set p_image as current image
   m_image = imageFromCvMat(model()->data());
+
+  // update position widget in main window
+  if (model()->type() == CV_8UC3)
+    {
+      parent()->positionWidget()->setValueDescription(tr("BGR"));
+    }
 
   // rebuild histogram
   if (m_histogramAct->isChecked())

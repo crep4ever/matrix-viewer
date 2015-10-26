@@ -30,6 +30,7 @@
 #include <QDebug>
 
 #include "main-window.hh"
+#include "tab.hh"
 #include "matrix-model.hh"
 #include "matrix-converter.hh"
 #include "file-chooser.hh"
@@ -42,12 +43,23 @@ COperationWidget::COperationWidget(const QString & p_title,
 				   CMatrixModel * p_model,
 				   QWidget* p_parent) :
   QWidget(p_parent)
+  , m_parent(qobject_cast<CMainWindow*>(p_parent))
+  , m_wasModified(false)
   , m_backup(p_model->data())
   , m_applyButton(new QPushButton(tr("Apply"), this))
+  , m_openPath(QDir::homePath())
+  , m_savePath(QDir::homePath())
   , m_title(p_title)
   , m_model(p_model)
   , m_parametersLayout(new QFormLayout)
 {
+  readSettings();
+
+  if (m_parent && m_parent->currentWidget())
+    {
+      m_wasModified = m_parent->currentWidget()->isModified();
+    }
+
   connect(m_applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
   QGroupBox *operationGroupBox = new QGroupBox(p_title);
@@ -84,6 +96,33 @@ void COperationWidget::addParameter(const QString & p_label,
   m_parametersLayout->addRow(p_label, p_widget);
 }
 
+
+void COperationWidget::readSettings()
+{
+  QSettings settings;
+  settings.beginGroup("general");
+  m_openPath = settings.value("openPath", QDir::homePath()).toString();
+  m_savePath = settings.value("savePath", QDir::homePath()).toString();
+  settings.endGroup();
+}
+
+void COperationWidget::writeSettings()
+{
+  QSettings settings;
+  settings.beginGroup( "general" );
+  settings.setValue( "openPath", m_openPath );
+  settings.setValue( "savePath", m_savePath );
+  settings.endGroup();
+}
+
+void COperationWidget::reset()
+{
+  if (!m_wasModified && m_parent && m_parent->currentWidget())
+    {
+      m_parent->currentWidget()->setModified(false);
+    }
+}
+
 /*
   Format
 */
@@ -96,6 +135,9 @@ CFormatWidget::CFormatWidget(const QString & p_title,
   , m_alphaWidget(new QDoubleSpinBox)
   , m_betaWidget(new QDoubleSpinBox)
 {
+  m_alphaWidget->setValue(1);
+  m_betaWidget->setValue(0);
+
   m_typeWidget->addItem("8U");
   m_typeWidget->addItem("8S");
   m_typeWidget->addItem("16U");
@@ -103,6 +145,7 @@ CFormatWidget::CFormatWidget(const QString & p_title,
   m_typeWidget->addItem("32S");
   m_typeWidget->addItem("32F");
   m_typeWidget->addItem("64F");
+  m_typeWidget->setCurrentIndex(model()->type() % 8);
 
   addParameter(tr("data type"), m_typeWidget);
   addParameter(tr("scale"), m_alphaWidget);
@@ -118,6 +161,7 @@ void CFormatWidget::reset()
   m_typeWidget->setCurrentIndex(model()->type() % 8);
   m_alphaWidget->setValue(1);
   m_betaWidget->setValue(0);
+  COperationWidget::reset();
 }
 
 void CFormatWidget::apply()
@@ -142,9 +186,11 @@ CScalarWidget::CScalarWidget(const QString & p_title,
 
   m_addWidget->setRange(-DBL_MAX, DBL_MAX);
   m_addWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_addWidget->setValue(0);
 
   m_multiplyWidget->setRange(-DBL_MAX, DBL_MAX);
   m_multiplyWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_multiplyWidget->setValue(1);
 
   addParameter(tr("add"), m_addWidget);
   addParameter(tr("multiply"), m_multiplyWidget);
@@ -158,6 +204,7 @@ void CScalarWidget::reset()
 {
   m_addWidget->setValue(0);
   m_multiplyWidget->setValue(1);
+  COperationWidget::reset();
 }
 
 void CScalarWidget::apply()
@@ -178,8 +225,15 @@ CRotationWidget::CRotationWidget(const QString & p_title,
   , m_angleWidget(new QDoubleSpinBox)
   , m_scaleWidget(new QDoubleSpinBox)
 {
+  const float x = model()->data().cols / 2.0;
+  const float y = model()->data().rows / 2.0;
+  m_centerWidget->setPoint(QPointF(x, y));
+
   m_angleWidget->setRange(-360, 360);
   m_angleWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_angleWidget->setValue(0);
+
+  m_scaleWidget->setValue(1);
 
   addParameter(tr("center"), m_centerWidget);
   addParameter(tr("angle"), m_angleWidget);
@@ -198,14 +252,15 @@ void CRotationWidget::reset()
 
   m_angleWidget->setValue(0);
   m_scaleWidget->setValue(1);
+  COperationWidget::reset();
 }
 
 void CRotationWidget::apply()
 {
   model()->setData(m_backup.clone());
 
-  const cv::Point center(m_centerWidget->point().x(),
-                         m_centerWidget->point().y());
+  const cv::Point2f center(m_centerWidget->point().x(),
+			   m_centerWidget->point().y());
 
   model()->rotate(center,
                   m_angleWidget->value(),
@@ -226,9 +281,11 @@ CNormalizeWidget::CNormalizeWidget(const QString & p_title,
 {
   m_alphaWidget->setRange(-DBL_MAX, DBL_MAX);
   m_alphaWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_alphaWidget->setValue(1);
 
   m_betaWidget->setRange(-DBL_MAX, DBL_MAX);
   m_betaWidget->setDecimals(SPIN_BOX_DECIMALS);
+  m_betaWidget->setValue(0);
 
   m_normWidget->addItem("L1");
   m_normWidget->addItem("L2");
@@ -249,6 +306,7 @@ void CNormalizeWidget::reset()
   m_alphaWidget->setValue(1);
   m_betaWidget->setValue(0);
   m_normWidget->setCurrentIndex(1);
+  COperationWidget::reset();
 }
 
 void CNormalizeWidget::apply()
@@ -285,12 +343,14 @@ CTransformationsWidget::CTransformationsWidget(const QString & p_title,
   , m_transposeWidget(new QPushButton(tr("Transpose"), this))
   , m_verticalFlipWidget(new QPushButton(tr("Vertical flip"), this))
   , m_horizontalFlipWidget(new QPushButton(tr("Horizontal flip"), this))
+  , m_mulTransposeWidget(new QPushButton(tr("Multiply by transposed"), this))
 {
   m_applyButton->hide();
 
   addParameter("", m_transposeWidget);
   addParameter("", m_verticalFlipWidget);
   addParameter("", m_horizontalFlipWidget);
+  addParameter("", m_mulTransposeWidget);
 
   connect(m_transposeWidget, SIGNAL(clicked()),
 	  model(), SLOT(transpose()));
@@ -300,6 +360,9 @@ CTransformationsWidget::CTransformationsWidget(const QString & p_title,
 
   connect(m_horizontalFlipWidget, SIGNAL(clicked()),
 	  model(), SLOT(horizontalFlip()));
+
+  connect(m_mulTransposeWidget, SIGNAL(clicked()),
+	  model(), SLOT(mulTranspose()));
 }
 
 CTransformationsWidget::~CTransformationsWidget()
@@ -308,10 +371,11 @@ CTransformationsWidget::~CTransformationsWidget()
 
 void CTransformationsWidget::reset()
 {
+  COperationWidget::reset();
 }
 
 void CTransformationsWidget::apply()
-{ 
+{
 }
 
 
@@ -332,7 +396,7 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
       m_rangeWidget->setLabels(tr("min"), tr("max"));
       addParameter(tr("range"), m_rangeWidget);
     }
-  
+
   m_colorMapWidget->addItem("NONE");
   m_colorMapWidget->addItem("AUTUMN");
   m_colorMapWidget->addItem("BONE");
@@ -346,6 +410,7 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
   m_colorMapWidget->addItem("HSV");
   m_colorMapWidget->addItem("PINK");
   m_colorMapWidget->addItem("HOT");
+  m_colorMapWidget->setCurrentIndex(0);
 
   addParameter(tr("color map"), m_colorMapWidget);
 }
@@ -364,6 +429,8 @@ void CColorMapWidget::reset()
       model()->minMaxLoc(&min, &max);
       m_rangeWidget->setPoint(QPointF(min, max));
     }
+
+  COperationWidget::reset();
 }
 
 void CColorMapWidget::apply()
@@ -390,7 +457,7 @@ void CColorMapWidget::apply()
       cv::normalize(m, m, 0, 255, cv::NORM_MINMAX, CV_8U);
     }
 
-  model()->setData(m); 
+  model()->setData(m);
 
   const QString type = m_colorMapWidget->currentText();
 
@@ -465,7 +532,10 @@ CThresholdWidget::CThresholdWidget(const QString & p_title,
   , m_otsuWidget(new QCheckBox)
 {
   m_thresholdValueWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_thresholdValueWidget->setValue(0);
+
   m_maxValueWidget->setRange(-DBL_MAX, DBL_MAX);
+  m_maxValueWidget->setValue(255);
 
   m_typeWidget->addItem("BINARY");
   m_typeWidget->addItem("BINARY_INV");
@@ -473,6 +543,8 @@ CThresholdWidget::CThresholdWidget(const QString & p_title,
   m_typeWidget->addItem("TOZERO");
   m_typeWidget->addItem("TOZERO_INV");
   m_typeWidget->setCurrentIndex(0);
+
+  m_otsuWidget->setChecked(false);
 
   addParameter(tr("threshold value"), m_thresholdValueWidget);
   addParameter(tr("max value"), m_maxValueWidget);
@@ -490,6 +562,7 @@ void CThresholdWidget::reset()
   m_maxValueWidget->setValue(255);
   m_typeWidget->setCurrentIndex(0);
   m_otsuWidget->setChecked(false);
+  COperationWidget::reset();
 }
 
 void CThresholdWidget::apply()
@@ -533,8 +606,8 @@ void CThresholdWidget::apply()
 */
 
 CMatrixWidget::CMatrixWidget(const QString & p_title,
-			   CMatrixModel * p_model,
-			   QWidget* p_parent) :
+			     CMatrixModel * p_model,
+			     QWidget* p_parent) :
   COperationWidget(p_title, p_model, p_parent)
   , m_fileChooserWidget(new CFileChooser(this))
   , m_absDiffWidget(new QPushButton(tr("Absolute difference"), this))
@@ -572,6 +645,8 @@ CMatrixWidget::~CMatrixWidget()
 
 void CMatrixWidget::reset()
 {
+  m_fileChooserWidget->setPath(m_openPath);
+  COperationWidget::reset();
 }
 
 void CMatrixWidget::apply()
@@ -590,7 +665,8 @@ void CMatrixWidget::absDiff()
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->absdiff(converter.data());
 
-  writeSettings();
+  m_openPath = m_fileChooserWidget->path();
+  writeSettings(); // update openPath
 }
 
 void CMatrixWidget::multiplyElements()
@@ -604,7 +680,8 @@ void CMatrixWidget::multiplyElements()
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->multiplyElements(converter.data());
 
-  writeSettings();
+  m_openPath = m_fileChooserWidget->path();
+  writeSettings(); // update openPath
 }
 
 void CMatrixWidget::multiplyMatrix()
@@ -618,56 +695,43 @@ void CMatrixWidget::multiplyMatrix()
   CMatrixConverter converter(m_fileChooserWidget->path());
   model()->multiplyMatrix(converter.data());
 
-  writeSettings();
+  m_openPath = m_fileChooserWidget->path();
+  writeSettings(); // update openPath
 }
 
-void CMatrixWidget::readSettings()
-{
-  QSettings settings;
-  settings.beginGroup("general");
-  m_openPath = settings.value("openPath", QDir::homePath()).toString();
-  settings.endGroup();
-}
-
-
-void CMatrixWidget::writeSettings()
-{
-  QSettings settings;
-  settings.beginGroup( "general" );
-  settings.setValue( "openPath", m_openPath );
-  settings.endGroup();
-}
 
 /*
   Channels
 */
 
 CChannelsWidget::CChannelsWidget(const QString & p_title,
-			   CMatrixModel * p_model,
-			   QWidget* p_parent) :
+				 CMatrixModel * p_model,
+				 QWidget* p_parent) :
   COperationWidget(p_title, p_model, p_parent)
   , m_redFileChooserWidget(new CFileChooser(this))
   , m_greenFileChooserWidget(new CFileChooser(this))
   , m_blueFileChooserWidget(new CFileChooser(this))
-  , m_openPath(QDir::homePath())
+  , m_redOpenPath(m_openPath)
+  , m_greenOpenPath(m_openPath)
+  , m_blueOpenPath(m_openPath)
 {
-  readSettings();
+  m_applyButton->setText(tr("Merge"));
 
-  m_redFileChooserWidget->setCaption(tr("Red"));
+  m_redFileChooserWidget->setCaption(tr("Select red channel"));
   m_redFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
-  m_redFileChooserWidget->setPath(m_openPath);
+  m_redFileChooserWidget->setPath(m_redOpenPath);
 
-  m_greenFileChooserWidget->setCaption(tr("Green"));
+  m_greenFileChooserWidget->setCaption(tr("Select green channel"));
   m_greenFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
-  m_greenFileChooserWidget->setPath(m_openPath);
+  m_greenFileChooserWidget->setPath(m_blueOpenPath);
 
-  m_blueFileChooserWidget->setCaption(tr("Blue"));
+  m_blueFileChooserWidget->setCaption(tr("Select blue channel"));
   m_blueFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
-  m_blueFileChooserWidget->setPath(m_openPath);
+  m_blueFileChooserWidget->setPath(m_greenOpenPath);
 
-  addParameter("", m_redFileChooserWidget);
-  addParameter("", m_greenFileChooserWidget);
-  addParameter("", m_blueFileChooserWidget);
+  addParameter("Red", m_redFileChooserWidget);
+  addParameter("Green", m_greenFileChooserWidget);
+  addParameter("Blue", m_blueFileChooserWidget);
 }
 
 CChannelsWidget::~CChannelsWidget()
@@ -676,44 +740,35 @@ CChannelsWidget::~CChannelsWidget()
 
 void CChannelsWidget::reset()
 {
-  m_redFileChooserWidget->setPath(QDir::homePath());
-  m_greenFileChooserWidget->setPath(QDir::homePath());
-  m_blueFileChooserWidget->setPath(QDir::homePath());
+  m_redFileChooserWidget->setPath(m_redOpenPath);
+  m_greenFileChooserWidget->setPath(m_greenOpenPath);
+  m_blueFileChooserWidget->setPath(m_blueOpenPath);
+  COperationWidget::reset();
 }
 
 void CChannelsWidget::apply()
 {
+  m_redOpenPath   = m_redFileChooserWidget->path();
+  m_greenOpenPath = m_greenFileChooserWidget->path();
+  m_blueOpenPath  = m_blueFileChooserWidget->path();
+
+  if (m_redOpenPath.isEmpty()   ||
+      m_greenOpenPath.isEmpty() ||
+      m_blueOpenPath.isEmpty())
+    {
+      qWarning() << tr("Empty filenames");
+      return;
+    }
+
   model()->setData(m_backup.clone());
 
-  std::vector<cv::Mat> channels;
-  CMatrixConverter rConverter(m_redFileChooserWidget->path());
-  channels.push_back(rConverter.data());
-
-  CMatrixConverter gConverter(m_greenFileChooserWidget->path());
-  channels.push_back(gConverter.data());
-
-  CMatrixConverter bConverter(m_blueFileChooserWidget->path());
-  channels.push_back(bConverter.data());
+  QList<cv::Mat> channels;
+  channels << CMatrixConverter(m_redOpenPath).data();
+  channels << CMatrixConverter(m_greenOpenPath).data();
+  channels << CMatrixConverter(m_blueOpenPath).data();
 
   model()->merge(channels);
 
-  writeSettings();
-}
-
-
-void CChannelsWidget::readSettings()
-{
-  QSettings settings;
-  settings.beginGroup("general");
-  m_openPath = settings.value("openPath", QDir::homePath()).toString();
-  settings.endGroup();
-}
-
-
-void CChannelsWidget::writeSettings()
-{
-  QSettings settings;
-  settings.beginGroup( "general" );
-  settings.setValue( "openPath", m_openPath );
-  settings.endGroup();
+  m_openPath = m_redOpenPath;
+  writeSettings(); // update openPath
 }

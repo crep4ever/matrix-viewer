@@ -24,7 +24,11 @@ set(MATRIX_VIEWER_SOURCES
   src/matrix-view.cc
   src/image-view.cc
   src/matrix-converter.cc
+  src/operation.cc
   src/operations-dialog.cc
+  src/benchmark-thread.cc
+  src/benchmark-result.cc
+  src/benchmark-dialog.cc
   src/properties-dialog.cc
   src/tab-widget.cc
   src/tab.cc
@@ -48,6 +52,9 @@ set(MATRIX_VIEWER_QT_HEADER
   src/image-view.hh
   src/matrix-converter.hh
   src/operations-dialog.hh
+  src/benchmark-thread.hh
+  src/benchmark-result.hh
+  src/benchmark-dialog.hh
   src/properties-dialog.hh
   src/tab-widget.hh
   src/tab.hh
@@ -85,7 +92,6 @@ set(MATRIX_VIEWER_RCS
 find_package(OpenCV REQUIRED)
 
 find_package(Qt4 REQUIRED)
-set(QT_USE_QTSVG true)
 
 include(${QT_USE_FILE})
 
