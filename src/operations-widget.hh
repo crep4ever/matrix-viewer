@@ -268,7 +268,6 @@ private:
   QPushButton *m_absDiffWidget;
   QPushButton *m_multiplyElementsWidget;
   QPushButton *m_multiplyMatrixWidget;
-  QString m_openPath;
 };
 
 /*

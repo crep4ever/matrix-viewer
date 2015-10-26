@@ -613,7 +613,6 @@ CMatrixWidget::CMatrixWidget(const QString & p_title,
   , m_absDiffWidget(new QPushButton(tr("Absolute difference"), this))
   , m_multiplyElementsWidget(new QPushButton(tr("Element-wise multiply"), this))
   , m_multiplyMatrixWidget(new QPushButton(tr("Matrix multiply"), this))
-  , m_openPath(QDir::homePath())
 {
   m_applyButton->hide();
 
