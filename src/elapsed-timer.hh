@@ -35,9 +35,9 @@ public:
 
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
     qWarning() << QObject::tr("Current Qt version does not support sub-millisecond timer precision");
-    ns = elapsed() * 1000 * 1000;
+    ns = QElapsedTimer::elapsed() * 1000 * 1000;
 #else
-    ns = nsecsElapsed();
+    ns = QElapsedTimer::nsecsElapsed();
 #endif
     
     return ns;
