@@ -19,11 +19,11 @@
 #include "benchmark-thread.hh"
 
 #include <QStringList>
-#include <QElapsedTimer>
 #include <QDebug>
 #include <QApplication>
 
 #include "matrix-model.hh"
+#include "elapsed-timer.hh"
 
 BenchmarkThread::BenchmarkThread(const QString & p_name,
 				 const int p_iterations,
@@ -53,7 +53,7 @@ void BenchmarkThread::run()
 
   BenchmarkResult result(m_name);
 
-  QElapsedTimer timer;
+  CElapsedTimer timer;
 
   qint64 ns = 0;
   double min =  DBL_MAX;
