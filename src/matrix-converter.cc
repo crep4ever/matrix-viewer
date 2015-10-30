@@ -250,6 +250,10 @@ bool CMatrixConverter::loadFromImage(const QString & filename)
   try
     {
       m_data = cv::imread(filename.toStdString(), -1);
+      if (m_data.type() == CV_8UC4)
+	{
+	  cv::cvtColor(m_data, m_data, CV_BGRA2RGB);  // remove alpha channel
+	}
     }
   catch (cv::Exception & e)
     {
