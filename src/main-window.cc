@@ -456,8 +456,12 @@ void CMainWindow::about()
 
   QMessageBox::about(this, title, tr("<p>%1</p>"
 				     "<p><b>Version:</b> %2</p>"
-				     "<p><b>Authors:</b> %3</p>")
-		     .arg(description).arg(version).arg(authors));
+				     "<p><b>Authors:</b> %3</p>"
+				     "<p><b>Qt:</b> %4</p>")
+		     .arg(description)
+		     .arg(version)
+		     .arg(authors)
+		     .arg(QT_VERSION_STR));
 }
 
 void CMainWindow::operations()
