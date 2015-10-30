@@ -418,7 +418,6 @@ void CMainWindow::createToolBar()
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_operationsAct);
-  m_mainToolBar->addAction(m_benchmarkAct);
   m_mainToolBar->addSeparator();
 
   m_mainToolBar->addAction(m_dataViewAct);
