@@ -240,10 +240,18 @@ void CBenchmarkDialog::handleResult(const BenchmarkResult & p_result)
 {
   m_progressBar->setValue(++m_progress);
 
-  m_report->append(QString("<b>%1 (%2)</b>")
-		   .arg(p_result.title())
-		   .arg(p_result.statusStr()));
-
+  if (p_result.status() == BenchmarkResult::Success)
+    {
+      m_report->append(QString("<b>%1</b>")
+		       .arg(p_result.title()));
+    }
+  else
+    {
+      m_report->append(QString("<b>%1 (%2)</b>")
+		       .arg(p_result.title())
+		       .arg(p_result.statusStr()));
+    }
+  
   m_report->append(p_result.timeStr());
 }
 
@@ -322,7 +330,7 @@ void CBenchmarkDialog::addHeaderInfo()
 
   m_report->append(modelInfo);
 
-  QString benchmarkInfo = tr("Benchmark: %1 operations with %2 iterations")
+  QString benchmarkInfo = tr("Benchmark: %1 operations (%2 iterations)")
     .arg(QString::number(countOperations()))
     .arg(QString::number(m_iterations->value()));
 
