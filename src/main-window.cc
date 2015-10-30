@@ -600,7 +600,7 @@ void CMainWindow::open()
   QStringList filenames = QFileDialog::getOpenFileNames(this,
                                                         tr("Open data file"),
                                                         m_openPath,
-                                                        tr("Data files (*.xml *.txt *.bmp *.png *.jpg *.raw *.mfe)"));
+							tr("Matrices (%1)").arg(_filters.join(" ")));
   foreach (const QString & filename, filenames)
     if (!filename.isEmpty())
       open(filename);
@@ -641,7 +641,7 @@ void CMainWindow::saveAs()
   QString filename = QFileDialog::getSaveFileName(this,
                                                   tr("Save data file"),
                                                   m_savePath,
-                                                  tr("Data files (*.xml *.txt *.bmp *jpg *.png *.raw *.mfe)"));
+						  tr("Matrices (%1)").arg(_filters.join(" ")));
   if (!filename.isEmpty())
     {
       QFileInfo fi(filename);
