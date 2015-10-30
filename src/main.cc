@@ -80,14 +80,13 @@ void printUsage()
   out << "\t--jpg \t" << "JPEG format." << endl;
   out << "\t--bmp \t" << "BMP format." << endl;
   out << "\t--png \t" << "PNG format." << endl;
-  out << "\t--bin \t" << "Boost serialization of Image2D classes." << endl;
   out << "\t--raw \t" << "Raw images (16bits unsigned, little-endian byte order)." << endl;
   out << "\t--mfe \t" << "Matrix Format Exchange." << endl;
   out << endl;
 
   out << "OPTIONS:" << endl;
   out << "\t-o, --output-directory <DIRECTORY>\t" << "Specify an existing DIRECTORY where converted images should be saved." << endl;
-  out << "\t--raw-width <VALUE>\t\t\t" << "Specify an integer VALUE for width of raw images (default is 2160)." << endl;
+  out << "\t--raw-width  <VALUE>\t\t\t" << "Specify an integer VALUE for width of raw images (default is 2160)." << endl;
   out << "\t--raw-height <VALUE>\t\t\t" << "Specify an integer VALUE for height of raw images (default is 1944)." << endl;
   out << endl;
   out << "********************************************************" << endl;
