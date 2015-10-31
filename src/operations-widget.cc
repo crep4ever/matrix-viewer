@@ -394,6 +394,11 @@ CColorMapWidget::CColorMapWidget(const QString & p_title,
     {
       m_rangeWidget = new CPoint2DWidget;
       m_rangeWidget->setLabels(tr("min"), tr("max"));
+
+      double min = 0, max = 0;
+      model()->minMaxLoc(&min, &max);
+      m_rangeWidget->setPoint(QPointF(min, max));
+
       addParameter(tr("range"), m_rangeWidget);
     }
 
@@ -436,7 +441,7 @@ void CColorMapWidget::reset()
 void CColorMapWidget::apply()
 {
 #if (CV_MAJOR_VERSION == 2) and (CV_MINOR_VERSION <= 3)
-  qWarning() << tr("cv::applyColorMap requires a more recent version of OpenCV.");
+  qWarning() << tr("applyColorMap requires a more recent version of OpenCV.");
   qWarning() << tr("Current OpenCV version: %1.%2").arg(QString::number(CV_MAJOR_VERSION)).arg(QString::number(CV_MINOR_VERSION));
   qWarning() << tr("Minimum required OpenCV version: 2.4");
   return;
