@@ -22,8 +22,6 @@
 #include <QGraphicsView>
 #include <QModelIndex>
 
-#include <opencv2/opencv.hpp>
-
 class CMainWindow;
 class CMatrixModel;
 class CHistogramWidget;
@@ -61,8 +59,6 @@ public:
   void wheelEvent(QWheelEvent *event);
   void mousePressEvent(QMouseEvent *event);
   void keyPressEvent(QKeyEvent *event);
-
-  static QImage* imageFromCvMat(const cv::Mat & mat);
 
 public slots:
   void selectItem(int row, int col);

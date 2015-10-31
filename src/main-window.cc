@@ -558,6 +558,7 @@ void CMainWindow::open(const QString & filename)
   CMatrixModel *model = new CMatrixModel();
   model->setData(converter.data());
   model->setProfile(profile);
+  positionWidget()->setValueDescription(model->valueDescription());
 
   // New tab
   CTab *tab = new CTab();
@@ -680,6 +681,8 @@ void CMainWindow::changeTab(int index)
       disconnect(positionWidget());
       connect(positionWidget(), SIGNAL(positionChanged(int, int)),
 	      currentWidget(), SLOT(selectItem(int, int)));
+
+      positionWidget()->setValueDescription(currentModel()->valueDescription());
     }
 }
 

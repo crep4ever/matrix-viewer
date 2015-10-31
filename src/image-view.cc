@@ -22,7 +22,6 @@
 #include <QPainter>
 #include <QWheelEvent>
 #include <QMouseEvent>
-#include <QSettings>
 #include <QAction>
 #include <QMenu>
 #include <QDebug>
@@ -99,44 +98,6 @@ void CImageView::createActions()
   m_histogramAct->setChecked(false);
   connect(m_histogramAct, SIGNAL(toggled(bool)),
 	  this, SLOT(toggleHistogram(bool)));
-}
-
-QImage* CImageView::imageFromCvMat(const cv::Mat & mat)
-{
-  QSettings settings;
-  settings.beginGroup("image");
-  bool stretch = settings.value("stretch-dynamic", true).toBool();
-  settings.endGroup();
-
-  cv::Mat data;
-  if (stretch)
-    {
-      double min = 0, max = 0;
-      cv::Mat tmp = mat - min;
-      cv::minMaxLoc(tmp, &min, &max);
-      data = tmp * 255 / max;
-    }
-  else
-    {
-      data = mat.clone();
-    }
-
-  try
-    {
-      data.convertTo(data, CV_8U);
-      cv::cvtColor(data, data, mat.channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
-    }
-  catch(cv::Exception & e)
-    {
-      qWarning() << tr("Can't convert color space for matrix\n%1").arg(e.what());
-      return new QImage;
-    }
-
-  QImage *image = new QImage(data.cols, data.rows, QImage::Format_RGB888);
-  for (int i = 0; i < data.rows; ++i)
-    memcpy(image->scanLine(i), data.ptr(i), image->bytesPerLine());
-
-  return image;
 }
 
 CMatrixModel * CImageView::model() const
@@ -304,13 +265,8 @@ void CImageView::draw()
     delete m_image;
 
   // set p_image as current image
-  m_image = imageFromCvMat(model()->data());
+  m_image = model()->toQImage();
 
-  // update position widget in main window
-  if (model()->type() == CV_8UC3)
-    {
-      parent()->positionWidget()->setValueDescription(tr("BGR"));
-    }
 
   // rebuild histogram
   if (m_histogramAct->isChecked())

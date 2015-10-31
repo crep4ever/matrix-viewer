@@ -20,6 +20,8 @@
 #include <QDebug>
 #include <QXmlStreamReader>
 #include <QFile>
+#include <QImage>
+#include <QSettings>
 
 #include "logger.hh"
 
@@ -720,3 +722,54 @@ void CMatrixModel::merge(const QList<cv::Mat> & p_channels)
       qWarning() << e;
     }
 }
+
+QImage* CMatrixModel::toQImage() const
+{
+  QSettings settings;
+  settings.beginGroup("image");
+  bool stretch = settings.value("stretch-dynamic", true).toBool();
+  settings.endGroup();
+
+  cv::Mat data;
+  if (stretch)
+    {
+      double min = 0, max = 0;
+      cv::Mat tmp = m_data - min;
+      cv::minMaxLoc(tmp, &min, &max);
+      data = tmp * 255 / max;
+    }
+  else
+    {
+      data = m_data.clone();
+    }
+
+  try
+    {
+      data.convertTo(data, CV_8U);
+      cv::cvtColor(data, data, channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
+    }
+  catch(cv::Exception & e)
+    {
+      qWarning() << tr("Can't convert color space");
+      qWarning() << e;
+      return new QImage;
+    }
+
+  QImage *image = new QImage(data.cols, data.rows, QImage::Format_RGB888);
+  for (int i = 0; i < data.rows; ++i)
+    memcpy(image->scanLine(i), data.ptr(i), image->bytesPerLine());
+
+  return image;
+}
+
+QString CMatrixModel::valueDescription() const
+{
+  // update position widget in main window
+  if (type() == CV_8UC3)
+    {
+      return tr("BGR");
+    }
+
+  return tr("Value");
+}
+

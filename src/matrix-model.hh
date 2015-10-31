@@ -29,6 +29,8 @@
   \brief CMatrixModel is a model that represent matrix data
 */
 
+class QImage;
+
 class CMatrixModel : public QAbstractTableModel
 {
   Q_OBJECT
@@ -53,6 +55,10 @@ public:
   Qt::ItemFlags flags(const QModelIndex & index) const;
 
   void setProfile(const QString & profile);
+
+  QImage* toQImage() const;
+
+  QString valueDescription() const;
 
   // OpenCV wrappers
   int channels() const;
