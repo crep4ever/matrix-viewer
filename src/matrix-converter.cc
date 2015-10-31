@@ -73,6 +73,11 @@ void CMatrixConverter::setRawWidth(const int p_value)
   m_rawWidth = p_value;
 }
 
+CMatrixConverter::FileFormat CMatrixConverter::format() const
+{
+  return m_format;
+}
+
 void CMatrixConverter::setRawHeight(const int p_value)
 {
   m_rawHeight = p_value;
@@ -121,19 +126,6 @@ cv::Mat CMatrixConverter::data() const
 void CMatrixConverter::setData(const cv::Mat & matrix)
 {
   m_data = matrix;
-}
-
-bool CMatrixConverter::isFormatData() const
-{
-  return m_format == Format_Xml || m_format == Format_Txt || m_format == Format_Mfe;
-}
-
-bool CMatrixConverter::isFormatImage() const
-{
-  return (m_format == Format_Bmp ||
-          m_format == Format_Jpg ||
-          m_format == Format_Png ||
-          m_format == Format_Raw);
 }
 
 bool CMatrixConverter::loadFromTxt(const QString & filename)

@@ -102,19 +102,19 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p)
 
 
       double min, max;
-      cv::Point minLoc, maxLoc;
+      QPoint minLoc, maxLoc;
       model->minMaxLoc(&min, &max, &minLoc, &maxLoc);
 
       item = new QTableWidgetItem(tr("Min"));
       matrixInfo->setItem(6, 0, item);
 
-      item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(min).arg(minLoc.x).arg(minLoc.y));
+      item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(min).arg(minLoc.x()).arg(minLoc.y()));
       matrixInfo->setItem(6, 1, item);
 
       item = new QTableWidgetItem(tr("Max"));
       matrixInfo->setItem(7, 0, item);
 
-      item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(max).arg(maxLoc.x).arg(maxLoc.y));
+      item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(max).arg(maxLoc.x()).arg(maxLoc.y()));
       matrixInfo->setItem(7, 1, item);
 
 

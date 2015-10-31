@@ -28,13 +28,41 @@
 CMatrixModel::CMatrixModel()
   : QAbstractTableModel()
   , m_data()
+  , m_format(CMatrixConverter::Format_Unknown)
   , m_horizontalHeaderLabels()
   , m_verticalHeaderLabels()
 {
 }
 
+CMatrixModel::CMatrixModel(const QString & p_filePath)
+  : QAbstractTableModel()
+  , m_data()
+  , m_format(CMatrixConverter::Format_Unknown)
+  , m_horizontalHeaderLabels()
+  , m_verticalHeaderLabels()
+{
+  CMatrixConverter converter(p_filePath);
+  setData(converter.data());
+  m_format = converter.format();
+}
+
 CMatrixModel::~CMatrixModel()
 {
+}
+
+bool CMatrixModel::isFormatData() const
+{
+  return (m_format == CMatrixConverter::Format_Xml ||
+          m_format == CMatrixConverter::Format_Txt ||
+          m_format == CMatrixConverter::Format_Mfe);
+}
+
+bool CMatrixModel::isFormatImage() const
+{
+  return (m_format == CMatrixConverter::Format_Bmp ||
+          m_format == CMatrixConverter::Format_Jpg ||
+          m_format == CMatrixConverter::Format_Png ||
+          m_format == CMatrixConverter::Format_Raw);
 }
 
 cv::Mat CMatrixModel::data() const
@@ -460,11 +488,23 @@ int CMatrixModel::countNonZeros() const
 }
 
 void CMatrixModel::minMaxLoc(double* p_minVal, double* p_maxVal,
-			     cv::Point* p_minLoc, cv::Point* p_maxLoc)
+			     QPoint* p_minLoc, QPoint* p_maxLoc)
 {
   try
     {
-      cv::minMaxLoc(m_data, p_minVal, p_maxVal, p_minLoc, p_maxLoc);
+      cv::Point minLoc, maxLoc;
+      cv::minMaxLoc(m_data, p_minVal, p_maxVal, &minLoc, &maxLoc);
+      if (p_minLoc)
+        {
+          p_minLoc->setX(minLoc.x);
+          p_minLoc->setY(minLoc.y);
+        }
+
+      if (p_maxLoc)
+        {
+          p_maxLoc->setX(maxLoc.x);
+          p_maxLoc->setY(maxLoc.y);
+        }
     }
   catch (cv::Exception & e)
     {
@@ -591,13 +631,14 @@ void CMatrixModel::horizontalFlip()
 }
 
 
-void CMatrixModel::rotate(const cv::Point2f & p_center,
+void CMatrixModel::rotate(const QPointF & p_center,
                           const double p_angle_dg,
                           const double p_scaleFactor)
 {
   try
     {
-      cv::Mat rotation = getRotationMatrix2D(p_center, p_angle_dg, p_scaleFactor);
+      const cv::Point2f center(p_center.x(), p_center.y());
+      cv::Mat rotation = getRotationMatrix2D(center, p_angle_dg, p_scaleFactor);
 
       cv::Mat dst;
       cv::warpAffine(m_data, dst, rotation, m_data.size());
@@ -701,19 +742,16 @@ void CMatrixModel::threshold(const double p_threshold,
     }
 }
 
-void CMatrixModel::merge(const QList<cv::Mat> & p_channels)
+void CMatrixModel::merge(const QStringList & p_channels)
 {
+  std::vector<cv::Mat> channels;
+  foreach (const QString & filePath, p_channels)
+    {
+      channels.push_back(CMatrixConverter(filePath).data());
+    }
+
   try
     {
-      std::vector<cv::Mat> channels(p_channels.size());
-      // RGB -> BGR
-      if (p_channels.size() == 3)
-	{
-	  channels[0] = p_channels[2];
-	  channels[1] = p_channels[1];
-	  channels[2] = p_channels[0];
-	}
-
       cv::merge(channels, m_data);
       emit(dataChanged(QModelIndex(), QModelIndex()));
     }
@@ -771,5 +809,64 @@ QString CMatrixModel::valueDescription() const
     }
 
   return tr("Value");
+}
+
+CMatrixModel* CMatrixModel::clone() const
+{
+  CMatrixModel *model = new CMatrixModel();
+  model->setData(m_data.clone());
+  return model;
+}
+
+bool CMatrixModel::compare(CMatrixModel *p_model,
+                           CMatrixModel *p_other)
+{
+  cv::Mat m1 = p_model->data();
+  cv::Mat m2 = p_other->data();
+
+  if (m1.empty() && m2.empty())
+    {
+      return true;
+    }
+
+  if (m1.channels() != m2.channels() ||
+      m1.type() != m2.type() ||
+      m1.rows != m2.rows ||
+      m1.cols != m2.cols)
+    {
+      return false;
+    }
+
+  m1.convertTo(m1, CV_64F);
+  m2.convertTo(m2, CV_64F);
+
+  std::vector<cv::Mat> channels1, channels2;
+  cv::split(m1, channels1);
+  cv::split(m2, channels2);
+
+  for (int channel = 0; channel < m1.channels(); ++channel)
+    {
+      for (int r = 0; r < m1.rows; ++r)
+        {
+          for (int c = 0; c < m1.cols; ++c)
+            {
+              const double v1 = channels1[channel].at<double>(r, c);
+              const double v2 = channels2[channel].at<double>(r, c);
+              if (v1 != v2)
+                {
+                  return false;
+                }
+            }
+        }
+    }
+
+  return true;
+}
+
+QPointF CMatrixModel::center() const
+{
+  const float x = (float) (columnCount() / 2.0);
+  const float y = (float) (rowCount() / 2.0);
+  return QPointF(x, y);
 }
 

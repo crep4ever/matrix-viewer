@@ -23,6 +23,8 @@
 #include <QStringList>
 #include <opencv2/opencv.hpp>
 
+#include "matrix-converter.hh"
+
 /*!
   \file matrix-model.hh
   \class CMatrixModel
@@ -38,9 +40,15 @@ class CMatrixModel : public QAbstractTableModel
 public:
   /// Constructor.
   CMatrixModel();
+  CMatrixModel(const QString & p_filePath);
 
   /// Destructor.
   virtual ~CMatrixModel();
+
+  CMatrixModel* clone() const;
+
+  bool isFormatData() const;
+  bool isFormatImage() const;
 
   cv::Mat data() const;
   void setData(const cv::Mat & matrix);
@@ -60,6 +68,9 @@ public:
 
   QString valueDescription() const;
 
+  static bool compare(CMatrixModel *p_model,
+                      CMatrixModel *p_other);
+
   // OpenCV wrappers
   int channels() const;
   int type() const;
@@ -68,9 +79,11 @@ public:
   size_t total() const;
   int countNonZeros() const;
   void minMaxLoc(double* p_minVal, double* p_maxVal = 0,
-		 cv::Point* p_minLoc = 0, cv::Point* p_maxLoc = 0);
+		 QPoint* p_minLoc = 0, QPoint* p_maxLoc = 0);
 
   void meanStdDev(double* mean, double* stddev);
+
+  QPointF center() const;
 
 public slots:
 
@@ -80,7 +93,7 @@ public slots:
 		 const double p_beta);
 
   // channels
-  void merge(const QList<cv::Mat> & p_channels);
+  void merge(const QStringList & p_channels);
 
   // scalar
   void add(double p_value);
@@ -96,7 +109,7 @@ public slots:
 
   void horizontalFlip();
 
-  void rotate(const cv::Point2f & p_center,
+  void rotate(const QPointF & p_center,
 	      const double p_angle_dg,
 	      const double p_scaleFactor);
 
@@ -121,6 +134,7 @@ public slots:
 private:
 
   cv::Mat m_data;
+  CMatrixConverter::FileFormat m_format;
   QStringList m_horizontalHeaderLabels;
   QStringList m_verticalHeaderLabels;
 };

@@ -32,7 +32,6 @@
 #include "main-window.hh"
 #include "tab.hh"
 #include "matrix-model.hh"
-#include "matrix-converter.hh"
 #include "file-chooser.hh"
 #include "common-widgets.hh"
 
@@ -225,9 +224,7 @@ CRotationWidget::CRotationWidget(const QString & p_title,
   , m_angleWidget(new QDoubleSpinBox)
   , m_scaleWidget(new QDoubleSpinBox)
 {
-  const float x = model()->data().cols / 2.0;
-  const float y = model()->data().rows / 2.0;
-  m_centerWidget->setPoint(QPointF(x, y));
+  m_centerWidget->setPoint(model()->center());
 
   m_angleWidget->setRange(-360, 360);
   m_angleWidget->setDecimals(SPIN_BOX_DECIMALS);
@@ -246,10 +243,7 @@ CRotationWidget::~CRotationWidget()
 
 void CRotationWidget::reset()
 {
-  const float x = model()->data().cols / 2.0;
-  const float y = model()->data().rows / 2.0;
-  m_centerWidget->setPoint(QPointF(x, y));
-
+  m_centerWidget->setPoint(model()->center());
   m_angleWidget->setValue(0);
   m_scaleWidget->setValue(1);
   COperationWidget::reset();
@@ -259,10 +253,7 @@ void CRotationWidget::apply()
 {
   model()->setData(m_backup.clone());
 
-  const cv::Point2f center(m_centerWidget->point().x(),
-			   m_centerWidget->point().y());
-
-  model()->rotate(center,
+  model()->rotate(m_centerWidget->point(),
                   m_angleWidget->value(),
                   m_scaleWidget->value());
 }
@@ -666,8 +657,8 @@ void CMatrixWidget::absDiff()
     }
 
   model()->setData(m_backup.clone());
-  CMatrixConverter converter(m_fileChooserWidget->path());
-  model()->absdiff(converter.data());
+  CMatrixModel other(m_fileChooserWidget->path());
+  model()->absdiff(other.data());
 
   m_openPath = m_fileChooserWidget->path();
   writeSettings(); // update openPath
@@ -681,8 +672,8 @@ void CMatrixWidget::multiplyElements()
       return;
     }
 
-  CMatrixConverter converter(m_fileChooserWidget->path());
-  model()->multiplyElements(converter.data());
+  CMatrixModel other(m_fileChooserWidget->path());
+  model()->multiplyElements(other.data());
 
   m_openPath = m_fileChooserWidget->path();
   writeSettings(); // update openPath
@@ -696,8 +687,8 @@ void CMatrixWidget::multiplyMatrix()
       return;
     }
 
-  CMatrixConverter converter(m_fileChooserWidget->path());
-  model()->multiplyMatrix(converter.data());
+  CMatrixModel other(m_fileChooserWidget->path());
+  model()->multiplyMatrix(other.data());
 
   m_openPath = m_fileChooserWidget->path();
   writeSettings(); // update openPath
@@ -766,10 +757,10 @@ void CChannelsWidget::apply()
 
   model()->setData(m_backup.clone());
 
-  QList<cv::Mat> channels;
-  channels << CMatrixConverter(m_redOpenPath).data();
-  channels << CMatrixConverter(m_greenOpenPath).data();
-  channels << CMatrixConverter(m_blueOpenPath).data();
+  QStringList channels;
+  channels << m_blueOpenPath;
+  channels << m_greenOpenPath;
+  channels << m_redOpenPath;
 
   model()->merge(channels);
 

@@ -63,8 +63,7 @@ public:
   bool save(const QString & filename);
   bool load(const QString & filename);
 
-  bool isFormatData() const;
-  bool isFormatImage() const;
+  FileFormat format() const;
 
   void readSettings();
 

@@ -549,14 +549,12 @@ void CMainWindow::open(const QString & filename)
 {
   QFileInfo fi(filename);
   m_openPath = fi.absolutePath();
-  CMatrixConverter converter(filename);
 
   // Try to find a suitable profile for this file
   QString profile = findProfile(filename);
 
   // Build model from data file
-  CMatrixModel *model = new CMatrixModel();
-  model->setData(converter.data());
+  CMatrixModel *model = new CMatrixModel(filename);
   model->setProfile(profile);
   positionWidget()->setValueDescription(model->valueDescription());
 
@@ -577,13 +575,13 @@ void CMainWindow::open(const QString & filename)
 
   imgView->bestSize();
 
-  if (converter.isFormatData())
+  if (model->isFormatData())
     {
       m_dataViewAct->setChecked(true);
       toggleDataView(m_dataViewAct->isChecked());
     }
 
-  if (converter.isFormatImage())
+  if (model->isFormatImage())
     {
       m_imageViewAct->setChecked(true);
       toggleImageView(m_imageViewAct->isChecked());
