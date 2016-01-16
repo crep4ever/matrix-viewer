@@ -23,8 +23,8 @@
 
 #include "tab.hh"
 
-CTabWidget::CTabWidget(QWidget *parent)
-  : QTabWidget(parent)
+CTabWidget::CTabWidget(QWidget *parent) :
+QTabWidget(parent)
 {
   setStyleSheet(" QTabWidget::tab-bar {}");
   setTabBar(new CTabBar(this));
@@ -45,31 +45,33 @@ void CTabWidget::addTab(QWidget * page, const QString & label)
   QFileInfo fi(label);
   CTab *tab = qobject_cast<CTab*>(page);
   if (tab)
-    {
-      tab->setFilePath(fi.absoluteFilePath());
-      tab->setWindowTitle(fi.fileName());
-      QTabWidget::addTab(page, fi.fileName());
-    }
+  {
+    tab->setFilePath(fi.absoluteFilePath());
+    tab->setWindowTitle(fi.fileName());
+    QTabWidget::addTab(page, fi.fileName());
+  }
   else
-    {
-      QTabWidget::addTab(page, label);
-    }
+  {
+    QTabWidget::addTab(page, label);
+  }
 }
 
 //----------------------------------------------------------------------------
 
-CTabBar::CTabBar(QWidget *parent)
-  : QTabBar(parent)
-{}
+CTabBar::CTabBar(QWidget *parent) :
+QTabBar(parent)
+{
+}
 
 CTabBar::~CTabBar()
-{}
+{
+}
 
 void CTabBar::mouseReleaseEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::MidButton)
-    {
-      emit(tabCloseRequested(tabAt(event->pos())));
-    }
+  {
+    emit(tabCloseRequested(tabAt(event->pos())));
+  }
   QTabBar::mouseReleaseEvent(event);
 }

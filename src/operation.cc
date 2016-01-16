@@ -19,16 +19,16 @@
 #include "operation.hh"
 
 Operation::Operation() :
-  m_name(),
-  m_description(),
-  m_url()
+m_name(),
+m_description(),
+m_url()
 {
 }
 
 Operation::Operation(const Operation & p_other) :
-  m_name(p_other.name()),
-  m_description(p_other.description()),
-  m_url(p_other.url())
+m_name(p_other.name()),
+m_description(p_other.description()),
+m_url(p_other.url())
 {
 }
 
@@ -70,7 +70,6 @@ void Operation::setUrl(const QString & p_url)
 {
   m_url = QUrl(p_url);
 }
-
 
 QList<Operation> Operation::list_benchmark()
 {

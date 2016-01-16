@@ -28,11 +28,11 @@
 #include "position.hh"
 #include "properties-dialog.hh"
 
-CMatrixView::CMatrixView(QWidget *p)
-  : QTableView(p)
-  , m_parent(qobject_cast<CMainWindow*>(p))
-  , m_adjustColumnsAct(0)
-  , m_propertiesAct(0)
+CMatrixView::CMatrixView(QWidget *p) :
+QTableView(p)
+, m_parent(qobject_cast<CMainWindow*>(p))
+, m_adjustColumnsAct(0)
+, m_propertiesAct(0)
 {
   setAlternatingRowColors(true);
   setShowGrid(true);
@@ -73,7 +73,7 @@ void CMatrixView::setModel(QAbstractItemModel * model)
   delete sm;
 
   connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-          this, SLOT(currentChanged(const QModelIndex &, const QModelIndex &)));
+  this, SLOT(currentChanged(const QModelIndex &, const QModelIndex &)));
 }
 
 void CMatrixView::selectItem(int row, int col)
@@ -87,17 +87,17 @@ void CMatrixView::keyPressEvent(QKeyEvent *event)
   QTableView::keyPressEvent(event);
 
   switch (event->key())
-    {
+  {
     case Qt::Key_Left:
     case Qt::Key_Right:
     case Qt::Key_Down:
     case Qt::Key_Up:
-      scrollTo(selectionModel()->currentIndex());
-      break;
+    scrollTo(selectionModel()->currentIndex());
+    break;
 
     default:
-      break;
-    }
+    break;
+  }
 }
 
 void CMatrixView::contextMenuEvent(QContextMenuEvent *event)
@@ -125,8 +125,9 @@ void CMatrixView::adjustColumnsToContents()
 CMainWindow* CMatrixView::parent() const
 {
   if (!m_parent)
+  {
     qWarning() << "CMatrixView::parent invalid parent";
+  }
 
   return m_parent;
 }
-

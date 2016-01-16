@@ -34,20 +34,20 @@
 #include "matrix-model.hh"
 #include "histogram-widget.hh"
 
-CImageView::CImageView(QWidget *p)
-  : QGraphicsView(p)
-  , m_parent(qobject_cast<CMainWindow*>(p))
-  , m_model(0)
-  , m_image(0)
-  , m_histogramWidget(0)
-  , m_histogramNeedsRedraw(true)
-  , m_scene(new QGraphicsScene)
-  , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
-  , m_zoomInAct(0)
-  , m_zoomOutAct(0)
-  , m_normalSizeAct(0)
-  , m_fitToWindowAct(0)
-  , m_histogramAct(0)
+CImageView::CImageView(QWidget *p) :
+QGraphicsView(p)
+, m_parent(qobject_cast<CMainWindow*>(p))
+, m_model(0)
+, m_image(0)
+, m_histogramWidget(0)
+, m_histogramNeedsRedraw(true)
+, m_scene(new QGraphicsScene)
+, m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
+, m_zoomInAct(0)
+, m_zoomOutAct(0)
+, m_normalSizeAct(0)
+, m_fitToWindowAct(0)
+, m_histogramAct(0)
 {
   setDragMode(QGraphicsView::ScrollHandDrag);
   setBackgroundRole(QPalette::Dark);
@@ -97,7 +97,7 @@ void CImageView::createActions()
   m_histogramAct->setCheckable(true);
   m_histogramAct->setChecked(false);
   connect(m_histogramAct, SIGNAL(toggled(bool)),
-	  this, SLOT(toggleHistogram(bool)));
+  this, SLOT(toggleHistogram(bool)));
 }
 
 CMatrixModel * CImageView::model() const
@@ -108,20 +108,22 @@ CMatrixModel * CImageView::model() const
 void CImageView::setModel(CMatrixModel * model)
 {
   if (model != m_model)
-    {
-      m_model = model;
+  {
+    m_model = model;
 
-      connect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-	      this, SLOT(update(const QModelIndex &, const QModelIndex & )));
+    connect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+    this, SLOT(update(const QModelIndex &, const QModelIndex & )));
 
-      update();
-    }
+    update();
+  }
 }
 
 CMainWindow* CImageView::parent() const
 {
   if (!m_parent)
+  {
     qWarning() << "CImageView::parent invalid parent";
+  }
 
   return m_parent;
 }
@@ -129,9 +131,9 @@ CMainWindow* CImageView::parent() const
 void CImageView::wheelEvent(QWheelEvent *event)
 {
   if (event->delta() > 0)
-    zoomIn();
+  zoomIn();
   else
-    zoomOut();
+  zoomOut();
 
   centerOn(mapToScene(event->pos()));
 
@@ -144,9 +146,9 @@ void CImageView::mousePressEvent(QMouseEvent *event)
   // ensure scenePoint is within the scene range
   if (0 < scenePoint.x() && scenePoint.x() < sceneRect().width() &&
       0 < scenePoint.y() && scenePoint.y() < sceneRect().height())
-    {
-      selectItem((int) scenePoint.y(), (int) scenePoint.x());
-    }
+  {
+    selectItem((int) scenePoint.y(), (int) scenePoint.x());
+  }
 
   QGraphicsView::mousePressEvent(event);
 }
@@ -154,34 +156,34 @@ void CImageView::mousePressEvent(QMouseEvent *event)
 void CImageView::keyPressEvent(QKeyEvent *event)
 {
   if (!parent())
-    {
-      return QGraphicsView::keyPressEvent(event);
-    }
+  {
+    return QGraphicsView::keyPressEvent(event);
+  }
 
   const int row = parent()->positionWidget()->row();
   const int col = parent()->positionWidget()->col();
 
   switch (event->key())
-    {
+  {
     case Qt::Key_Left:
-      selectItem(row, qMax(0, col - 1));
-      break;
+    selectItem(row, qMax(0, col - 1));
+    break;
 
     case Qt::Key_Right:
-      selectItem(row, qMin((int) sceneRect().width() - 1, col + 1));
-      break;
+    selectItem(row, qMin((int) sceneRect().width() - 1, col + 1));
+    break;
 
     case Qt::Key_Down:
-      selectItem(qMin((int) sceneRect().height() - 1, row + 1), col);
-      break;
+    selectItem(qMin((int) sceneRect().height() - 1, row + 1), col);
+    break;
 
     case Qt::Key_Up:
-      selectItem(qMax(0, row - 1), col);
-      break;
+    selectItem(qMax(0, row - 1), col);
+    break;
 
     default:
-      QGraphicsView::keyPressEvent(event);
-    }
+    QGraphicsView::keyPressEvent(event);
+  }
 }
 
 void CImageView::selectItem(int row, int col)
@@ -189,14 +191,14 @@ void CImageView::selectItem(int row, int col)
   m_selectionBox->setPos(col, row);
 
   if (parent())
-    {
-      parent()->positionWidget()->setRow(row);
-      parent()->positionWidget()->setCol(col);
+  {
+    parent()->positionWidget()->setRow(row);
+    parent()->positionWidget()->setCol(col);
 
-      const QModelIndex index = m_model->index(row, col);
-      const QString value = m_model->data(index, Qt::DisplayRole).toString();
-      parent()->positionWidget()->setValue(value);
-    }
+    const QModelIndex index = m_model->index(row, col);
+    const QString value = m_model->data(index, Qt::DisplayRole).toString();
+    parent()->positionWidget()->setValue(value);
+  }
 }
 
 void CImageView::zoomIn()
@@ -221,9 +223,10 @@ void CImageView::fitToWindow()
 
 void CImageView::bestSize()
 {
-  if (m_scene->sceneRect().width() > width() ||
-      m_scene->sceneRect().height() > height())
+  if (m_scene->sceneRect().width() > width() || m_scene->sceneRect().height() > height())
+  {
     fitToWindow();
+  }
 }
 
 void CImageView::contextMenuEvent(QContextMenuEvent *event)
@@ -244,13 +247,15 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
 void CImageView::toggleHistogram(bool p_visible)
 {
   if (p_visible && m_histogramNeedsRedraw)
+  {
+    if (!m_histogramWidget)
     {
-      if (!m_histogramWidget)
-	m_histogramWidget = new CHistogramWidget(this);
-
-      m_histogramWidget->setImage(m_image);
-      m_histogramNeedsRedraw = false;
+      m_histogramWidget = new CHistogramWidget(this);
     }
+
+    m_histogramWidget->setImage(m_image);
+    m_histogramNeedsRedraw = false;
+  }
 
   m_histogramWidget->setVisible(p_visible);
 }
@@ -262,7 +267,7 @@ void CImageView::draw()
 
   // delete previous image
   if (m_image)
-    delete m_image;
+  delete m_image;
 
   // set p_image as current image
   m_image = model()->toQImage();
@@ -270,18 +275,18 @@ void CImageView::draw()
 
   // rebuild histogram
   if (m_histogramAct->isChecked())
-    {
-      if (!m_histogramWidget)
-	m_histogramWidget = new CHistogramWidget(this);
+  {
+    if (!m_histogramWidget)
+    m_histogramWidget = new CHistogramWidget(this);
 
-      m_histogramWidget->setImage(m_image);
-      m_histogramNeedsRedraw = false;
-      m_histogramWidget->setVisible(true);
-    }
+    m_histogramWidget->setImage(m_image);
+    m_histogramNeedsRedraw = false;
+    m_histogramWidget->setVisible(true);
+  }
   else
-    {
-      m_histogramNeedsRedraw = true;
-    }
+  {
+    m_histogramNeedsRedraw = true;
+  }
 
   // rebuild selectionbox
   m_selectionBox = new QGraphicsRectItem(0, 0, 1, 1);
@@ -294,9 +299,7 @@ void CImageView::draw()
   m_scene->addItem(m_selectionBox);
 }
 
-
-void CImageView::update(const QModelIndex & p_begin,
-			const QModelIndex & p_end)
+void CImageView::update(const QModelIndex & p_begin, const QModelIndex & p_end)
 {
   Q_UNUSED(p_begin);
   Q_UNUSED(p_end);

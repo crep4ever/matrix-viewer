@@ -42,16 +42,16 @@
 #include "benchmark-thread.hh"
 
 CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
-  : QDialog(parent)
-  , m_parent(qobject_cast<CMainWindow*>(parent))
-  , m_tabs(new QTabWidget)
-  , m_progressBar(new CProgressBar)
-  , m_operations()
-  , m_iterations(new QSpinBox)
-  , m_report(new QTextEdit)
-  , m_savePath(QDir::homePath())
-  , m_cancelRequested(false)
-  , m_progress(0)
+: QDialog(parent)
+, m_parent(qobject_cast<CMainWindow*>(parent))
+, m_tabs(new QTabWidget)
+, m_progressBar(new CProgressBar)
+, m_operations()
+, m_iterations(new QSpinBox)
+, m_report(new QTextEdit)
+, m_savePath(QDir::homePath())
+, m_cancelRequested(false)
+, m_progress(0)
 {
   setWindowTitle(tr("Benchmark"));
   readSettings();
@@ -73,14 +73,14 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
 
   QVBoxLayout *namesLayout = new QVBoxLayout;
   foreach(const Operation & o, benchmarkOperations)
-    {
-      QCheckBox *item = new QCheckBox(o.name());
-      item->setToolTip(o.description());
-      item->setChecked(true);
-      connect(item, SIGNAL(clicked()), this, SLOT(updateProgressRange()));
-      m_operations.append(item);
-      namesLayout->addWidget(item);
-    }
+  {
+    QCheckBox *item = new QCheckBox(o.name());
+    item->setToolTip(o.description());
+    item->setChecked(true);
+    connect(item, SIGNAL(clicked()), this, SLOT(updateProgressRange()));
+    m_operations.append(item);
+    namesLayout->addWidget(item);
+  }
 
   QWidget *checkboxContainer = new QWidget(this);
   checkboxContainer->setLayout(namesLayout);
@@ -155,9 +155,9 @@ CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
 CBenchmarkDialog::~CBenchmarkDialog()
 {
   foreach (QCheckBox *checkBox, m_operations)
-    {
-      delete checkBox;
-    }
+  {
+    delete checkBox;
+  }
 
   delete m_iterations;
   delete m_report;
@@ -186,7 +186,7 @@ void CBenchmarkDialog::writeSettings()
 CMainWindow* CBenchmarkDialog::parent() const
 {
   if (!m_parent)
-    qWarning() << "CBenchmarkDialog::parent invalid parent";
+  qWarning() << "CBenchmarkDialog::parent invalid parent";
   return m_parent;
 }
 
@@ -213,22 +213,22 @@ void CBenchmarkDialog::run()
   model()->blockSignals(true);
 
   foreach (QCheckBox *checkBox, m_operations)
+  {
+    if (!m_cancelRequested && checkBox->isChecked())
     {
-      if (!m_cancelRequested && checkBox->isChecked())
-	{
-	  BenchmarkThread worker(checkBox->text(),
-				 m_iterations->value(),
-				 model());
+      BenchmarkThread worker(checkBox->text(),
+      m_iterations->value(),
+      model());
 
-	  connect(&worker, SIGNAL(resultReady(const BenchmarkResult &)),
-		  this, SLOT(handleResult(const BenchmarkResult &)));
+      connect(&worker, SIGNAL(resultReady(const BenchmarkResult &)),
+      this, SLOT(handleResult(const BenchmarkResult &)));
 
-	  connect(m_progressBar, SIGNAL(canceled()),
-		  &worker, SLOT(cancel()));
+      connect(m_progressBar, SIGNAL(canceled()),
+      &worker, SLOT(cancel()));
 
-	  worker.run();
-	}
+      worker.run();
     }
+  }
 
   // Restore normal signal use
   model()->blockSignals(false);
@@ -241,17 +241,17 @@ void CBenchmarkDialog::handleResult(const BenchmarkResult & p_result)
   m_progressBar->setValue(++m_progress);
 
   if (p_result.status() == BenchmarkResult::Success)
-    {
-      m_report->append(QString("<b>%1</b>")
-		       .arg(p_result.title()));
-    }
+  {
+    m_report->append(QString("<b>%1</b>")
+    .arg(p_result.title()));
+  }
   else
-    {
-      m_report->append(QString("<b>%1 (%2)</b>")
-		       .arg(p_result.title())
-		       .arg(p_result.statusStr()));
-    }
-  
+  {
+    m_report->append(QString("<b>%1 (%2)</b>")
+    .arg(p_result.title())
+    .arg(p_result.statusStr()));
+  }
+
   m_report->append(p_result.timeStr());
 }
 
@@ -263,9 +263,9 @@ void CBenchmarkDialog::cancel()
 void CBenchmarkDialog::selectAll()
 {
   foreach (QCheckBox *checkBox, m_operations)
-    {
-      checkBox->setChecked(true);
-    }
+  {
+    checkBox->setChecked(true);
+  }
 
   updateProgressRange();
 }
@@ -273,9 +273,9 @@ void CBenchmarkDialog::selectAll()
 void CBenchmarkDialog::unselectAll()
 {
   foreach (QCheckBox *checkBox, m_operations)
-    {
-      checkBox->setChecked(false);
-    }
+  {
+    checkBox->setChecked(false);
+  }
 
   updateProgressRange();
 }
@@ -284,10 +284,10 @@ int CBenchmarkDialog::countOperations() const
 {
   int count = 0;
   foreach (QCheckBox *checkBox, m_operations)
-    {
-      if (checkBox->isChecked())
-	++count;
-    }
+  {
+    if (checkBox->isChecked())
+    ++count;
+  }
 
   return count;
 }
@@ -298,15 +298,15 @@ void CBenchmarkDialog::updateProgressRange()
 
   m_progressBar->reset();
   if (count == 0) // avoid k2000
-    {
-      m_progressBar->setMinimum(1);
-      m_progressBar->setMaximum(1);
-    }
+  {
+    m_progressBar->setMinimum(1);
+    m_progressBar->setMaximum(1);
+  }
   else
-    {
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(count);
-    }
+  {
+    m_progressBar->setMinimum(0);
+    m_progressBar->setMaximum(count);
+  }
 }
 
 void CBenchmarkDialog::addHeaderInfo()
@@ -316,23 +316,23 @@ void CBenchmarkDialog::addHeaderInfo()
   m_report->append(rule);
 
   QString cvInfo = tr("OpenCV: %1.%2.%3")
-    .arg(QString::number(CV_MAJOR_VERSION))
-    .arg(QString::number(CV_MINOR_VERSION))
-    .arg(QString::number(CV_SUBMINOR_VERSION));;
+  .arg(QString::number(CV_MAJOR_VERSION))
+  .arg(QString::number(CV_MINOR_VERSION))
+  .arg(QString::number(CV_SUBMINOR_VERSION));;
 
   m_report->append(cvInfo);
 
   QString modelInfo = tr("Matrix: %1 x %2 %3C%4")
-    .arg(QString::number(model()->rowCount()))
-    .arg(QString::number(model()->columnCount()))
-    .arg(model()->typeString())
-    .arg(QString::number(model()->channels()));
+  .arg(QString::number(model()->rowCount()))
+  .arg(QString::number(model()->columnCount()))
+  .arg(model()->typeString())
+  .arg(QString::number(model()->channels()));
 
   m_report->append(modelInfo);
 
   QString benchmarkInfo = tr("Benchmark: %1 operations (%2 iterations)")
-    .arg(QString::number(countOperations()))
-    .arg(QString::number(m_iterations->value()));
+  .arg(QString::number(countOperations()))
+  .arg(QString::number(m_iterations->value()));
 
   m_report->append(benchmarkInfo);
 
@@ -343,29 +343,27 @@ void CBenchmarkDialog::addHeaderInfo()
 void CBenchmarkDialog::save()
 {
   QString filename = QFileDialog::getSaveFileName(this,
-                                                  tr("Save benchmark report"),
-                                                  m_savePath,
-                                                  tr("Data files (*.txt *.html)"));
-  QFileInfo fi(filename);
-  if (filename.isEmpty())
+    tr("Save benchmark report"),
+    m_savePath,
+    tr("Data files (*.txt *.html)"));
+    QFileInfo fi(filename);
+    if (filename.isEmpty())
     return;
 
-  m_savePath = fi.absolutePath();
-  QFile file(filename);
-  if (file.open(QFile::WriteOnly | QFile::Truncate))
+    m_savePath = fi.absolutePath();
+    QFile file(filename);
+    if (file.open(QFile::WriteOnly | QFile::Truncate))
     {
       QTextStream out(&file);
       if (fi.completeSuffix() == "html")
-	{
-	  out << m_report->toHtml();
-	}
+      {
+        out << m_report->toHtml();
+      }
       else
-	{
-	  out << m_report->toPlainText();
-	}
+      {
+        out << m_report->toPlainText();
+      }
     }
 
-  writeSettings(); //update savePath
-}
-
-
+    writeSettings(); //update savePath
+  }

@@ -25,21 +25,21 @@
 
 #include <limits>
 
-CPosition::CPosition(QWidget *parent)
-  : QWidget(parent)
-  , m_rowSpinBox(new QSpinBox)
-  , m_colSpinBox(new QSpinBox)
-  , m_valueLabel(new QLabel)
-  , m_valueDescription(tr("Value"))
+CPosition::CPosition(QWidget *parent) :
+QWidget(parent)
+, m_rowSpinBox(new QSpinBox)
+, m_colSpinBox(new QSpinBox)
+, m_valueLabel(new QLabel)
+, m_valueDescription(tr("Value"))
 {
   m_rowSpinBox->setMaximum(std::numeric_limits<int>::max());
   m_colSpinBox->setMaximum(std::numeric_limits<int>::max());
 
   connect(m_rowSpinBox, SIGNAL(valueChanged(int)),
-	  this, SLOT(changeRow(int)));
+  this, SLOT(changeRow(int)));
 
   connect(m_colSpinBox, SIGNAL(valueChanged(int)),
-	  this, SLOT(changeCol(int)));
+  this, SLOT(changeCol(int)));
 
   QLabel *rowLabel = new QLabel(tr("Row:"));
   QLabel *colLabel = new QLabel(tr("Col:"));
@@ -101,4 +101,3 @@ void CPosition::setValueDescription(const QString & desc)
 {
   m_valueDescription = desc;
 }
-

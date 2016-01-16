@@ -23,10 +23,10 @@
 #include "matrix-view.hh"
 #include "image-view.hh"
 
-CTab::CTab()
-  : QSplitter(Qt::Horizontal)
-  , m_isModified(false)
-  , m_filePath()
+CTab::CTab() :
+QSplitter(Qt::Horizontal)
+, m_isModified(false)
+, m_filePath()
 {
 }
 
@@ -34,19 +34,17 @@ CTab::~CTab()
 {
 }
 
-
 void CTab::addWidget(QWidget* w)
 {
   QSplitter::addWidget(w);
   if (CMatrixView *view = qobject_cast<CMatrixView*>(widget(0)))
-    {
-      connect(view->model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-	      this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
-    }
+  {
+    connect(view->model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+    this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+  }
 }
 
-void CTab::modelDataChanged(const QModelIndex & index,
-			    const QModelIndex & previous)
+void CTab::modelDataChanged(const QModelIndex & index, const QModelIndex & previous)
 {
   Q_UNUSED(index);
   Q_UNUSED(previous);
@@ -58,16 +56,19 @@ void CTab::modelDataChanged(const QModelIndex & index,
 void CTab::selectItem(int row, int col)
 {
   for (int i = 0; i < count(); ++i)
+  {
+    CMatrixView *dataView = qobject_cast<CMatrixView*>(widget(i));
+    if (dataView)
     {
-      CMatrixView *dataView = qobject_cast<CMatrixView*>(widget(i));
-      if (dataView)
-	dataView->selectItem(row, col);
-
-      CImageView *imgView = qobject_cast<CImageView*>(widget(i));
-      if (imgView)
-	imgView->selectItem(row, col);
+      dataView->selectItem(row, col);
     }
 
+    CImageView *imgView = qobject_cast<CImageView*>(widget(i));
+    if (imgView)
+    {
+      imgView->selectItem(row, col);
+    }
+  }
 }
 
 bool CTab::isModified() const
@@ -81,15 +82,15 @@ void CTab::setModified(const bool modified)
 
   // update the window title
   if (modified && !windowTitle().contains(" *"))
-    {
-      setWindowTitle(windowTitle() + " *");
-      emit(labelChanged(windowTitle()));
-    }
+  {
+    setWindowTitle(windowTitle() + " *");
+    emit(labelChanged(windowTitle()));
+  }
   else if (!modified && windowTitle().contains(" *"))
-    {
-      setWindowTitle(windowTitle().remove(" *"));
-      emit(labelChanged(windowTitle()));
-    }
+  {
+    setWindowTitle(windowTitle().remove(" *"));
+    emit(labelChanged(windowTitle()));
+  }
 }
 
 QString CTab::filePath() const

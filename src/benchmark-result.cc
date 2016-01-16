@@ -21,38 +21,38 @@
 #include <QDebug>
 
 BenchmarkResult::BenchmarkResult()
-  : QObject()
-  , m_title("invalid")
-  , m_nsMin(0)
-  , m_nsMax(0)
-  , m_nsAvg(0)
-  , m_status(Ignored)
+: QObject()
+, m_title("invalid")
+, m_nsMin(0)
+, m_nsMax(0)
+, m_nsAvg(0)
+, m_status(Ignored)
 {
 }
 
 BenchmarkResult::BenchmarkResult(const QString & p_name)
-  : QObject()
-  , m_title(p_name)
-  , m_nsMin(0)
-  , m_nsMax(0)
-  , m_nsAvg(0)
-  , m_status(Ignored)
+: QObject()
+, m_title(p_name)
+, m_nsMin(0)
+, m_nsMax(0)
+, m_nsAvg(0)
+, m_status(Ignored)
 {
 }
 
 BenchmarkResult::BenchmarkResult(const BenchmarkResult & p_other)
-  : QObject()
-  , m_title(p_other.title())
-  , m_nsMin(p_other.nsMin())
-  , m_nsMax(p_other.nsMax())
-  , m_nsAvg(p_other.nsAvg())
-  , m_status(p_other.status())
+: QObject()
+, m_title(p_other.title())
+, m_nsMin(p_other.nsMin())
+, m_nsMax(p_other.nsMax())
+, m_nsAvg(p_other.nsAvg())
+, m_status(p_other.status())
 {
 }
 
 BenchmarkResult::~BenchmarkResult()
-{}
-
+{
+}
 
 const QString & BenchmarkResult::title() const
 {
@@ -107,19 +107,19 @@ void BenchmarkResult::setStatus(const Status s)
 QString BenchmarkResult::statusStr() const
 {
   switch (m_status)
-    {
+  {
     case Success:
-      return "success";
+    return "success";
 
     case Error:
-      return "error";
+    return "error";
 
     case Canceled:
-      return "canceled";
+    return "canceled";
 
     case Ignored:
-      return "ignored";
-    }
+    return "ignored";
+  }
 
   return QString();
 }
@@ -135,30 +135,30 @@ QString BenchmarkResult::timeStr() const
   const double ms = us * 1000;
   const double s  = ms * 1000;
   if (min > s)
-    {
-      min /= s;
-      max /= s;
-      avg /= s;
-      unit = "s";
-    }
+  {
+    min /= s;
+    max /= s;
+    avg /= s;
+    unit = "s";
+  }
   else if (min > ms)
-    {
-      min /= ms;
-      max /= ms;
-      avg /= ms;
-      unit = "ms";
-    }
+  {
+    min /= ms;
+    max /= ms;
+    avg /= ms;
+    unit = "ms";
+  }
   else if (min > us)
-    {
-      min /= us;
-      max /= us;
-      avg /= us;
-      unit = "µs";
-    }
+  {
+    min /= us;
+    max /= us;
+    avg /= us;
+    unit = "µs";
+  }
 
   return QString("avg: %1 %4\nmin: %2 %4\nmax: %3 %4\n")
-    .arg(avg)
-    .arg(min)
-    .arg(max)
-    .arg(unit);
+  .arg(avg)
+  .arg(min)
+  .arg(max)
+  .arg(unit);
 }

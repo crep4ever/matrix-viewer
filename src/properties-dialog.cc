@@ -29,19 +29,19 @@
 #include "matrix-view.hh"
 #include "image-view.hh"
 
-CPropertiesDialog::CPropertiesDialog(QWidget *p)
-  : QDialog(p)
-  , m_parent(qobject_cast<CMainWindow*>(p))
+CPropertiesDialog::CPropertiesDialog(QWidget *p) :
+QDialog(p)
+, m_parent(qobject_cast<CMainWindow*>(p))
 {
   setWindowTitle(tr("Matrix properties"));
 
   CMatrixModel *model = parent()->currentModel();
 
   if (!model)
-    {
-      parent()->showMessage(tr("Can't display properties of invalid models"));
-      close();
-    }
+  {
+    parent()->showMessage(tr("Can't display properties of invalid models"));
+    close();
+  }
 
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok);
   connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
@@ -93,46 +93,46 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p)
 
   // Properties only available for single-channel matrices
   if (model->channels() == 1)
-    {
-      item = new QTableWidgetItem(tr("Non-zeros"));
-      matrixInfo->setItem(5, 0, item);
+  {
+    item = new QTableWidgetItem(tr("Non-zeros"));
+    matrixInfo->setItem(5, 0, item);
 
-      item = new QTableWidgetItem(QString::number(model->countNonZeros()));
-      matrixInfo->setItem(5, 1, item);
-
-
-      double min, max;
-      QPoint minLoc, maxLoc;
-      model->minMaxLoc(&min, &max, &minLoc, &maxLoc);
-
-      item = new QTableWidgetItem(tr("Min"));
-      matrixInfo->setItem(6, 0, item);
-
-      item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(min).arg(minLoc.x()).arg(minLoc.y()));
-      matrixInfo->setItem(6, 1, item);
-
-      item = new QTableWidgetItem(tr("Max"));
-      matrixInfo->setItem(7, 0, item);
-
-      item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(max).arg(maxLoc.x()).arg(maxLoc.y()));
-      matrixInfo->setItem(7, 1, item);
+    item = new QTableWidgetItem(QString::number(model->countNonZeros()));
+    matrixInfo->setItem(5, 1, item);
 
 
-      double mean, stddev;
-      model->meanStdDev(&mean, &stddev);
+    double min, max;
+    QPoint minLoc, maxLoc;
+    model->minMaxLoc(&min, &max, &minLoc, &maxLoc);
 
-      item = new QTableWidgetItem(tr("Mean"));
-      matrixInfo->setItem(8, 0, item);
+    item = new QTableWidgetItem(tr("Min"));
+    matrixInfo->setItem(6, 0, item);
 
-      item = new QTableWidgetItem(QString::number(mean));
-      matrixInfo->setItem(8, 1, item);
+    item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(min).arg(minLoc.x()).arg(minLoc.y()));
+    matrixInfo->setItem(6, 1, item);
 
-      item = new QTableWidgetItem(tr("StdDev"));
-      matrixInfo->setItem(9, 0, item);
+    item = new QTableWidgetItem(tr("Max"));
+    matrixInfo->setItem(7, 0, item);
 
-      item = new QTableWidgetItem(QString::number(stddev));
-      matrixInfo->setItem(9, 1, item);
-    }
+    item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(max).arg(maxLoc.x()).arg(maxLoc.y()));
+    matrixInfo->setItem(7, 1, item);
+
+
+    double mean, stddev;
+    model->meanStdDev(&mean, &stddev);
+
+    item = new QTableWidgetItem(tr("Mean"));
+    matrixInfo->setItem(8, 0, item);
+
+    item = new QTableWidgetItem(QString::number(mean));
+    matrixInfo->setItem(8, 1, item);
+
+    item = new QTableWidgetItem(tr("StdDev"));
+    matrixInfo->setItem(9, 0, item);
+
+    item = new QTableWidgetItem(QString::number(stddev));
+    matrixInfo->setItem(9, 1, item);
+  }
 
   QBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(matrixInfo, 1);
@@ -148,6 +148,9 @@ CPropertiesDialog::~CPropertiesDialog()
 CMainWindow* CPropertiesDialog::parent() const
 {
   if (!m_parent)
+  {
     qWarning() << "CPropertiesDialog::parent invalid parent";
+  }
+  
   return m_parent;
 }

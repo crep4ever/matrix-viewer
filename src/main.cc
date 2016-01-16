@@ -17,10 +17,10 @@
 //******************************************************************************
 
 /*!
- * \file main.cc
- * \mainpage Matrix-Viewer Documentation
- *
- */
+* \file main.cc
+* \mainpage Matrix-Viewer Documentation
+*
+*/
 
 #include <QApplication>
 
@@ -41,12 +41,12 @@
 bool isFilenameSupported(const QString & filename)
 {
   return (filename.endsWith(".xml") ||
-          filename.endsWith(".txt") ||
-          filename.endsWith(".bmp") ||
-          filename.endsWith(".png") ||
-          filename.endsWith(".jpg") ||
-          filename.endsWith(".mfe") ||
-          filename.endsWith(".raw"));
+  filename.endsWith(".txt") ||
+  filename.endsWith(".bmp") ||
+  filename.endsWith(".png") ||
+  filename.endsWith(".jpg") ||
+  filename.endsWith(".mfe") ||
+  filename.endsWith(".raw"));
 }
 
 void printUsage()
@@ -97,8 +97,8 @@ void printVersion()
 {
   QTextStream out(stdout);
   out << QCoreApplication::applicationName()
-      << " " << QCoreApplication::applicationVersion()
-      << endl;
+  << " " << QCoreApplication::applicationVersion()
+  << endl;
 }
 
 
@@ -120,9 +120,9 @@ int main(int argc, char *argv[])
   // instance on MacOSX or Windows, fallback to one of the theme
   // provided in the ressource file.
   if (!QIcon::hasThemeIcon("document-open"))
-    {
-      QIcon::setThemeName("tango");
-    }
+  {
+    QIcon::setThemeName("tango");
+  }
 
   // Parse command line arguments
   QStringList arguments = QApplication::arguments();
@@ -131,17 +131,17 @@ int main(int argc, char *argv[])
   bool cliMode = false;
 
   if (arguments.contains("-h") || arguments.contains("--help"))
-    {
-      helpFlag = true;
-    }
+  {
+    helpFlag = true;
+  }
   else if (arguments.contains("--version") || arguments.contains("-v"))
-    {
-      versionFlag = true;
-    }
+  {
+    versionFlag = true;
+  }
   else if (arguments.contains("--convert")) // CLI option
-    {
-      cliMode = true;
-    }
+  {
+    cliMode = true;
+  }
 
   // Localization
   QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8")) ;
@@ -151,35 +151,35 @@ int main(int argc, char *argv[])
 
   translationDirectory = QDir(MATRIX_VIEWER_DATA_PATH);
   if (translationDirectory.exists())
-    {
-      directory = translationDirectory.absoluteFilePath("lang");
-    }
+  {
+    directory = translationDirectory.absoluteFilePath("lang");
+  }
   else
-    {
-      directory = QDir::current().absoluteFilePath("lang");
-    }
+  {
+    directory = QDir::current().absoluteFilePath("lang");
+  }
 
   QTranslator translator;
   translator.load(translationFilename, directory);
   application.installTranslator(&translator);
 
   if (helpFlag)
-    {
-      printUsage();
-      return 0;
-    }
+  {
+    printUsage();
+    return 0;
+  }
 
   if (versionFlag)
-    {
-      printVersion();
-      return 0;
-    }
+  {
+    printVersion();
+    return 0;
+  }
 
   if (cliMode)
-    {
-      CParser parser(QCoreApplication::arguments());
-      return parser.execute();
-    }
+  {
+    CParser parser(QCoreApplication::arguments());
+    return parser.execute();
+  }
 
   qRegisterMetaType<BenchmarkResult>("BenchmarkResult");
 
@@ -187,12 +187,12 @@ int main(int argc, char *argv[])
   mainWindow.show();
 
   foreach (const QString & arg, arguments)
+  {
+    if (QFile(arg).exists() && isFilenameSupported(arg))
     {
-      if (QFile(arg).exists() && isFilenameSupported(arg))
-        {
-          mainWindow.open(arg);
-        }
+      mainWindow.open(arg);
     }
+  }
 
   return application.exec();
 }

@@ -26,15 +26,15 @@
 #include <QDebug>
 
 CHistogram::CHistogram(const QColor & color, QWidget* parent) :
-  QWidget(parent)
-  , m_color(color)
-  , m_values()
-  , m_pixmapLabel(new QLabel(this))
-  , m_count(new QLabel(this))
-  , m_min(new QLabel(this))
-  , m_max(new QLabel(this))
-  , m_mean(new QLabel(this))
-  , m_standardDeviation(new QLabel(this))
+QWidget(parent)
+, m_color(color)
+, m_values()
+, m_pixmapLabel(new QLabel(this))
+, m_count(new QLabel(this))
+, m_min(new QLabel(this))
+, m_max(new QLabel(this))
+, m_mean(new QLabel(this))
+, m_standardDeviation(new QLabel(this))
 {
   QBoxLayout *vlayout1 = new QVBoxLayout;
   vlayout1->addWidget(m_pixmapLabel);
@@ -76,8 +76,8 @@ void CHistogram::setValues(const QVector<uint>& p_values)
 QBoxLayout * CHistogram::makeAxisBar() const
 {
   QString css = QString("QLabel{background-color: "
-			"qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
-			"stop: 0 black, stop: 1 %1);}").arg(m_color.name());
+  "qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
+  "stop: 0 black, stop: 1 %1);}").arg(m_color.name());
 
   QLabel *begin = new QLabel("0");
   QLabel *end = new QLabel("255");
@@ -98,19 +98,19 @@ void CHistogram::drawPixmap()
   // normalize histogram
   uint max = 0;
   for (int i = 0; i < m_values.size(); ++i)
-    {
-      if (m_values[i] > max)
-	max = m_values[i];
-    }
+  {
+    if (m_values[i] > max)
+    max = m_values[i];
+  }
 
   QVector<qreal> normalizedValues(m_values.size(), 0);
   if (max > 0.0)
+  {
+    for (int i = 0; i < 256; ++i)
     {
-      for (int i = 0; i < 256; ++i)
-	{
-	  normalizedValues[i] = m_values[i] / (qreal) max;
-	}
+      normalizedValues[i] = m_values[i] / (qreal) max;
     }
+  }
 
   QPixmap pixmap(300, 50);
   QPainter painter(&pixmap);
@@ -120,19 +120,19 @@ void CHistogram::drawPixmap()
   const qreal barWidth = width / (qreal)normalizedValues.size();
 
   for (int i = 0; i < normalizedValues.size(); ++i)
-    {
-      const qreal barHeight = normalizedValues[i] * height;
+  {
+    const qreal barHeight = normalizedValues[i] * height;
 
-      // draw bar
-      painter.fillRect(barWidth * i, height - barHeight, /* origin */
-		       barWidth * (i + 1), height, /* size */
-		       m_color);
+    // draw bar
+    painter.fillRect(barWidth * i, height - barHeight, /* origin */
+      barWidth * (i + 1), height, /* size */
+      m_color);
 
-      // fill the rest of the pixmap
-      painter.fillRect(barWidth * i, 0, /* origin */
-		       barWidth * (i + 1), height - barHeight, /* size */
-		       Qt::white);
-    }
+    // fill the rest of the pixmap
+    painter.fillRect(barWidth * i, 0, /* origin */
+      barWidth * (i + 1), height - barHeight, /* size */
+      Qt::white);
+  }
 
   m_pixmapLabel->setPixmap(pixmap);
 }
@@ -146,14 +146,14 @@ void CHistogram::computeStats()
   int count = 0;
 
   for (int i = 0; i < m_values.size(); ++i)
-    {
-      sum += i * m_values[i];
-      squareSum += i * i * m_values[i];
+  {
+    sum += i * m_values[i];
+    squareSum += i * i * m_values[i];
 
-      min = qMin(min, i);
-      max = qMax(max, i);
-      count += m_values[i];
-    }
+    min = qMin(min, i);
+    max = qMax(max, i);
+    count += m_values[i];
+  }
 
   double mean = sum / (double) count;
   const double meanSquare = squareSum / (double) count;

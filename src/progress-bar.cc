@@ -22,11 +22,11 @@
 #include <QToolButton>
 #include <QBoxLayout>
 
-CProgressBar::CProgressBar(QWidget* parent)
-  : QWidget(parent)
-  , m_progressBar(new QProgressBar(this))
-  , m_cancelButton(new QToolButton(this))
-  , m_cancelable(true)
+CProgressBar::CProgressBar(QWidget* parent) :
+QWidget(parent)
+, m_progressBar(new QProgressBar(this))
+, m_cancelButton(new QToolButton(this))
+, m_cancelable(true)
 {
   m_cancelButton->setIcon(QIcon::fromTheme("process-stop", QIcon(":/icons/tango/32x32/actions/process-stop.png")));
 
@@ -62,7 +62,7 @@ void CProgressBar::show()
 {
   m_progressBar->show();
   if (isCancelable())
-    m_cancelButton->show();
+  m_cancelButton->show();
 }
 
 void CProgressBar::setTextVisible(bool value)
@@ -97,7 +97,7 @@ void CProgressBar::reset()
 
 bool CProgressBar::isCancelable() const
 {
- return m_cancelable;
+  return m_cancelable;
 }
 
 void CProgressBar::setCancelable(bool value)

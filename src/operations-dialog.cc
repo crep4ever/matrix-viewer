@@ -32,12 +32,12 @@
 #include "matrix-model.hh"
 #include "operations-widget.hh"
 
-COperationsDialog::COperationsDialog(QWidget *parent)
-  : QDialog(parent)
-  , m_parent(qobject_cast<CMainWindow*>(parent))
-  , m_backupData()
-  , m_categoriesWidget(0)
-  , m_operationsWidget(0)
+COperationsDialog::COperationsDialog(QWidget *parent) :
+QDialog(parent)
+, m_parent(qobject_cast<CMainWindow*>(parent))
+, m_backupData()
+, m_categoriesWidget(0)
+, m_operationsWidget(0)
 {
   setWindowTitle(tr("Operations"));
 
@@ -98,15 +98,18 @@ void COperationsDialog::reset()
   model()->setData(m_backupData.clone());
 
   for (int i = 0; i < m_operationsWidget->count(); ++i)
-    {
-      qobject_cast<COperationWidget*>(m_operationsWidget->widget(i))->reset();
-    }
+  {
+    qobject_cast<COperationWidget*>(m_operationsWidget->widget(i))->reset();
+  }
 }
 
 CMainWindow* COperationsDialog::parent() const
 {
   if (!m_parent)
+  {
     qWarning() << "COperationsDialog::parent invalid parent";
+  }
+
   return m_parent;
 }
 
@@ -118,23 +121,24 @@ CMatrixModel* COperationsDialog::model() const
 void COperationsDialog::createIcons()
 {
   for (int i = 0; i < m_operationsWidget->count(); ++i)
-    {
-      QListWidgetItem *button = new QListWidgetItem(m_categoriesWidget);
-      //displayButton->setIcon(QIcon::fromTheme("preferences-desktop", QIcon(":/icons/tango/48x48/categories/preferences-desktop.png")));
-button->setText(qobject_cast<COperationWidget*>(m_operationsWidget->widget(i))->title());
-      button->setTextAlignment(Qt::AlignHCenter);
-      button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    }
+  {
+    QListWidgetItem *button = new QListWidgetItem(m_categoriesWidget);
+    //displayButton->setIcon(QIcon::fromTheme("preferences-desktop", QIcon(":/icons/tango/48x48/categories/preferences-desktop.png")));
+    button->setText(qobject_cast<COperationWidget*>(m_operationsWidget->widget(i))->title());
+    button->setTextAlignment(Qt::AlignHCenter);
+    button->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+  }
 
   connect(m_categoriesWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-          this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
+  this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 }
 
-void COperationsDialog::changePage(QListWidgetItem *current,
-				   QListWidgetItem *previous)
+void COperationsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
 {
   if (!current)
+  {
     current = previous;
+  }
 
   m_operationsWidget->setCurrentIndex(m_categoriesWidget->row(current));
 }

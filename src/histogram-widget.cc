@@ -26,11 +26,11 @@ const QColor CHistogramWidget::_red(239, 41, 41);
 const QColor CHistogramWidget::_green(138, 226, 52);
 const QColor CHistogramWidget::_blue(114, 159, 207);
 
-CHistogramWidget::CHistogramWidget(QWidget *p_parent)
-  : QWidget(p_parent)
-  , m_redHistogram(new CHistogram(_red))
-  , m_greenHistogram(new CHistogram(_green))
-  , m_blueHistogram(new CHistogram(_blue))
+CHistogramWidget::CHistogramWidget(QWidget *p_parent) :
+QWidget(p_parent)
+, m_redHistogram(new CHistogram(_red))
+, m_greenHistogram(new CHistogram(_green))
+, m_blueHistogram(new CHistogram(_blue))
 {
   setStyleSheet("background: transparent;");
   setAttribute(Qt::WA_TranslucentBackground);
@@ -54,15 +54,15 @@ void CHistogramWidget::setImage(QImage *image)
   QImage copy = image->convertToFormat(QImage::Format_ARGB32);
   QVector<uint> redValues(256, 0), greenValues(256, 0), blueValues(256, 0);
   for (int j = 0; j < image->height(); ++j)
+  {
+    QRgb *row = (QRgb *)copy.scanLine(j);
+    for (int i = 0; i < image->width(); ++i)
     {
-      QRgb *row = (QRgb *)copy.scanLine(j);
-      for (int i = 0; i < image->width(); ++i)
-	{
-	  ++redValues[qRed(row[i])];
-	  ++greenValues[qGreen(row[i])];
-	  ++blueValues[qBlue(row[i])];
-	}
+      ++redValues[qRed(row[i])];
+      ++greenValues[qGreen(row[i])];
+      ++blueValues[qBlue(row[i])];
     }
+  }
 
   m_redHistogram->setValues(redValues);
   m_greenHistogram->setValues(greenValues);
