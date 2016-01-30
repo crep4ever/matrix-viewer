@@ -26,6 +26,24 @@
 #include <QString>
 #include <QDebug>
 
+/**
+ * @brief MFE format header
+ *
+ * The header contains information about the
+ * the matrix data it precedes such as the matrix
+ * size, type etc.
+ *
+ * The structure MFEHeader contains 3 char + 5 int
+ * hence a theoretical size of 3*1 + 5*4 = 23 bytes
+ *
+ * since integers are aligned on 4 bytes, by default :
+ * sizeof(MFEHeader) = 24
+ *
+ * using the pragma '#pragma pack(1)' returns the expected value :
+ * sizeof(MFEHeader) = 23
+ *
+ * Note that this pragma entails portability issues on windows with MVSCC
+ */
 #pragma pack(1)
 struct MFEHeader
 {
@@ -53,6 +71,47 @@ struct MFEHeader
   int32_t depth;
 };
 
+/**
+ * @class MFE
+ * @brief Matrix Format Exchange
+ *
+ * The class MatrixFormatExchange reads and write OpenCV's cv::Mat in a binary
+ * format that ensures floating values accuracy, fast load/unload times
+ * and reasonnable storage size.
+ *
+ * A MFE file has the following content:
+ *
+ *  \li a fixed-sized header of 23bytes (see MFEHeader)
+ *  \li an optional comment (string of variable length)
+ *  \li binary data (OpenCV matrix values)
+ *
+ * Example:
+ *
+ * \code
+ *   // create matrix of random values
+ *   cv::Mat m(3, 2, CV_64FC1);
+ *   cv::randu(m, cv::Scalar::all(0), cv::Scalar::all(255));
+ *
+ *   // write matrix in MFE format
+ *   MatrixFormatExchange mfe;
+ *   mfe.setData(m);
+ *   mfe.setComment("hello world");
+ *   mfe.write("/tmp/matrix.mfe");
+ *
+ *   // read matrix in MFE format
+ *   MatrixFormatExchange mfe;
+ *   mfe.read("/tmp/matrix.mfe");
+ *   cv::Mat n = mfe.data();
+ *   std::cout << "comment: " << mfe.comment() << std::endl;
+ *
+ *   // verify that saved+reloaded matrix is similar to original matrix
+ *   cv::Mat diff;
+ *   cv::absdiff(m, n, diff);
+ *   assert(cv::countNonZero(diff) == 0);
+ *
+ * \endcode
+ *
+ */
 class MFE
 {
 
@@ -155,4 +214,3 @@ private:
   std::string m_comment;
   cv::Mat m_data;
 };
-
