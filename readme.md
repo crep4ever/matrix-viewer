@@ -2,7 +2,7 @@
 This is a graphical frontend in Qt4/C++ to OpenCV matrices format
 
 # Screenshot
-![MatrixViewer](http://www.patacrep.com/data/images/matrix-viewer.png)
+![MatrixViewer](doc/img/main.png)
 
 # Matrix-viewer
 * required packages: cmake, libqt4-dev, libopencv-dev
