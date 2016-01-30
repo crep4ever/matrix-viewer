@@ -32,47 +32,89 @@ class CMatrixModel;
 class CMatrixView;
 
 /*!
-  \file main-window.hh
-  \class CMainWindow
-  \brief CMainWindow is the base class of the application.
+\file main-window.hh
+\class CMainWindow
+\brief CMainWindow is the base class of the application.
 
-  Class for the main window of the application.
+The main window of the application features
+a tabbed area where each tab corresponds to an opened file.
+
+A matrix can be viewed as data and / or as an image
+by enabling the corresponding actions in the View menu
+or from the shortcuts in the main tool bar.
+
+\image html main-window.png
+
+The CMainWindow handles files as illustrated below :
+
+\image html process.png
+
+\li The class CMatrixConverter handles IO operations and
+converts a file into OpenCV cv::Mat object
+
+\li The class CMatrixModel is built on the cv::Mat data
+
+\li CMatrixView and CImageView offer visualization of the CMatrixModel
 */
 class CMainWindow : public QMainWindow
 {
   Q_OBJECT
 
-public slots:
-  void open(const QString &filename);
+  public slots:
+  /*!
+  Open file from \a p_filePath
+  */
+  void open(const QString & p_filePath);
 
 public:
-  /// Constructor.
+  /// Constructor
   CMainWindow(QWidget *parent = 0);
 
-  /// Destructor.
+  /// Destructor
   ~CMainWindow();
 
   /*!
-    Returns the progress bar that is embedded in the status bar.
+  Returns the progress bar that is embedded in the status bar
   */
   CProgressBar * progressBar() const;
 
+  /*!
+  Getter on the main widget (multi-tabs container)
+  */
   CTabWidget* mainWidget() const;
+
+  /*!
+  Getter on the current widget (single tab)
+  */
   CTab* currentWidget() const;
+
+  /*!
+  Getter on the model of the current tab
+  */
   CMatrixView* currentView() const;
+
+  /*!
+  Getter on the model of the current tab
+  */
   CMatrixModel* currentModel() const;
 
+  /*!
+  Getter on the position widget widget (shared between all tabs)
+  */
   CPosition* positionWidget() const;
 
+  /*!
+  Display \a p_message in the status bar
+  */
   void showMessage(const QString & p_message) const;
 
 protected:
   /*!
-    Saves settings before closing the application.
+  Saves settings before closing the application
   */
   void closeEvent(QCloseEvent *event);
 
-private slots:
+  private slots:
   void open();
   void save();
   void saveAs();

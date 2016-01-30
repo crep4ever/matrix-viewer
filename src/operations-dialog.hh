@@ -33,9 +33,15 @@ class QListWidgetItem;
 /*!
   \file operations-dialog.hh
   \class COperationsDialog
-  \brief COperationDialog exposes common OpenCV operations
-*/
+  \brief COperationsDialog exposes common OpenCV operations
 
+  This dialog relies on the CMatrixModel to apply OpenCV
+  transformations. For example, changing the internal type, applying
+  transformations or image filters.
+
+  The dialog groups operations into categories.
+  Each category corresponds to a COperationWidget.
+*/
 class COperationsDialog : public QDialog
 {
   Q_OBJECT

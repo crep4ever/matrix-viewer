@@ -25,10 +25,27 @@
 /*!
   \file matrix-converter.hh
   \class CMatrixConverter
-  \brief CMatrixConverter is a helper that may convert
-  different matrix data files in OpenCV matrix
-*/
+  \brief CMatrixConverter converts different file formats in OpenCV matrices
 
+  ### Common image files
+
+  All image formats that are supported by the `cv::imread` function
+  are available. Those formats include bmp, jpg, png ...
+
+  ### XML files
+
+  [OpenCV XML persistance](http://docs.opencv.org/2.4/modules/core/doc/xml_yaml_persistence.html)
+
+  ### MFE files
+
+  Custom serialization in MFE binary format.
+
+  ### TXT files
+
+  Custom serialization in plain text format.
+  This format stores width / height information on the first line and values
+  on the second.
+*/
 class CMatrixConverter : public QObject
 {
   Q_OBJECT
@@ -94,7 +111,6 @@ private:
   int m_rawType;
   int m_rawWidth;
   int m_rawHeight;
-
 };
 
 #endif  // __MATRIX_CONVERTER_HH__

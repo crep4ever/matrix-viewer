@@ -518,8 +518,8 @@ void CMatrixModel::meanStdDev(double* p_mean, double* p_stddev)
   {
     cv::Scalar mean, stddev;
     cv::meanStdDev(m_data, mean, stddev);
-    *p_mean = mean[0];     //first channel
-    *p_stddev = stddev[0]; //first channel
+    *p_mean = mean[0];
+    *p_stddev = stddev[0];
   }
   catch (cv::Exception & e)
   {
@@ -771,6 +771,7 @@ QImage* CMatrixModel::toQImage() const
     data = m_data.clone();
   }
 
+  // Convert matrix data to RGB
   try
   {
     data.convertTo(data, CV_8U);

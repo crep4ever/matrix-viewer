@@ -31,13 +31,11 @@ class QPushButton;
 /*!
   \file file-chooser.hh
   \class CFileChooser
-  \brief CFileChooser is a inline widget to select a path.
+  \brief CFileChooser is an inline widget to select a path.
 
   The CFileChooser is composed of two widgets:
-
-    1) a QLineEdit which displays the currently selected path;
-
-    2) a QPushButton which allow to select the path through a dialog.
+    \li a QLineEdit which displays the currently selected path;
+    \li a QPushButton which allow to select the path through a dialog.
 
   \image html file-chooser.png
 */

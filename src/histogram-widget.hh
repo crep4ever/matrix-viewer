@@ -27,11 +27,13 @@ class QPaintEvent;
 class CHistogram;
 
 /*!
-  \file histogram-dialog.hh
-  \class CHistogramDialog
-  \brief CHistogramDialog is a dialog that wraps up the histogram of an image
-*/
+  \file histogram-widget.hh
+  \class CHistogramWidget
+  \brief CHistogramWidget displays the histogram of an image
 
+  CHistogramWidget wraps three CHistogram corresponding
+  to RGB channels of a QImage.
+*/
 class CHistogramWidget : public QWidget
 {
   Q_OBJECT

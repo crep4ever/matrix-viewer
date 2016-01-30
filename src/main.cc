@@ -17,11 +17,14 @@
 //******************************************************************************
 
 /*!
-* \file main.cc
-* \mainpage Matrix-Viewer Documentation
-*
-*/
+ \file main.cc
+ \mainpage Matrix-Viewer Documentation
 
+ This application is a graphical frontend to OpenCV matrices
+ that allows to visualize and edit them as tabular or image data.
+
+ \image html main.png
+*/
 #include <QApplication>
 
 #include <QTranslator>

@@ -26,6 +26,14 @@
 class QBoxLayout;
 class QLabel;
 
+/*!
+  \file histogram.hh
+  \class CHistogram
+  \brief CHistogram displays histogram and statistics from a set of values.
+
+  Values typically correspond to pixel data from an image.
+  Statistics include min/max values, mean and standard deviation.
+*/
 class CHistogram : public QWidget
 {
   Q_OBJECT
@@ -45,7 +53,7 @@ private:
   QColor m_color;
   QVector<uint> m_values;
 
-  QLabel *m_pixmapLabel;
+  QLabel * m_pixmapLabel;
   QLabel * m_count;
   QLabel * m_min;
   QLabel * m_max;
