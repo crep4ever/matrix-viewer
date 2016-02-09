@@ -688,7 +688,10 @@ void CMainWindow::changeTab(int index)
     connect(positionWidget(), SIGNAL(positionChanged(int, int)),
     currentWidget(), SLOT(selectItem(int, int)));
 
-    positionWidget()->setValueDescription(currentModel()->valueDescription());
+    if (positionWidget() && currentModel())
+    {
+      positionWidget()->setValueDescription(currentModel()->valueDescription());
+    }
   }
 }
 
