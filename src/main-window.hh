@@ -189,7 +189,8 @@ private:
   QString m_savePath;
 
 public:
-  static const QStringList _filters;
+  static const QStringList _fileExtensions;
+  static const QStringList _fileTypeFilters;
 };
 
 #endif  // __MAIN_WINDOW_HH__

@@ -54,8 +54,25 @@
 
 #include "config.hh"
 
-const QStringList CMainWindow::_filters = QStringList()
-<< "*.xml" << "*.txt" << "*.bmp" << "*.jpg" << "*.png" << "*.raw" << "*.mfe";
+const QStringList CMainWindow::_fileExtensions = QStringList()
+<< "*.mfe" << "*.raw"
+<< "*.png" << "*.PNG"
+<< "*.jpg" << "*.jpeg" << "*.JPG"
+<< "*.bmp" << "*.BMP"
+<< "*.tif" << "*.tiff" << "*.TIFF"
+<< "*.txt" << "*.xml";
+
+const QStringList CMainWindow::_fileTypeFilters = QStringList()
+<< "All files (*.*);;"
+<< "JPEG (*.jpg *.jpeg *.JPG);;"
+<< "PNG (*.png *.PNG);;"
+<< "BMP (*.bmp *.BMP);;"
+<< "TIFF (*.tif *.tiff *.TIFF);;"
+<< "RAW (*.raw *.RAW);;"
+<< "MFE (*.mfe *.MFE);;"
+<< "TXT (*.txt *.TXT);;"
+<< "XML (*.xml *.XML);;";
+
 
 CMainWindow::CMainWindow(QWidget *parent) :
 QMainWindow(parent)
@@ -245,7 +262,7 @@ void CMainWindow::nextFile()
   QFileInfo current(currentWidget()->filePath());
 
   QDir dir(m_openPath);
-  dir.setNameFilters(_filters);
+  dir.setNameFilters(_fileExtensions);
 
   QFileInfoList list = dir.entryInfoList(QDir::Files | QDir::NoSymLinks, QDir::Name);
   for (int i = 0; i < list.size(); ++i)
@@ -270,7 +287,7 @@ void CMainWindow::previousFile()
   QFileInfo current(currentWidget()->filePath());
 
   QDir dir(m_openPath);
-  dir.setNameFilters(_filters);
+  dir.setNameFilters(_fileExtensions);
 
   QFileInfoList list = dir.entryInfoList(QDir::Files | QDir::NoSymLinks, QDir::Name);
   for (int i = 0; i < list.size(); ++i)
@@ -600,7 +617,7 @@ void CMainWindow::open()
   QStringList filenames = QFileDialog::getOpenFileNames(this,
     tr("Open data file"),
     m_openPath,
-    tr("Matrices (%1)").arg(_filters.join(" ")));
+    tr("%1").arg(_fileTypeFilters.join(" ")));
 
   foreach (const QString & filename, filenames)
   {
@@ -646,7 +663,7 @@ void CMainWindow::saveAs()
   QString filename = QFileDialog::getSaveFileName(this,
     tr("Save data file"),
     m_savePath,
-    tr("Matrices (%1)").arg(_filters.join(" ")));
+    tr("Matrices (%1)").arg(_fileTypeFilters.join(" ")));
 
   if (!filename.isEmpty())
   {

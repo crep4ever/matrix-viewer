@@ -595,7 +595,7 @@ COperationWidget(p_title, p_model, p_parent)
   readSettings();
 
   m_fileChooserWidget->setCaption(tr("Pick other data file"));
-  m_fileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_fileChooserWidget->setFilter(tr("%1").arg(CMainWindow::_fileTypeFilters.join(" ")));
   m_fileChooserWidget->setPath(m_openPath);
 
   addParameter("", m_fileChooserWidget);
@@ -691,15 +691,15 @@ COperationWidget(p_title, p_model, p_parent)
   m_applyButton->setText(tr("Merge"));
 
   m_redFileChooserWidget->setCaption(tr("Select red channel"));
-  m_redFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_redFileChooserWidget->setFilter(tr("%1").arg(CMainWindow::_fileTypeFilters.join(" ")));
   m_redFileChooserWidget->setPath(m_redOpenPath);
 
   m_greenFileChooserWidget->setCaption(tr("Select green channel"));
-  m_greenFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_greenFileChooserWidget->setFilter(tr("%1").arg(CMainWindow::_fileTypeFilters.join(" ")));
   m_greenFileChooserWidget->setPath(m_blueOpenPath);
 
   m_blueFileChooserWidget->setCaption(tr("Select blue channel"));
-  m_blueFileChooserWidget->setFilter(tr("Data files (%1)").arg(CMainWindow::_filters.join(" ")));
+  m_blueFileChooserWidget->setFilter(tr("%1").arg(CMainWindow::_fileTypeFilters.join(" ")));
   m_blueFileChooserWidget->setPath(m_greenOpenPath);
 
   addParameter("Red", m_redFileChooserWidget);
