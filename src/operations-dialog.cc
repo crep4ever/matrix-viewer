@@ -32,9 +32,9 @@
 #include "matrix-model.hh"
 #include "operations-widget.hh"
 
-COperationsDialog::COperationsDialog(QWidget *parent) :
-QDialog(parent)
-, m_parent(qobject_cast<CMainWindow*>(parent))
+COperationsDialog::COperationsDialog(QWidget *p_parent) :
+QDialog(p_parent)
+, m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_backupData()
 , m_categoriesWidget(0)
 , m_operationsWidget(0)
@@ -133,12 +133,12 @@ void COperationsDialog::createIcons()
   this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 }
 
-void COperationsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
+void COperationsDialog::changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous)
 {
-  if (!current)
+  if (!p_current)
   {
-    current = previous;
+    p_current = p_previous;
   }
 
-  m_operationsWidget->setCurrentIndex(m_categoriesWidget->row(current));
+  m_operationsWidget->setCurrentIndex(m_categoriesWidget->row(p_current));
 }

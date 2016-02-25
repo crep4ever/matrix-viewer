@@ -74,8 +74,8 @@ const QStringList CMainWindow::_fileTypeFilters = QStringList()
 << "XML (*.xml *.XML);;";
 
 
-CMainWindow::CMainWindow(QWidget *parent) :
-QMainWindow(parent)
+CMainWindow::CMainWindow(QWidget *p_parent) :
+QMainWindow(p_parent)
 , m_mainWidget(new CTabWidget(this))
 , m_mainToolBar(0)
 , m_progressBar(new CProgressBar(this))
@@ -269,9 +269,9 @@ void CMainWindow::nextFile()
   {
     if (list.at(i).fileName() == current.fileName())
     {
-      int pos = (i + 1 == list.size()) ? 0 : i + 1;
+      int idx = (i + 1 == list.size()) ? 0 : i + 1;
       closeTab(m_mainWidget->currentIndex());
-      open(list.at(pos).absoluteFilePath());
+      open(list.at(idx).absoluteFilePath());
       return;
     }
   }
@@ -294,9 +294,9 @@ void CMainWindow::previousFile()
   {
     if (list.at(i).fileName() == current.fileName())
     {
-      int pos = (i == 0) ? list.size() - 1 : i - 1;
+      int idx = (i == 0) ? list.size() - 1 : i - 1;
       closeTab(m_mainWidget->currentIndex());
-      open(list.at(pos).absoluteFilePath());
+      open(list.at(idx).absoluteFilePath());
       return;
     }
   }
@@ -387,10 +387,10 @@ bool CMainWindow::isStatusBarDisplayed()
   return m_isStatusBarDisplayed;
 }
 
-void CMainWindow::closeEvent(QCloseEvent *event)
+void CMainWindow::closeEvent(QCloseEvent *p_event)
 {
   writeSettings();
-  event->accept();
+  p_event->accept();
 }
 
 void CMainWindow::createMenus()

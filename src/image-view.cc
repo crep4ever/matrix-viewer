@@ -105,11 +105,11 @@ CMatrixModel * CImageView::model() const
   return m_model;
 }
 
-void CImageView::setModel(CMatrixModel * model)
+void CImageView::setModel(CMatrixModel * p_model)
 {
-  if (model != m_model)
+  if (p_model != m_model)
   {
-    m_model = model;
+    m_model = p_model;
 
     connect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
     this, SLOT(update(const QModelIndex &, const QModelIndex & )));
@@ -128,21 +128,21 @@ CMainWindow* CImageView::parent() const
   return m_parent;
 }
 
-void CImageView::wheelEvent(QWheelEvent *event)
+void CImageView::wheelEvent(QWheelEvent *p_event)
 {
-  if (event->delta() > 0)
+  if (p_event->delta() > 0)
   zoomIn();
   else
   zoomOut();
 
-  centerOn(mapToScene(event->pos()));
+  centerOn(mapToScene(p_event->pos()));
 
-  QGraphicsView::wheelEvent(event);
+  QGraphicsView::wheelEvent(p_event);
 }
 
-void CImageView::mousePressEvent(QMouseEvent *event)
+void CImageView::mousePressEvent(QMouseEvent *p_event)
 {
-  const QPointF scenePoint = mapToScene(event->pos());
+  const QPointF scenePoint = mapToScene(p_event->pos());
   // ensure scenePoint is within the scene range
   if (0 < scenePoint.x() && scenePoint.x() < sceneRect().width() &&
       0 < scenePoint.y() && scenePoint.y() < sceneRect().height())
@@ -150,20 +150,20 @@ void CImageView::mousePressEvent(QMouseEvent *event)
     selectItem((int) scenePoint.y(), (int) scenePoint.x());
   }
 
-  QGraphicsView::mousePressEvent(event);
+  QGraphicsView::mousePressEvent(p_event);
 }
 
-void CImageView::keyPressEvent(QKeyEvent *event)
+void CImageView::keyPressEvent(QKeyEvent *p_event)
 {
   if (!parent())
   {
-    return QGraphicsView::keyPressEvent(event);
+    return QGraphicsView::keyPressEvent(p_event);
   }
 
   const int row = parent()->positionWidget()->row();
   const int col = parent()->positionWidget()->col();
 
-  switch (event->key())
+  switch (p_event->key())
   {
     case Qt::Key_Left:
     selectItem(row, qMax(0, col - 1));
@@ -182,20 +182,20 @@ void CImageView::keyPressEvent(QKeyEvent *event)
     break;
 
     default:
-    QGraphicsView::keyPressEvent(event);
+    QGraphicsView::keyPressEvent(p_event);
   }
 }
 
-void CImageView::selectItem(int row, int col)
+void CImageView::selectItem(int p_row, int p_col)
 {
-  m_selectionBox->setPos(col, row);
+  m_selectionBox->setPos(p_col, p_row);
 
   if (parent())
   {
-    parent()->positionWidget()->setRow(row);
-    parent()->positionWidget()->setCol(col);
+    parent()->positionWidget()->setRow(p_row);
+    parent()->positionWidget()->setCol(p_col);
 
-    const QModelIndex index = m_model->index(row, col);
+    const QModelIndex index = m_model->index(p_row, p_col);
     const QString value = m_model->data(index, Qt::DisplayRole).toString();
     parent()->positionWidget()->setValue(value);
   }
@@ -229,7 +229,7 @@ void CImageView::bestSize()
   }
 }
 
-void CImageView::contextMenuEvent(QContextMenuEvent *event)
+void CImageView::contextMenuEvent(QContextMenuEvent *p_event)
 {
   QMenu *menu = new QMenu;
 
@@ -240,7 +240,7 @@ void CImageView::contextMenuEvent(QContextMenuEvent *event)
   menu->addSeparator();
   menu->addAction(m_histogramAct);
 
-  menu->exec(event->globalPos());
+  menu->exec(p_event->globalPos());
   delete menu;
 }
 

@@ -40,8 +40,8 @@
 
 // Config Dialog
 
-ConfigDialog::ConfigDialog(QWidget* parent) :
-QDialog(parent)
+ConfigDialog::ConfigDialog(QWidget* p_parent) :
+QDialog(p_parent)
 , m_contentsWidget(0)
 , m_pagesWidget(0)
 {
@@ -115,9 +115,9 @@ void ConfigDialog::changePage(QListWidgetItem *current, QListWidgetItem *previou
   m_pagesWidget->setCurrentIndex(m_contentsWidget->row(current));
 }
 
-void ConfigDialog::closeEvent(QCloseEvent *event)
+void ConfigDialog::closeEvent(QCloseEvent *p_event)
 {
-  Q_UNUSED(event);
+  Q_UNUSED(p_event);
   for ( int i = 0 ; i < m_pagesWidget->count() ; ++i )
   {
     m_pagesWidget->widget(i)->close();
@@ -127,8 +127,8 @@ void ConfigDialog::closeEvent(QCloseEvent *event)
 
 // Page
 
-Page::Page(QWidget *parent) :
-QScrollArea(parent)
+Page::Page(QWidget *p_parent) :
+QScrollArea(p_parent)
 , m_content(new QWidget)
 {
 }
@@ -140,10 +140,10 @@ ConfigDialog * Page::parent() const
   return p;
 }
 
-void Page::closeEvent(QCloseEvent *event)
+void Page::closeEvent(QCloseEvent *p_event)
 {
   writeSettings();
-  event->accept();
+  p_event->accept();
 }
 
 void Page::readSettings()
@@ -154,16 +154,16 @@ void Page::writeSettings()
 {
 }
 
-void Page::setLayout(QLayout *layout)
+void Page::setLayout(QLayout *p_layout)
 {
-  m_content->setLayout(layout);
+  m_content->setLayout(p_layout);
   setWidget(m_content);
 }
 
 // Display Page
 
-DisplayPage::DisplayPage(QWidget *parent) :
-Page(parent)
+DisplayPage::DisplayPage(QWidget *p_parent) :
+Page(p_parent)
 , m_statusBarCheckBox(0)
 , m_toolBarCheckBox(0)
 {
@@ -204,8 +204,8 @@ void DisplayPage::writeSettings()
 
 // Image Page
 
-ImagePage::ImagePage(QWidget *parent) :
-Page(parent)
+ImagePage::ImagePage(QWidget *p_parent) :
+Page(p_parent)
 , m_stretchDynamic(0)
 , m_rawType(0)
 , m_rawWidth(0)

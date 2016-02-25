@@ -36,11 +36,11 @@ QWidget(p_parent)
   setAttribute(Qt::WA_TranslucentBackground);
   setWindowFlags(Qt::FramelessWindowHint);
 
-  QVBoxLayout *layout = new QVBoxLayout;
-  layout->addWidget(m_redHistogram);
-  layout->addWidget(m_greenHistogram);
-  layout->addWidget(m_blueHistogram);
-  setLayout(layout);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  mainLayout->addWidget(m_redHistogram);
+  mainLayout->addWidget(m_greenHistogram);
+  mainLayout->addWidget(m_blueHistogram);
+  setLayout(mainLayout);
 
   resize(sizeHint());
 }

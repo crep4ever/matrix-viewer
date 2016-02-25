@@ -41,9 +41,9 @@
 #include "progress-bar.hh"
 #include "benchmark-thread.hh"
 
-CBenchmarkDialog::CBenchmarkDialog(QWidget *parent)
-: QDialog(parent)
-, m_parent(qobject_cast<CMainWindow*>(parent))
+CBenchmarkDialog::CBenchmarkDialog(QWidget *p_parent)
+: QDialog(p_parent)
+, m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_tabs(new QTabWidget)
 , m_progressBar(new CProgressBar)
 , m_operations()

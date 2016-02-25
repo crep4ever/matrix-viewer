@@ -735,12 +735,12 @@ void CChannelsWidget::apply()
 
   model()->setData(m_backup.clone());
 
-  QStringList channels;
-  channels << m_blueOpenPath;
-  channels << m_greenOpenPath;
-  channels << m_redOpenPath;
+  QStringList paths;
+  paths << m_blueOpenPath;
+  paths << m_greenOpenPath;
+  paths << m_redOpenPath;
 
-  model()->merge(channels);
+  model()->merge(paths);
 
   m_openPath = m_redOpenPath;
   writeSettings(); // update openPath

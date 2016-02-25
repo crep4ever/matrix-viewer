@@ -25,8 +25,8 @@
 #include <QLabel>
 #include <QDebug>
 
-CHistogram::CHistogram(const QColor & color, QWidget* parent) :
-QWidget(parent)
+CHistogram::CHistogram(const QColor & color, QWidget* p_parent) :
+QWidget(p_parent)
 , m_color(color)
 , m_values()
 , m_pixmapLabel(new QLabel(this))
@@ -52,13 +52,13 @@ QWidget(parent)
   vlayout3->addWidget(m_standardDeviation);
   vlayout3->addStretch();
 
-  QBoxLayout *layout = new QHBoxLayout;
-  layout->addLayout(vlayout1);
-  layout->addStretch();
-  layout->addLayout(vlayout2);
-  layout->addLayout(vlayout3);
+  QBoxLayout *mainLayout = new QHBoxLayout;
+  mainLayout->addLayout(vlayout1);
+  mainLayout->addStretch();
+  mainLayout->addLayout(vlayout2);
+  mainLayout->addLayout(vlayout3);
 
-  setLayout(layout);
+  setLayout(mainLayout);
 }
 
 CHistogram::~CHistogram()
@@ -85,12 +85,12 @@ QBoxLayout * CHistogram::makeAxisBar() const
   QLabel *gradient = new QLabel;
   gradient->setStyleSheet(css);
 
-  QBoxLayout * layout = new QHBoxLayout;
-  layout->addWidget(begin);
-  layout->addWidget(gradient, 1);
-  layout->addWidget(end);
+  QBoxLayout * mainLayout = new QHBoxLayout;
+  mainLayout->addWidget(begin);
+  mainLayout->addWidget(gradient, 1);
+  mainLayout->addWidget(end);
 
-  return layout;
+  return mainLayout;
 }
 
 void CHistogram::drawPixmap()
@@ -115,22 +115,22 @@ void CHistogram::drawPixmap()
   QPixmap pixmap(300, 50);
   QPainter painter(&pixmap);
 
-  const qreal width  = pixmap.width();
-  const qreal height = pixmap.height();
-  const qreal barWidth = width / (qreal)normalizedValues.size();
+  const qreal w  = pixmap.width();
+  const qreal h = pixmap.height();
+  const qreal barWidth = w / (qreal)normalizedValues.size();
 
   for (int i = 0; i < normalizedValues.size(); ++i)
   {
-    const qreal barHeight = normalizedValues[i] * height;
+    const qreal barHeight = normalizedValues[i] * h;
 
     // draw bar
-    painter.fillRect(barWidth * i, height - barHeight, /* origin */
-      barWidth * (i + 1), height, /* size */
+    painter.fillRect(barWidth * i, h - barHeight, /* origin */
+      barWidth * (i + 1), h, /* size */
       m_color);
 
     // fill the rest of the pixmap
     painter.fillRect(barWidth * i, 0, /* origin */
-      barWidth * (i + 1), height - barHeight, /* size */
+      barWidth * (i + 1), h - barHeight, /* size */
       Qt::white);
   }
 

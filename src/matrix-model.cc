@@ -76,21 +76,21 @@ void CMatrixModel::setData(const cv::Mat & matrix)
   emit(dataChanged(QModelIndex(), QModelIndex()));
 }
 
-int CMatrixModel::rowCount(const QModelIndex & parent) const
+int CMatrixModel::rowCount(const QModelIndex & p_parent) const
 {
-  Q_UNUSED(parent);
+  Q_UNUSED(p_parent);
   return data().rows;
 }
 
-int CMatrixModel::columnCount(const QModelIndex & parent) const
+int CMatrixModel::columnCount(const QModelIndex & p_parent) const
 {
-  Q_UNUSED(parent);
+  Q_UNUSED(p_parent);
   return data().cols;
 }
 
-QVariant CMatrixModel::data(const QModelIndex & index, int role) const
+QVariant CMatrixModel::data(const QModelIndex & p_index, int p_role) const
 {
-  switch (role)
+  switch (p_role)
   {
     case Qt::TextAlignmentRole:
     return Qt::AlignCenter;
@@ -98,8 +98,8 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
     case Qt::EditRole:
     case Qt::DisplayRole:
     {
-      const int r = index.row();
-      const int c = index.column();
+      const int r = p_index.row();
+      const int c = p_index.column();
 
       cv::Vec2b point2b; cv::Vec3b point3b;
       cv::Vec2s point2s; cv::Vec3s point3s;
@@ -176,17 +176,17 @@ QVariant CMatrixModel::data(const QModelIndex & index, int role) const
     }
 
     default:
-    data(index, Qt::DisplayRole);
+    data(p_index, Qt::DisplayRole);
   }
 
   return QVariant();
 }
 
-bool CMatrixModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, int p_role)
 {
-  if (role != Qt::EditRole)
+  if (p_role != Qt::EditRole)
   {
-    qWarning() << tr("Unsupported role: ") << role;
+    qWarning() << tr("Unsupported role: ") << p_role;
     return false;
   }
 
@@ -203,8 +203,8 @@ bool CMatrixModel::setData(const QModelIndex & index, const QVariant & value, in
     }
   }
 
-  const int r = index.row();
-  const int c = index.column();
+  const int r = p_index.row();
+  const int c = p_index.column();
 
   switch(type())
   {
@@ -315,9 +315,9 @@ QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int 
   return QVariant();
 }
 
-Qt::ItemFlags CMatrixModel::flags(const QModelIndex & index) const
+Qt::ItemFlags CMatrixModel::flags(const QModelIndex & p_index) const
 {
-  Q_UNUSED(index);
+  Q_UNUSED(p_index);
   return Qt::ItemIsSelectable | Qt::ItemIsEditable  | Qt::ItemIsEnabled;
 }
 
@@ -631,8 +631,8 @@ void CMatrixModel::rotate(const QPointF & p_center, const double p_angle_dg, con
 {
   try
   {
-    const cv::Point2f center(p_center.x(), p_center.y());
-    cv::Mat rotation = getRotationMatrix2D(center, p_angle_dg, p_scaleFactor);
+    const cv::Point2f rotationCenter(p_center.x(), p_center.y());
+    cv::Mat rotation = getRotationMatrix2D(rotationCenter, p_angle_dg, p_scaleFactor);
 
     cv::Mat dst;
     cv::warpAffine(m_data, dst, rotation, m_data.size());
@@ -734,15 +734,15 @@ void CMatrixModel::threshold(const double p_threshold, const double p_maxValue, 
 
 void CMatrixModel::merge(const QStringList & p_channels)
 {
-  std::vector<cv::Mat> channels;
+  std::vector<cv::Mat> layers;
   foreach (const QString & filePath, p_channels)
   {
-    channels.push_back(CMatrixConverter(filePath).data());
+    layers.push_back(CMatrixConverter(filePath).data());
   }
 
   try
   {
-    cv::merge(channels, m_data);
+    cv::merge(layers, m_data);
     emit(dataChanged(QModelIndex(), QModelIndex()));
   }
   catch (cv::Exception & e)
@@ -758,24 +758,24 @@ QImage* CMatrixModel::toQImage() const
   bool stretch = settings.value("stretch-dynamic", true).toBool();
   settings.endGroup();
 
-  cv::Mat data;
+  cv::Mat imgData;
   if (stretch)
   {
     double min = 0, max = 0;
     cv::Mat tmp = m_data - min;
     cv::minMaxLoc(tmp, &min, &max);
-    data = tmp * 255 / max;
+    imgData = tmp * 255 / max;
   }
   else
   {
-    data = m_data.clone();
+    imgData = m_data.clone();
   }
 
   // Convert matrix data to RGB
   try
   {
-    data.convertTo(data, CV_8U);
-    cv::cvtColor(data, data, channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
+    imgData.convertTo(imgData, CV_8U);
+    cv::cvtColor(imgData, imgData, channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
   }
   catch(cv::Exception & e)
   {
@@ -784,10 +784,10 @@ QImage* CMatrixModel::toQImage() const
     return new QImage;
   }
 
-  QImage *image = new QImage(data.cols, data.rows, QImage::Format_RGB888);
-  for (int i = 0; i < data.rows; ++i)
+  QImage *image = new QImage(imgData.cols, imgData.rows, QImage::Format_RGB888);
+  for (int i = 0; i < imgData.rows; ++i)
   {
-    memcpy(image->scanLine(i), data.ptr(i), image->bytesPerLine());
+    memcpy(image->scanLine(i), imgData.ptr(i), image->bytesPerLine());
   }
 
   return image;

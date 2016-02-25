@@ -22,8 +22,8 @@
 #include <QToolButton>
 #include <QBoxLayout>
 
-CProgressBar::CProgressBar(QWidget* parent) :
-QWidget(parent)
+CProgressBar::CProgressBar(QWidget* p_parent) :
+QWidget(p_parent)
 , m_progressBar(new QProgressBar(this))
 , m_cancelButton(new QToolButton(this))
 , m_cancelable(true)
@@ -32,10 +32,10 @@ QWidget(parent)
 
   connect(m_cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
-  QLayout* layout = new QHBoxLayout;
-  layout->addWidget(m_progressBar);
-  layout->addWidget(m_cancelButton);
-  setLayout(layout);
+  QLayout* mainLayout = new QHBoxLayout;
+  mainLayout->addWidget(m_progressBar);
+  mainLayout->addWidget(m_cancelButton);
+  setLayout(mainLayout);
   setContentsMargins(0, 0, 0, 0);
 
   show();

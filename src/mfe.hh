@@ -196,10 +196,10 @@ public:
 
     // comment
     size = (int32_t) m_header.offset - (int32_t) sizeof(MFEHeader);
-    std::vector<char> comment(size + 1);
-    stream.read(comment.data(), size);
-    comment[size] = '\0';
-    setComment(std::string(comment.begin(), comment.end()));
+    std::vector<char> info(size + 1);
+    stream.read(info.data(), size);
+    info[size] = '\0';
+    setComment(std::string(info.begin(), info.end()));
 
     // data
     m_data.create(m_header.rows, m_header.cols, m_header.type);

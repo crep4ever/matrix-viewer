@@ -23,8 +23,8 @@
 
 #include "tab.hh"
 
-CTabWidget::CTabWidget(QWidget *parent) :
-QTabWidget(parent)
+CTabWidget::CTabWidget(QWidget *p_parent) :
+QTabWidget(p_parent)
 {
   setStyleSheet(" QTabWidget::tab-bar {}");
   setTabBar(new CTabBar(this));
@@ -58,8 +58,8 @@ void CTabWidget::addTab(QWidget * page, const QString & label)
 
 //----------------------------------------------------------------------------
 
-CTabBar::CTabBar(QWidget *parent) :
-QTabBar(parent)
+CTabBar::CTabBar(QWidget *p_parent) :
+QTabBar(p_parent)
 {
 }
 
@@ -67,11 +67,11 @@ CTabBar::~CTabBar()
 {
 }
 
-void CTabBar::mouseReleaseEvent(QMouseEvent *event)
+void CTabBar::mouseReleaseEvent(QMouseEvent *p_event)
 {
-  if (event->button() == Qt::MidButton)
+  if (p_event->button() == Qt::MidButton)
   {
-    emit(tabCloseRequested(tabAt(event->pos())));
+    emit(tabCloseRequested(tabAt(p_event->pos())));
   }
-  QTabBar::mouseReleaseEvent(event);
+  QTabBar::mouseReleaseEvent(p_event);
 }

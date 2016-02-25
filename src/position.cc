@@ -25,8 +25,8 @@
 
 #include <limits>
 
-CPosition::CPosition(QWidget *parent) :
-QWidget(parent)
+CPosition::CPosition(QWidget *p_parent) :
+QWidget(p_parent)
 , m_rowSpinBox(new QSpinBox)
 , m_colSpinBox(new QSpinBox)
 , m_valueLabel(new QLabel)
@@ -44,14 +44,14 @@ QWidget(parent)
   QLabel *rowLabel = new QLabel(tr("Row:"));
   QLabel *colLabel = new QLabel(tr("Col:"));
 
-  QBoxLayout *layout = new QHBoxLayout;
-  layout->addWidget(rowLabel);
-  layout->addWidget(m_rowSpinBox);
-  layout->addWidget(colLabel);
-  layout->addWidget(m_colSpinBox);
-  layout->addWidget(m_valueLabel);
+  QBoxLayout *mainLayout = new QHBoxLayout;
+  mainLayout->addWidget(rowLabel);
+  mainLayout->addWidget(m_rowSpinBox);
+  mainLayout->addWidget(colLabel);
+  mainLayout->addWidget(m_colSpinBox);
+  mainLayout->addWidget(m_valueLabel);
 
-  setLayout(layout);
+  setLayout(mainLayout);
 }
 
 CPosition::~CPosition()
@@ -63,10 +63,10 @@ uint CPosition::row() const
   return m_rowSpinBox->value();
 }
 
-void CPosition::setRow(const uint row)
+void CPosition::setRow(const uint p_row)
 {
   blockSignals(true);
-  m_rowSpinBox->setValue(row);
+  m_rowSpinBox->setValue(p_row);
   blockSignals(false);
 }
 
@@ -75,21 +75,21 @@ uint CPosition::col() const
   return m_colSpinBox->value();
 }
 
-void CPosition::setCol(const uint col)
+void CPosition::setCol(const uint p_col)
 {
   blockSignals(true);
-  m_colSpinBox->setValue(col);
+  m_colSpinBox->setValue(p_col);
   blockSignals(false);
 }
 
-void CPosition::changeRow(int row)
+void CPosition::changeRow(int p_row)
 {
-  emit(positionChanged(row, m_colSpinBox->value()));
+  emit(positionChanged(p_row, m_colSpinBox->value()));
 }
 
-void CPosition::changeCol(int col)
+void CPosition::changeCol(int p_col)
 {
-  emit(positionChanged(m_rowSpinBox->value(), col));
+  emit(positionChanged(m_rowSpinBox->value(), p_col));
 }
 
 void CPosition::setValue(const QString & value)

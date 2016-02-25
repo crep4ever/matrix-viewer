@@ -66,27 +66,27 @@ void CMatrixView::currentChanged(const QModelIndex & index, const QModelIndex & 
   parent()->positionWidget()->setValue(index.data().toString());
 }
 
-void CMatrixView::setModel(QAbstractItemModel * model)
+void CMatrixView::setModel(QAbstractItemModel * p_model)
 {
   QItemSelectionModel *sm = selectionModel();
-  QTableView::setModel(model);
+  QTableView::setModel(p_model);
   delete sm;
 
   connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
   this, SLOT(currentChanged(const QModelIndex &, const QModelIndex &)));
 }
 
-void CMatrixView::selectItem(int row, int col)
+void CMatrixView::selectItem(int p_row, int p_col)
 {
-  setCurrentIndex(model()->index(row, col));
-  scrollTo(model()->index(row, col));
+  setCurrentIndex(model()->index(p_row, p_col));
+  scrollTo(model()->index(p_row, p_col));
 }
 
-void CMatrixView::keyPressEvent(QKeyEvent *event)
+void CMatrixView::keyPressEvent(QKeyEvent *p_event)
 {
-  QTableView::keyPressEvent(event);
+  QTableView::keyPressEvent(p_event);
 
-  switch (event->key())
+  switch (p_event->key())
   {
     case Qt::Key_Left:
     case Qt::Key_Right:
@@ -100,14 +100,14 @@ void CMatrixView::keyPressEvent(QKeyEvent *event)
   }
 }
 
-void CMatrixView::contextMenuEvent(QContextMenuEvent *event)
+void CMatrixView::contextMenuEvent(QContextMenuEvent *p_event)
 {
   QMenu *menu = new QMenu;
 
   menu->addAction(m_adjustColumnsAct);
   menu->addAction(m_propertiesAct);
 
-  menu->exec(event->globalPos());
+  menu->exec(p_event->globalPos());
   delete menu;
 }
 

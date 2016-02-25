@@ -47,15 +47,15 @@ QWidget(p_parent)
   connect(m_yInput, SIGNAL(valueChanged(double)),
   this, SLOT(updateYValue(double)));
 
-  QHBoxLayout *layout = new QHBoxLayout;
-  layout->addStretch();
-  layout->addWidget(p_xLabel);
-  layout->addWidget(m_xInput);
-  layout->addWidget(p_yLabel);
-  layout->addWidget(m_yInput);
-  layout->setContentsMargins(0, 0, 0, 0);
+  QHBoxLayout *mainLayout = new QHBoxLayout;
+  mainLayout->addStretch();
+  mainLayout->addWidget(p_xLabel);
+  mainLayout->addWidget(m_xInput);
+  mainLayout->addWidget(p_yLabel);
+  mainLayout->addWidget(m_yInput);
+  mainLayout->setContentsMargins(0, 0, 0, 0);
 
-  setLayout(layout);
+  setLayout(mainLayout);
 }
 
 CPoint2DWidget::~CPoint2DWidget()

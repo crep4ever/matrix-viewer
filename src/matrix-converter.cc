@@ -325,10 +325,10 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
       return false;
     }
 
-    cv::Mat data(cv::Size(m_rawWidth, m_rawHeight), CV_16U, buffer);
+    cv::Mat rawData(cv::Size(m_rawWidth, m_rawHeight), CV_16U, buffer);
 
     const double ratio = 127.5 / 511.5; // conversion from 10bits to 8 bits
-    m_data = data * ratio;
+    m_data = rawData * ratio;
     m_data.convertTo(m_data, CV_8UC1);
     delete [] buffer;
   }

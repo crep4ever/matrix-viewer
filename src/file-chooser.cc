@@ -28,8 +28,8 @@
 #include <QDirModel>
 #include <QSettings>
 
-CFileChooser::CFileChooser(QWidget *parent) :
-QWidget(parent)
+CFileChooser::CFileChooser(QWidget *p_parent) :
+QWidget(p_parent)
 , m_lineEdit(0)
 , m_button(0)
 , m_caption(QCoreApplication::applicationName())
@@ -50,12 +50,12 @@ QWidget(parent)
   m_button = new QPushButton(tr("Browse"));
   connect(m_button, SIGNAL(clicked()), SLOT(browse()));
 
-  QLayout *layout = new QHBoxLayout;
-  layout->addWidget(m_lineEdit);
-  layout->addWidget(m_button);
+  QLayout *mainLayout = new QHBoxLayout;
+  mainLayout->addWidget(m_lineEdit);
+  mainLayout->addWidget(m_button);
   // disable layout's margin to have a proper "one widget" appearance
-  layout->setContentsMargins(0, 0, 0, 0);
-  setLayout(layout);
+  mainLayout->setContentsMargins(0, 0, 0, 0);
+  setLayout(mainLayout);
 }
 
 CFileChooser::~CFileChooser()
@@ -79,9 +79,9 @@ QFileDialog::Options CFileChooser::options() const
   return m_options;
 }
 
-void CFileChooser::setOptions(const QFileDialog::Options &opts)
+void CFileChooser::setOptions(const QFileDialog::Options &p_opts)
 {
-  m_options = opts;
+  m_options = p_opts;
 }
 
 QString CFileChooser::filter() const
@@ -89,9 +89,9 @@ QString CFileChooser::filter() const
   return m_filter;
 }
 
-void CFileChooser::setFilter(const QString &filter)
+void CFileChooser::setFilter(const QString &p_filter)
 {
-  m_filter = filter;
+  m_filter = p_filter;
 }
 
 QString CFileChooser::caption() const
@@ -99,9 +99,9 @@ QString CFileChooser::caption() const
   return m_caption;
 }
 
-void CFileChooser::setCaption(const QString &caption)
+void CFileChooser::setCaption(const QString &p_caption)
 {
-  m_caption = caption;
+  m_caption = p_caption;
 }
 
 QString CFileChooser::directory() const
@@ -109,14 +109,14 @@ QString CFileChooser::directory() const
   return m_directory;
 }
 
-void CFileChooser::setDirectory(const QString &directory)
+void CFileChooser::setDirectory(const QString &p_directory)
 {
-  m_directory = directory;
+  m_directory = p_directory;
 }
 
-void CFileChooser::setDirectory(const QDir &directory)
+void CFileChooser::setDirectory(const QDir &p_directory)
 {
-  m_directory = directory.absolutePath();
+  m_directory = p_directory.absolutePath();
 }
 
 
@@ -125,15 +125,15 @@ QString CFileChooser::path() const
   return m_path;
 }
 
-void CFileChooser::setPath(const QString &path)
+void CFileChooser::setPath(const QString &p_path)
 {
-  if (QString::compare(m_path, path, Qt::CaseSensitive) == 0)
+  if (QString::compare(m_path, p_path, Qt::CaseSensitive) == 0)
   return;
 
-  if (m_lineEdit->text() != path)
-  m_lineEdit->setText(path);
+  if (m_lineEdit->text() != p_path)
+  m_lineEdit->setText(p_path);
 
-  m_path = path;
+  m_path = p_path;
 
   QFileInfo fileInfo(m_path);
   if (fileInfo.isDir())

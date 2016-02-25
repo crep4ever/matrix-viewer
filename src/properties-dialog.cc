@@ -134,10 +134,10 @@ QDialog(p)
     matrixInfo->setItem(9, 1, item);
   }
 
-  QBoxLayout *layout = new QVBoxLayout;
-  layout->addWidget(matrixInfo, 1);
-  layout->addWidget(buttons);
-  setLayout(layout);
+  QBoxLayout *mainLayout = new QVBoxLayout;
+  mainLayout->addWidget(matrixInfo, 1);
+  mainLayout->addWidget(buttons);
+  setLayout(mainLayout);
   resize(400, 400);
 }
 
