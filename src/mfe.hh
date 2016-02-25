@@ -134,50 +134,85 @@ private:
             return s; 
         }
 
-        bool read(std::ifstream& stream)
+        bool read(QDataStream& p_stream)
         {
-            bool bret = false;
-            if (stream.is_open())
+            if (p_stream.readRawData(&format[0], 3) == -1)
             {
-                try
-                {
-                    stream.read(&format[0], 3);
-                    stream.read(reinterpret_cast<char*>(&offset), sizeof(offset));
-                    stream.read(reinterpret_cast<char*>(&type), sizeof(type));
-                    stream.read(reinterpret_cast<char*>(&cols), sizeof(cols));
-                    stream.read(reinterpret_cast<char*>(&rows), sizeof(rows));
-                    stream.read(reinterpret_cast<char*>(&depth), sizeof(depth));
-                    bret = true;
-                }
-                catch (...)
-                {
-                    bret = false;
-                }
+                qWarning() << "Can't read MFE header offset";
+                return false;
             }
-            return bret; 
-        }
-        bool write(std::ofstream& stream)
-        {
-            bool res = false;
-            if (stream.is_open())
-            {
-                try
-                {
-                    stream.write(&format[0],3);
-                    stream.write(reinterpret_cast<char*>(&offset), sizeof(offset));
-                    stream.write(reinterpret_cast<char*>(&type), sizeof(type));
-                    stream.write(reinterpret_cast<char*>(&cols), sizeof(cols));
-                    stream.write(reinterpret_cast<char*>(&rows), sizeof(rows));
-                    stream.write(reinterpret_cast<char*>(&depth), sizeof(depth));
 
-                    res = true;
-                }
-                catch (...)
-                {
-                    res = false;
-                }
+            if (p_stream.readRawData(reinterpret_cast<char*>(&offset), sizeof(offset)) == -1)
+            {
+                qWarning() << "Can't read MFE header offset";
+                return false;
             }
-            return res; 
+
+            if (p_stream.readRawData(reinterpret_cast<char*>(&type), sizeof(type)) == -1)
+            {
+                qWarning() << "Can't read MFE header data type";
+                return false;
+            }
+
+            if (p_stream.readRawData(reinterpret_cast<char*>(&cols), sizeof(cols)) == -1)
+            {
+                qWarning() << "Can't read MFE header nb columns";
+                return false;
+            }
+
+            if (p_stream.readRawData(reinterpret_cast<char*>(&rows), sizeof(rows)) == -1)
+            {
+                qWarning() << "Can't read MFE header nb rows";
+                return false;
+            }
+
+            if (p_stream.readRawData(reinterpret_cast<char*>(&depth), sizeof(depth)) == -1)
+            {
+                qWarning() << "Can't read MFE header nb channels";
+                return false;
+            }
+
+            return true;
+        }
+        bool write(QDataStream& p_stream)
+        {
+            if (p_stream.writeRawData(&format[0],3) == -1)
+            {
+                qWarning() << "Can't write MFE header format";
+                return false;
+            }
+
+            if (p_stream.writeRawData(reinterpret_cast<char*>(&offset), sizeof(offset)) == -1)
+            {
+                qWarning() << "Can't write MFE header offset";
+                return false;
+            }
+
+            if (p_stream.writeRawData(reinterpret_cast<char*>(&type), sizeof(type)) == -1)
+            {
+                qWarning() << "Can't write MFE header data type";
+                return false;
+            }
+
+            if (p_stream.writeRawData(reinterpret_cast<char*>(&cols), sizeof(cols)) == -1)
+            {
+                qWarning() << "Can't write MFE header nb columns";
+                return false;
+            }
+
+            if (p_stream.writeRawData(reinterpret_cast<char*>(&rows), sizeof(rows)) == -1)
+            {
+                qWarning() << "Can't write MFE header nb rows";
+                return false;
+            }
+
+            if (p_stream.writeRawData(reinterpret_cast<char*>(&depth), sizeof(depth)) == -1)
+            {
+                qWarning() << "Can't write MFE header nb channels";
+                return false;
+            }
+
+            return true;
         }
 
         std::vector<char> format;

@@ -18,6 +18,8 @@
 
 #include "mfe.hh"
 #include <QDebug>
+#include <QFile>
+#include <QDataStream>
 
 MatrixFormatExchange::MatrixFormatExchange()
 : m_header()
@@ -73,59 +75,79 @@ std::string MatrixFormatExchange::toString() const
 
 bool MatrixFormatExchange::write(const QString & p_path)
 {
-    std::ofstream stream;
-    stream.open(p_path.toStdString().c_str(), std::ofstream::out | std::ofstream::binary);
-
-    if (!stream.is_open())
+    QFile file(p_path);
+    if (!file.open(QIODevice::WriteOnly))
     {
-        qWarning() << "Can't write in file:" << p_path;
+        qWarning() << "Can't  write in file:" << p_path;
         return false;
     }
+
+    QDataStream stream(&file);
 
     // header
     m_header.write(stream);
 
     // comment
-    stream.write(m_comment.c_str(), m_comment.size()); // skip the '\0' character
+    if (stream.writeRawData(m_comment.c_str(), m_comment.size()) == 1) // skip the '\0' character
+    {
+        qWarning() << "Can't write MFE comment";
+        return false;
+    }
 
     // data
-    stream.write(reinterpret_cast<char*>(m_data.data), m_data.rows * m_data.cols * m_data.elemSize());
+    if (stream.writeRawData(reinterpret_cast<char*>(m_data.data), m_data.rows * m_data.cols * m_data.elemSize()) == -1)
+    {
+        qWarning() << "Can't write MFE data";
+        return false;
+    }
 
-    stream.flush();
-
-    stream.close();
+    file.close(); // close automatically flush the file
 
     return true;
 }
 
 bool MatrixFormatExchange::read(const QString & p_path)
 {
-    std::ifstream stream;
-    stream.open(p_path.toStdString().c_str(), std::ifstream::in | std::ifstream::binary);
-
-    if (!stream.is_open())
+    QFile file(p_path);
+    if (!file.open(QIODevice::ReadOnly))
     {
         qWarning() << "Can't read from file:" << p_path;
         return false;
     }
 
+    QDataStream stream(&file);
+
     // header
     int size = m_header.size();
-    m_header.read(stream);
+    if (!m_header.read(stream))
+    {
+        qWarning() << "Error decoding MFE header";
+        return false;
+    }
     
     // comment
     size = m_header.offset - m_header.size();
     std::vector<char> info(size + 1);
-    stream.read(info.data(), size);
+
+    if (stream.readRawData(info.data(), size) == -1)
+    {
+        qWarning() << "Error decoding MFE comment";
+        return false;
+    }
     info[size] = '\0';
     setComment(std::string(info.begin(), info.end()));
 
     // data
     m_data.create(m_header.rows, m_header.cols, m_header.type);
     size = m_header.rows * m_header.cols * (uint32_t)m_data.elemSize();
-    stream.read(reinterpret_cast<char*>(m_data.data), size);
+    if (stream.readRawData(reinterpret_cast<char*>(m_data.data), size) == -1)
+    {
+        qWarning() << "Error decoding MFE data";
+        return false;
+    }
 
-    stream.close();
+    file.close();
 
     return true;
 }
+
