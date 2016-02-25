@@ -82,7 +82,7 @@ QDialog(p_parent)
   mainLayout->addWidget(buttons);
 
   setLayout(mainLayout);
-  resize(600, 400);
+  adjustSize();
 
   // save a backup of the model data
   // that can be restored by the reset button
@@ -141,4 +141,5 @@ void COperationsDialog::changePage(QListWidgetItem *p_current, QListWidgetItem *
   }
 
   m_operationsWidget->setCurrentIndex(m_categoriesWidget->row(p_current));
+  adjustSize();
 }

@@ -23,7 +23,6 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QSettings>
@@ -33,12 +32,11 @@
 #include "tab.hh"
 #include "matrix-model.hh"
 #include "file-chooser.hh"
+#include "double-spinbox.hh"
 #include "common-widgets.hh"
 
-#define SPIN_BOX_DECIMALS 10 // max is DBL_MAX_10_EXP + DBL_DIG = 323
 
-
-COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) : QWidget(p_parent)
+COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) : QWidget()
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_wasModified(false)
 , m_backup(p_model->data())
@@ -65,6 +63,7 @@ COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_mod
   mainLayout->addWidget(operationGroupBox);
   mainLayout->addWidget(m_applyButton);
   setLayout(mainLayout);
+  adjustSize();
 }
 
 COperationWidget::~COperationWidget()
@@ -125,8 +124,8 @@ Format
 CFormatWidget::CFormatWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) :
 COperationWidget(p_title, p_model, p_parent)
 , m_typeWidget(new QComboBox)
-, m_alphaWidget(new QDoubleSpinBox)
-, m_betaWidget(new QDoubleSpinBox)
+, m_alphaWidget(new CDoubleSpinBox)
+, m_betaWidget(new CDoubleSpinBox)
 {
   m_alphaWidget->setValue(1);
   m_betaWidget->setValue(0);
@@ -171,16 +170,10 @@ Scalar operations
 
 CScalarWidget::CScalarWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) :
 COperationWidget(p_title, p_model, p_parent)
-, m_addWidget(new QDoubleSpinBox)
-, m_multiplyWidget(new QDoubleSpinBox)
+, m_addWidget(new CDoubleSpinBox)
+, m_multiplyWidget(new CDoubleSpinBox)
 {
-
-  m_addWidget->setRange(-DBL_MAX, DBL_MAX);
-  m_addWidget->setDecimals(SPIN_BOX_DECIMALS);
   m_addWidget->setValue(0);
-
-  m_multiplyWidget->setRange(-DBL_MAX, DBL_MAX);
-  m_multiplyWidget->setDecimals(SPIN_BOX_DECIMALS);
   m_multiplyWidget->setValue(1);
 
   addParameter(tr("add"), m_addWidget);
@@ -211,13 +204,12 @@ Rotation widget
 CRotationWidget::CRotationWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) :
 COperationWidget(p_title, p_model, p_parent)
 , m_centerWidget(new CPoint2DWidget)
-, m_angleWidget(new QDoubleSpinBox)
-, m_scaleWidget(new QDoubleSpinBox)
+, m_angleWidget(new CDoubleSpinBox)
+, m_scaleWidget(new CDoubleSpinBox)
 {
   m_centerWidget->setPoint(model()->center());
 
   m_angleWidget->setRange(-360, 360);
-  m_angleWidget->setDecimals(SPIN_BOX_DECIMALS);
   m_angleWidget->setValue(0);
 
   m_scaleWidget->setValue(1);
@@ -254,16 +246,11 @@ Normalize widget
 
 CNormalizeWidget::CNormalizeWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) :
 COperationWidget(p_title, p_model, p_parent)
-, m_alphaWidget(new QDoubleSpinBox)
-, m_betaWidget(new QDoubleSpinBox)
+, m_alphaWidget(new CDoubleSpinBox)
+, m_betaWidget(new CDoubleSpinBox)
 , m_normWidget(new QComboBox)
 {
-  m_alphaWidget->setRange(-DBL_MAX, DBL_MAX);
-  m_alphaWidget->setDecimals(SPIN_BOX_DECIMALS);
   m_alphaWidget->setValue(1);
-
-  m_betaWidget->setRange(-DBL_MAX, DBL_MAX);
-  m_betaWidget->setDecimals(SPIN_BOX_DECIMALS);
   m_betaWidget->setValue(0);
 
   m_normWidget->addItem("L1");
@@ -504,15 +491,12 @@ Threshold
 
 CThresholdWidget::CThresholdWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) :
 COperationWidget(p_title, p_model, p_parent)
-, m_thresholdValueWidget(new QDoubleSpinBox)
-, m_maxValueWidget(new QDoubleSpinBox)
+, m_thresholdValueWidget(new CDoubleSpinBox)
+, m_maxValueWidget(new CDoubleSpinBox)
 , m_typeWidget(new QComboBox)
 , m_otsuWidget(new QCheckBox)
 {
-  m_thresholdValueWidget->setRange(-DBL_MAX, DBL_MAX);
   m_thresholdValueWidget->setValue(0);
-
-  m_maxValueWidget->setRange(-DBL_MAX, DBL_MAX);
   m_maxValueWidget->setValue(255);
 
   m_typeWidget->addItem("BINARY");

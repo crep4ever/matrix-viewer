@@ -20,10 +20,11 @@
 
 #include <QBoxLayout>
 #include <QLabel>
-#include <QDoubleSpinBox>
 #include <QDebug>
 
 #include <opencv2/opencv.hpp>
+
+#include "double-spinbox.hh"
 
 /*
 Point2D widget
@@ -35,14 +36,12 @@ QWidget(p_parent)
 , p_xLabel(new QLabel("x"))
 , p_yLabel(new QLabel("y"))
 {
-  m_xInput = new QDoubleSpinBox;
-  m_xInput->setRange(-DBL_MAX, DBL_MAX);
+  m_xInput = new CDoubleSpinBox;
   m_xInput->setDecimals(4);
   connect(m_xInput, SIGNAL(valueChanged(double)),
   this, SLOT(updateXValue(double)));
 
-  m_yInput = new QDoubleSpinBox;
-  m_yInput->setRange(-DBL_MAX, DBL_MAX);
+  m_yInput = new CDoubleSpinBox;
   m_yInput->setDecimals(4);
   connect(m_yInput, SIGNAL(valueChanged(double)),
   this, SLOT(updateYValue(double)));
