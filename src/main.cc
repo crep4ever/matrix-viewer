@@ -28,7 +28,6 @@
 #include <QApplication>
 
 #include <QTranslator>
-#include <QTextCodec>
 #include <QDate>
 #include <QLocale>
 #include <QDir>
@@ -114,7 +113,6 @@ int main(int argc, char *argv[])
   QApplication::setOrganizationDomain("vitechnology.com");
   QApplication::setApplicationName(MATRIX_VIEWER_APPLICATION_NAME);
   QApplication::setApplicationVersion(MATRIX_VIEWER_VERSION);
-  QApplication::setGraphicsSystem("raster");
 
   // Load the application ressources (icons, ...)
   Q_INIT_RESOURCE(matrix);
@@ -147,7 +145,6 @@ int main(int argc, char *argv[])
   }
 
   // Localization
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8")) ;
   QDir translationDirectory;
   QString translationFilename = QString("matrix-viewer_%1.qm").arg(QLocale::system().name().split('_').first());
   QString directory;
