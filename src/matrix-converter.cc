@@ -27,10 +27,6 @@
 
 #include "mfe.hh"
 
-#ifdef ENABLE_OPENMP
-#include <omp.h>
-#endif
-
 CMatrixConverter::CMatrixConverter() :
 QObject()
 , m_data()
@@ -178,7 +174,6 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
     // second line contains matrix values
     values = stream.readLine().split(" ");
 
-    #pragma omp parallel for schedule(static)
     for (uint v = 0; v < rows * cols; ++v)
     {
       int row = v / cols;
@@ -354,7 +349,7 @@ bool CMatrixConverter::loadFromMfe(const QString & filename)
 {
   try
   {
-    MFE mfe;
+    MatrixFormatExchange mfe;
     mfe.read(filename);
     m_data = mfe.data();
     m_format = Format_Mfe;
@@ -374,7 +369,7 @@ bool CMatrixConverter::saveToMfe(const QString & filename)
 {
   try
   {
-    MFE mfe;
+    MatrixFormatExchange mfe;
     mfe.setData(m_data);
     mfe.setComment("MatrixViewer");
     mfe.write(filename);

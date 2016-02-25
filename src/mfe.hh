@@ -16,6 +16,9 @@
 // 02110-1301, USA.
 //******************************************************************************
 
+#ifndef __MFE_H_
+#define __MFE_H_
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -26,85 +29,40 @@
 #include <QString>
 #include <QDebug>
 
-/**
- * @brief MFE format header
- *
- * The header contains information about the
- * the matrix data it precedes such as the matrix
- * size, type etc.
- *
- * The structure MFEHeader contains 3 char + 5 int
- * hence a theoretical size of 3*1 + 5*4 = 23 bytes
- *
- * since integers are aligned on 4 bytes, by default :
- * sizeof(MFEHeader) = 24
- *
- * using the pragma '#pragma pack(1)' returns the expected value :
- * sizeof(MFEHeader) = 23
- *
- * Note that this pragma entails portability issues on windows with MVSCC
- */
-#pragma pack(1)
-struct MFEHeader
-{
-  MFEHeader() :
-    format(),
-    offset(0),
-    type(0),
-    cols(0),
-    rows(0),
-    depth(0)
-  {
-    format[0] = 'n';
-    format[1] = '/';
-    format[2] = 'a';
-  }
-
-  ~MFEHeader()
-  {}
-
-  char format[3];
-  int32_t offset;
-  int32_t type;
-  int32_t cols;
-  int32_t rows;
-  int32_t depth;
-};
 
 /**
- * @class MFE
- * @brief Matrix Format Exchange
+ * @class MatrixFormatExchange
+ * @brief Matrix Format Exchange for Matlab/C++ data
  *
- * The class MatrixFormatExchange reads and write OpenCV's cv::Mat in a binary
- * format that ensures floating values accuracy, fast load/unload times
- * and reasonnable storage size.
+ * The class MatrixFormatExchange reads and write cv::Mat in a binary format
+ * that is compatible with c++ and matlab.
  *
  * A MFE file has the following content:
  *
- *  \li a fixed-sized header of 23bytes (see MFEHeader)
- *  \li an optional comment (string of variable length)
- *  \li binary data (OpenCV matrix values)
+ *  \li header  (fixed size of 23bytes @see MFEHeader)
+ *  \li comment (string of variable length)
+ *  \li data    (matrix values)
  *
  * Example:
  *
  * \code
- *   // create matrix of random values
+ *   // create matrix
  *   cv::Mat m(3, 2, CV_64FC1);
  *   cv::randu(m, cv::Scalar::all(0), cv::Scalar::all(255));
  *
  *   // write matrix in MFE format
  *   MatrixFormatExchange mfe;
- *   mfe.setData(m);
- *   mfe.setComment("hello world");
- *   mfe.write("/tmp/matrix.mfe");
+ *   mfe.SetData(m);
+ *   mfe.SetComment("hello world");
+ *   mfe.Write("/tmp/matrix.mfe");
  *
  *   // read matrix in MFE format
  *   MatrixFormatExchange mfe;
- *   mfe.read("/tmp/matrix.mfe");
- *   cv::Mat n = mfe.data();
- *   std::cout << "comment: " << mfe.comment() << std::endl;
+ *   mfe.Read("/tmp/matrix.mfe");
+ *   cv::Mat n = mfe.GetData();
+ *   std::cout << "comment: " << mfe.GetComment() << std::endl;
  *
- *   // verify that saved+reloaded matrix is similar to original matrix
+ *   // Compare matrix
  *   cv::Mat diff;
  *   cv::absdiff(m, n, diff);
  *   assert(cv::countNonZero(diff) == 0);
@@ -112,105 +70,148 @@ struct MFEHeader
  * \endcode
  *
  */
-class MFE
+class MatrixFormatExchange
 {
+private:
+    struct MFEHeader
+    {
+        MFEHeader():
+            format(std::vector<char>(3)),
+            offset(0),
+            type(0),
+            cols(0),
+            rows(0),
+            depth(0)
+        {
+            format[0] = 'n';
+            format[1] = '/';
+            format[2] = 'a';
+        }
+
+        ~MFEHeader() // explicitly non-virtual
+        {
+        }
+
+        std::string toString() const
+        {
+            std::stringstream stream;
+            stream << "format: "  << format[0] << format[1] << format[2] << std::endl;
+            stream << "offset: "  << offset << std::endl;
+            stream << "type: "    << type << std::endl;
+            stream << "cols: "    << cols << std::endl;
+            stream << "rows: "    << rows << std::endl;
+            stream << "depth: "   << depth << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * @brief Return the size in bytes of this structure
+         *
+         * The size returned by this method is different from sizeof(MFEHeader)
+         *
+         * Indeed, the structure MFEHeader contains 3 char + 5 int
+         * hence a theoretical size of 3*1 + 5*4 = 23 bytes
+         *
+         * since integers are aligned on 4 bytes, by default :
+         * sizeof(MFEHeader) = 24
+         *
+         * using the pragma '#pragma pack(1)' returns the expected value :
+         * sizeof(MFEHeader) = 23
+         *
+         * however, this pragma entail portability issues on windows with MVSCC
+         */
+        int size() const
+        {
+	    const int s = (int)format.size() + 
+	                  sizeof(offset) + 
+                          sizeof(type) + 
+                          sizeof(cols) + 
+                          sizeof(rows) + 
+                          sizeof(depth);
+
+            Q_ASSERT(s == 23);
+            return s; 
+        }
+
+        bool read(std::ifstream& stream)
+        {
+            bool bret = false;
+            if (stream.is_open())
+            {
+                try
+                {
+                    stream.read(&format[0], 3);
+                    stream.read(reinterpret_cast<char*>(&offset), sizeof(offset));
+                    stream.read(reinterpret_cast<char*>(&type), sizeof(type));
+                    stream.read(reinterpret_cast<char*>(&cols), sizeof(cols));
+                    stream.read(reinterpret_cast<char*>(&rows), sizeof(rows));
+                    stream.read(reinterpret_cast<char*>(&depth), sizeof(depth));
+                    bret = true;
+                }
+                catch (...)
+                {
+                    bret = false;
+                }
+            }
+            return bret; 
+        }
+        bool write(std::ofstream& stream)
+        {
+            bool res = false;
+            if (stream.is_open())
+            {
+                try
+                {
+                    stream.write(&format[0],3);
+                    stream.write(reinterpret_cast<char*>(&offset), sizeof(offset));
+                    stream.write(reinterpret_cast<char*>(&type), sizeof(type));
+                    stream.write(reinterpret_cast<char*>(&cols), sizeof(cols));
+                    stream.write(reinterpret_cast<char*>(&rows), sizeof(rows));
+                    stream.write(reinterpret_cast<char*>(&depth), sizeof(depth));
+
+                    res = true;
+                }
+                catch (...)
+                {
+                    res = false;
+                }
+            }
+            return res; 
+        }
+
+        std::vector<char> format;
+        uint32_t offset;
+        uint32_t type;
+        uint32_t cols;
+        uint32_t rows;
+        uint32_t depth;
+    };
 
 public:
 
-  MFE() :
-    m_header(),
-    m_comment(""),
-    m_data()
-  {}
+    MatrixFormatExchange();
 
-  ~MFE()
-  {}
+    ~MatrixFormatExchange();
 
-  void setData(const cv::Mat & p_mat)
-  {
-    if (!p_mat.isContinuous())
-      {
-        qWarning() << "OpenCV matrix must be continuous";
-        return;
-      }
+    cv::Mat data() const;
 
-    m_data = p_mat;
+    void setData(const cv::Mat & p_mat);
 
-    m_header.format[0] = 'M';
-    m_header.format[1] = 'F';
-    m_header.format[2] = 'E';
-    m_header.offset = (int32_t) m_comment.size() + (int32_t) sizeof(MFEHeader);
-    m_header.type  = p_mat.type();
-    m_header.cols  = p_mat.cols;
-    m_header.rows  = p_mat.rows;
-    m_header.depth = p_mat.channels();
-  }
+    std::string comment() const;
 
-  cv::Mat data() const
-  {
-    return m_data;
-  }
+    void setComment(const std::string & p_str);
 
-  void setComment(const std::string & p_str)
-  {
-    m_comment = p_str;
-    m_header.offset = (int32_t) m_comment.size() + (int32_t) sizeof(MFEHeader);
-  }
+    std::string toString() const;
 
-  std::string comment() const
-  {
-    return m_comment;
-  }
+    bool write(const QString & p_path);
 
-  void write(const QString & p_path)
-  {
-    std::ofstream stream;
-    stream.open(p_path.toStdString().c_str(),
-                std::ofstream::out | std::ofstream::binary);
-
-    // header
-    stream.write(reinterpret_cast<char*>(&m_header),
-                 sizeof(MFEHeader));
-
-    // comment
-    stream.write(m_comment.c_str(),
-                 m_comment.size()); // skip trailing '\0'
-
-    // data
-    stream.write(reinterpret_cast<char*>(m_data.data),
-                 m_data.rows * m_data.cols * m_data.elemSize());
-
-    stream.flush();
-    stream.close();
-  }
-
-  void read(const QString & p_path)
-  {
-    std::ifstream stream;
-    stream.open(p_path.toStdString().c_str(),
-                std::ifstream::in | std::ifstream::binary);
-
-    // header
-    int32_t size = (int32_t) sizeof(MFEHeader);
-    stream.read(reinterpret_cast<char*>(&m_header), size);
-
-    // comment
-    size = (int32_t) m_header.offset - (int32_t) sizeof(MFEHeader);
-    std::vector<char> info(size + 1);
-    stream.read(info.data(), size);
-    info[size] = '\0';
-    setComment(std::string(info.begin(), info.end()));
-
-    // data
-    m_data.create(m_header.rows, m_header.cols, m_header.type);
-    size = (int32_t) m_header.rows * (int32_t) m_header.cols * (int32_t) m_data.elemSize();
-    stream.read(reinterpret_cast<char*>(m_data.data), size);
-
-    stream.close();
-  }
+    bool read(const QString & p_path);
 
 private:
-  MFEHeader m_header;
-  std::string m_comment;
-  cv::Mat m_data;
+    MFEHeader m_header;
+    std::string m_comment;
+    cv::Mat m_data;
 };
+
+#endif // __MFE_H_
