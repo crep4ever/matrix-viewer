@@ -354,7 +354,7 @@ bool CMatrixConverter::loadFromMfe(const QString & filename)
 {
   try
   {
-    MFE mfe;
+    MatrixFormatExchange mfe;
     mfe.read(filename);
     m_data = mfe.data();
     m_format = Format_Mfe;
@@ -374,7 +374,7 @@ bool CMatrixConverter::saveToMfe(const QString & filename)
 {
   try
   {
-    MFE mfe;
+    MatrixFormatExchange mfe;
     mfe.setData(m_data);
     mfe.setComment("MatrixViewer");
     mfe.write(filename);

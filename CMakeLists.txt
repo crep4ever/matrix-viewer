@@ -39,6 +39,7 @@ set(MATRIX_VIEWER_SOURCES
   src/operations-widget.cc
   src/common-widgets.cc
   src/parser.cc
+  src/mfe.cc
   )
 
 # header (moc)
