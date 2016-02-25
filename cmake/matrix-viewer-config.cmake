@@ -10,7 +10,6 @@ set(CODENAME "")
 
 option(GENERATE_MANPAGES "generate manpages" ON)
 option(COMPRESS_MANPAGES "compress manpages" ON)
-option(ENABLE_OPENMP "multithreading with OpenMP" ON)
 
 # {{{ CFLAGS
 if (CMAKE_BUILD_TYPE MATCHES "Release")
@@ -50,22 +49,6 @@ if(NOT WIN32)
   add_definitions( -fvisibility=hidden )
 endif()
 # }}}
-
-
-if(ENABLE_OPENMP)
-  find_package(OpenMP)
-  if(OPENMP_FOUND)
-    message(STATUS "OpenMP support enabled")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-  else()
-    set(ENABLE_SPELLCHECK false)
-    message(STATUS "OpenMP support disabled (can't find library)")
-  endif()
-else()
-  message(STATUS "OpenMP support disabled")
-endif()
 
 
 # {{{ Find external utilities
