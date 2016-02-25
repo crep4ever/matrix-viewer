@@ -19,11 +19,11 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
   message(STATUS "Compiling in Debug mode with GCC")
   # Add additional GCC options.
   add_definitions(
-    -g -O -Wall -pedantic
+    -g -O -Wall -pedantic -Werror
     -pedantic-errors -Wextra -Wcast-align
-    -Wcast-qual -Wchar-subscripts -Wcomment
+    -Wchar-subscripts -Wcomment
     -Wdisabled-optimization
-    -Werror -Wformat -Wformat=2
+    -Wformat -Wformat=2
     -Wformat-nonliteral -Wformat-security
     -Wformat-y2k
     -Wimport  -Winit-self
@@ -35,7 +35,7 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
     -Wsequence-point  -Wshadow -Wsign-compare  -Wstack-protector
     -Wstrict-aliasing -Wstrict-aliasing=2 -Wswitch
     -Wswitch-enum -Wtrigraphs  -Wuninitialized
-    -Wunknown-pragmas -Wunreachable-code -Wunused
+    -Wunreachable-code -Wunused
     -Wunused-function -Wunused-label -Wunused-parameter
     -Wunused-value -Wunused-variable -Wvariadic-macros
     -Wvolatile-register-var  -Wwrite-strings
@@ -142,7 +142,7 @@ set(MATRIX_VIEWER_DATA_PATH        ${PREFIX}/share/${MATRIX_VIEWER_APPLICATION_N
 # }}}
 
 # {{{ Configure files
-set(MATRIX_VIEWER_CONFIGURE_FILES 
+set(MATRIX_VIEWER_CONFIGURE_FILES
   config.hh.in
   )
 
