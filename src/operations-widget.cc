@@ -61,10 +61,10 @@ COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_mod
   QGroupBox *operationGroupBox = new QGroupBox(p_title);
   operationGroupBox->setLayout(m_parametersLayout);
 
-  QBoxLayout *layout = new QVBoxLayout;
-  layout->addWidget(operationGroupBox);
-  layout->addWidget(m_applyButton);
-  setLayout(layout);
+  QBoxLayout *mainLayout = new QVBoxLayout;
+  mainLayout->addWidget(operationGroupBox);
+  mainLayout->addWidget(m_applyButton);
+  setLayout(mainLayout);
 }
 
 COperationWidget::~COperationWidget()

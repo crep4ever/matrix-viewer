@@ -27,9 +27,8 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
     -Werror -Wformat -Wformat=2
     -Wformat-nonliteral -Wformat-security
     -Wformat-y2k
-    -Wimport  -Winit-self -Winline
-    -Winvalid-pch
-    -Wunsafe-loop-optimizations -Wlong-long -Wmissing-braces
+    -Wimport  -Winit-self
+    -Winvalid-pch -Wlong-long -Wmissing-braces
     -Wmissing-field-initializers -Wmissing-format-attribute
     -Wmissing-include-dirs -Wmissing-noreturn
     -Wpacked  -Wparentheses  -Wpointer-arith
