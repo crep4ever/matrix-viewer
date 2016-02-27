@@ -101,7 +101,6 @@ private:
             stream << "cols: "    << cols << std::endl;
             stream << "rows: "    << rows << std::endl;
             stream << "depth: "   << depth << std::endl;
-
             return stream.str();
         }
 
@@ -121,18 +120,18 @@ private:
          *
          * however, this pragma entail portability issues on windows with MVSCC
          */
-        int size() const
-        {
-	    const int s = (int)format.size() + 
-	                  sizeof(offset) + 
-                          sizeof(type) + 
-                          sizeof(cols) + 
-                          sizeof(rows) + 
-                          sizeof(depth);
+         int size() const
+         {
+             const int s = (int)format.size() +
+             sizeof(offset) +
+             sizeof(type) +
+             sizeof(cols) +
+             sizeof(rows) +
+             sizeof(depth);
 
-            Q_ASSERT(s == 23);
-            return s; 
-        }
+             Q_ASSERT(s == 23);
+             return s;
+         }
 
         bool read(QDataStream& p_stream)
         {

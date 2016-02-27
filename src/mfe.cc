@@ -27,7 +27,6 @@ MatrixFormatExchange::MatrixFormatExchange()
 , m_data()
 {}
 
-
 MatrixFormatExchange::~MatrixFormatExchange()
 {}
 
@@ -38,10 +37,7 @@ cv::Mat MatrixFormatExchange::data() const
 
 void MatrixFormatExchange::setData(const cv::Mat & p_mat)
 {
-    if (!p_mat.empty())
-    {
-        Q_ASSERT(p_mat.isContinuous());
-    }
+    Q_ASSERT(p_mat.empty() || p_mat.isContinuous());
     m_data = p_mat;
 
     m_header.format[0] = 'M';
