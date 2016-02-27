@@ -1,24 +1,32 @@
 set(PROJECT_NAME matrix-viewer)
 
-# If ${SOURCE_DIR} is a git repository VERSION is set to
-# `git describe --tags` later.
+# If ${SOURCE_DIR} is a git repo, VERSION is set to `git describe --tags` later.
 set(VERSION devel)
 
 set(CODENAME "")
 
-#project(${PROJECT_NAME} C)
+#-------------------------------------------------------------------------------
+# CMake build options
+#-------------------------------------------------------------------------------
 
 option(GENERATE_MANPAGES "generate manpages" ON)
 option(COMPRESS_MANPAGES "compress manpages" ON)
 
-# {{{ CFLAGS
+#-------------------------------------------------------------------------------
+# Compiler options
+#-------------------------------------------------------------------------------
+
+# Default build type
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+  set (CMAKE_BUILD_TYPE Release)
+endif ()
+
+# Compiler flags
 if (CMAKE_BUILD_TYPE MATCHES "Release")
-  message(STATUS "Compiling in Release mode")
-  add_definitions(-O2 -march=native)
-elseif( CMAKE_COMPILER_IS_GNUCXX )
-  message(STATUS "Compiling in Debug mode with GCC")
-  # Add additional GCC options.
-  add_definitions(
+  set(FLAGS
+  -Ofast -march=native)
+elseif (CMAKE_BUILD_TYPE MATCHES "Debug")
+  set(FLAGS
     -g -O -Wall -pedantic -Werror
     -pedantic-errors -Wextra -Wcast-align
     -Wchar-subscripts -Wcomment
@@ -40,18 +48,20 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
     -Wunused-value -Wunused-variable -Wvariadic-macros
     -Wvolatile-register-var  -Wwrite-strings
     )
-elseif( CMAKE_CXX_COMPILER MATCHES "clang" )
-  message(STATUS "Compiling in Debug mode with Clang")
-  add_definitions( -Wall -Wextra )
+endif ()
+
+if (CMAKE_CXX_COMPILER MATCHES "clang")
 endif()
 
-if(NOT WIN32)
-  add_definitions( -fvisibility=hidden )
-endif()
-# }}}
+add_definitions(${FLAGS})
+message (STATUS "Using ${CMAKE_CXX_COMPILER} compiler")
+message (STATUS "Compile in ${CMAKE_BUILD_TYPE} configuration")
+message (STATUS "Compile options: ${FLAGS}")
 
+#-------------------------------------------------------------------------------
+# Find external utilities
+#-------------------------------------------------------------------------------
 
-# {{{ Find external utilities
 macro(a_find_program var prg req)
   set(required ${req})
   find_program(${var} ${prg})
@@ -71,31 +81,33 @@ a_find_program(HOSTNAME_EXECUTABLE hostname FALSE)
 a_find_program(ASCIIDOC_EXECUTABLE asciidoc FALSE)
 a_find_program(XMLTO_EXECUTABLE xmlto FALSE)
 a_find_program(GZIP_EXECUTABLE gzip FALSE)
-# }}}
 
-# {{{ Check if documentation can be build
-if(GENERATE_MANPAGES)
-  if(NOT ASCIIDOC_EXECUTABLE OR NOT XMLTO_EXECUTABLE
+#-------------------------------------------------------------------------------
+# Documentation
+#-------------------------------------------------------------------------------
+
+# Check if documentation can be build
+if (GENERATE_MANPAGES)
+  if (NOT ASCIIDOC_EXECUTABLE OR NOT XMLTO_EXECUTABLE
       OR (COMPRESS_MANPAGES AND NOT GZIP_EXECUTABLE)
       OR NOT EXISTS ${SOURCE_DIR}/manpages/)
-    if(NOT ASCIIDOC_EXECUTABLE)
-      SET(missing "asciidoc")
-    endif()
-    if(NOT XMLTO_EXECUTABLE)
-      SET(missing ${missing} " xmlto")
-    endif()
-    if(COMPRESS_MANPAGES AND NOT GZIP_EXECUTABLE)
-      SET(missing ${missing} " gzip")
-    endif()
+    if (NOT ASCIIDOC_EXECUTABLE)
+      set(missing "asciidoc")
+    endif ()
+    if (NOT XMLTO_EXECUTABLE)
+      set(missing ${missing} " xmlto")
+    endif ()
+    if (COMPRESS_MANPAGES AND NOT GZIP_EXECUTABLE)
+      set(missing ${missing} " gzip")
+    endif ()
 
-    message(STATUS "Not generating manpages. Missing: " ${missing})
+    message(STATUS "Skip manpages generation. Missing: " ${missing})
     set(GENERATE_MANPAGES OFF)
   endif()
 endif()
-# }}}
 
-# {{{ Version stamp
-if(EXISTS ${SOURCE_DIR}/.git/HEAD AND GIT_EXECUTABLE)
+# Version stamp
+if (EXISTS ${SOURCE_DIR}/.git/HEAD AND GIT_EXECUTABLE)
   # get current version
   execute_process(
     COMMAND ${GIT_EXECUTABLE} describe --tags
@@ -104,30 +116,29 @@ if(EXISTS ${SOURCE_DIR}/.git/HEAD AND GIT_EXECUTABLE)
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   set(BUILD_FROM_GIT TRUE)
 endif()
-# }}}
+#
 
-# {{{ Get hostname
+# Hostname
 execute_process(
   COMMAND ${HOSTNAME_EXECUTABLE}
   WORKING_DIRECTORY ${SOURCE_DIR}
   OUTPUT_VARIABLE BUILDHOSTNAME
   OUTPUT_STRIP_TRAILING_WHITESPACE)
-# }}}
 
-# {{{ Install path and configuration variables
-if(DEFINED PREFIX)
+# Install path and configuration variables
+if (DEFINED PREFIX)
   set(PREFIX ${PREFIX} CACHE PATH "install prefix")
   set(CMAKE_INSTALL_PREFIX ${PREFIX})
-else()
+else ()
   set(PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "install prefix")
-endif()
+endif ()
 
 # set man path
-if(DEFINED MATRIX_VIEWER_MAN_PATH)
+if (DEFINED MATRIX_VIEWER_MAN_PATH)
   set(MATRIX_VIEWER_MAN_PATH ${MATRIX_VIEWER_MAN_PATH} CACHE PATH "matrix-viewer manpage directory")
-else()
+else ()
   set(MATRIX_VIEWER_MAN_PATH ${PREFIX}/share/man CACHE PATH "matrix-viewer manpage directory")
-endif()
+endif ()
 
 # Hide to avoid confusion
 mark_as_advanced(CMAKE_INSTALL_PREFIX)
@@ -141,7 +152,7 @@ set(MATRIX_VIEWER_RELEASE          ${CODENAME})
 set(MATRIX_VIEWER_DATA_PATH        ${PREFIX}/share/${MATRIX_VIEWER_APPLICATION_NAME})
 # }}}
 
-# {{{ Configure files
+# Configure files
 set(MATRIX_VIEWER_CONFIGURE_FILES
   config.hh.in
   )
@@ -157,4 +168,3 @@ endmacro()
 foreach(file ${MATRIX_VIEWER_CONFIGURE_FILES})
   a_configure_file(${file})
 endforeach()
-#}}}
