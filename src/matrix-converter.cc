@@ -206,8 +206,12 @@ bool CMatrixConverter::saveToTxt(const QString & filename)
     stream << m_data.cols << " " << m_data.rows << "\n";
 
     for (int j = 0; j < m_data.rows; ++j)
-    for (int i = 0; i < m_data.cols; ++i)
-    stream << m_data.at< double >(j, i) << " ";
+    {
+      for (int i = 0; i < m_data.cols; ++i)
+      {
+        stream << m_data.at< double >(j, i) << " ";
+      }
+    }
 
     file.close();
     return true;
@@ -274,11 +278,17 @@ bool CMatrixConverter::loadFromImage(const QString & filename)
 
   // Set file format according to extension
   if (filename.endsWith(".bmp", Qt::CaseInsensitive))
-  m_format = Format_Bmp;
+  {
+    m_format = Format_Bmp;
+  }
   else if (filename.endsWith(".jpg", Qt::CaseInsensitive))
-  m_format = Format_Jpg;
+  {
+    m_format = Format_Jpg;
+  }
   else if (filename.endsWith(".png", Qt::CaseInsensitive))
-  m_format = Format_Png;
+  {
+    m_format = Format_Png;
+  }
 
   return true;
 }
