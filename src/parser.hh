@@ -21,8 +21,11 @@
 
 #include <QStringList>
 
-class CController;
-
+/*!
+  \file parser.hh
+  \class CParser
+  \brief CParser analyze command-line options when running the application from a terminal
+*/
 class CParser
 {
 public:
@@ -46,4 +49,3 @@ private:
 };
 
 #endif  // __PARSER_HH__
-

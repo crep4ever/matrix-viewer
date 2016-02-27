@@ -1,5 +1,6 @@
 # Description
-This is a graphical frontend in Qt4/C++ to OpenCV matrices format
+This application is a graphical frontend to [OpenCV](http://opencv.org/)
+matrices that allows to visualize and edit them as tabular or image data.
 
 ![MatrixViewer](doc/img/main.png)
 
@@ -13,16 +14,26 @@ This is a graphical frontend in Qt4/C++ to OpenCV matrices format
 >     git clone git://github.com/crep4ever/matrix-viewer.git
 >     cd matrix-viewer
 >     mkdir build && cd build
->     cmake -DCMAKE_BUILD_TYPE=Release .. && make
+>     cmake .. && make
 >     sudo make install
 >     matrix-viewer
 
-
 ## CMake options
 
-* CMAKE_BUILD_TYPE [Debug, Release]
+* CMAKE_BUILD_TYPE [ `Release` (default), `Debug`]
+* GENERATE_MANPAGES [`ON` (default), `OFF`]: requires asciidoc; xmlto;
+* COMPRESS_MANPAGES [`ON` (default), `OFF`]: requires gzip;
 * OpenCV_DIR <Path>: absolute path to custom OpenCV build directory (windows)
 
+# Documentation
+
+The developer documentation can be generated with [Doxygen](www.doxygen.org).
+
+* required packages: doxygen
+
+>     cd matrix-viewer
+>     doxygen Doxyfile
+>     <browser> doc/html/index.html
 
 # Integration with gdb
 * copy the script misc/matrix-viewer-gdb.py in a local directory
