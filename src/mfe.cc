@@ -88,7 +88,7 @@ bool MatrixFormatExchange::write(const QString & p_path)
     m_header.write(stream);
 
     // comment
-    if (stream.writeRawData(m_comment.c_str(), m_comment.size()) == 1) // skip the '\0' character
+    if (stream.writeRawData(m_comment.c_str(), m_comment.size()) == -1) // skip the '\0' character
     {
         qWarning() << "Can't write MFE comment";
         return false;
@@ -124,7 +124,7 @@ bool MatrixFormatExchange::read(const QString & p_path)
         qWarning() << "Error decoding MFE header";
         return false;
     }
-    
+
     // comment
     size = m_header.offset - m_header.size();
     std::vector<char> info(size + 1);
@@ -150,4 +150,3 @@ bool MatrixFormatExchange::read(const QString & p_path)
 
     return true;
 }
-
