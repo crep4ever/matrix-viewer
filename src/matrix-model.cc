@@ -107,7 +107,7 @@ QVariant CMatrixModel::data(const QModelIndex & p_index, int p_role) const
       cv::Vec2f point2f; cv::Vec3f point3f;
       cv::Vec2d point2d; cv::Vec3d point3d;
 
-      switch(type())
+      switch (type())
       {
         case CV_8UC1:
         return m_data.at< uchar >(r, c);

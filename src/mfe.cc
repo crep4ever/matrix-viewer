@@ -27,7 +27,6 @@ MatrixFormatExchange::MatrixFormatExchange()
 , m_data()
 {}
 
-
 MatrixFormatExchange::~MatrixFormatExchange()
 {}
 
@@ -38,10 +37,7 @@ cv::Mat MatrixFormatExchange::data() const
 
 void MatrixFormatExchange::setData(const cv::Mat & p_mat)
 {
-    if (!p_mat.empty())
-    {
-        Q_ASSERT(p_mat.isContinuous());
-    }
+    Q_ASSERT(p_mat.empty() || p_mat.isContinuous());
     m_data = p_mat;
 
     m_header.format[0] = 'M';
@@ -88,7 +84,7 @@ bool MatrixFormatExchange::write(const QString & p_path)
     m_header.write(stream);
 
     // comment
-    if (stream.writeRawData(m_comment.c_str(), m_comment.size()) == 1) // skip the '\0' character
+    if (stream.writeRawData(m_comment.c_str(), m_comment.size()) == -1) // skip the '\0' character
     {
         qWarning() << "Can't write MFE comment";
         return false;
@@ -124,7 +120,7 @@ bool MatrixFormatExchange::read(const QString & p_path)
         qWarning() << "Error decoding MFE header";
         return false;
     }
-    
+
     // comment
     size = m_header.offset - m_header.size();
     std::vector<char> info(size + 1);
@@ -150,4 +146,3 @@ bool MatrixFormatExchange::read(const QString & p_path)
 
     return true;
 }
-
