@@ -27,6 +27,7 @@
 #include <sstream>
 
 #include <QString>
+#include <QDataStream>
 #include <QDebug>
 
 
