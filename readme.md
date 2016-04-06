@@ -29,5 +29,17 @@ This is a graphical frontend in Qt4/C++ to OpenCV matrices format
 * from a gdb shell, run: "source /path/to/matrix-viewer-gdb.py"
 * the gdb command "mdv m" will launch matrix-viewer to open the cv::Mat 'm'
 
+# Qt4 compatibility
+The version 1.5.0 is the last release that is compatible with Qt4.
+If your platform only has Qt4 support, checkout onto this tag:
+
+>     git clone git://github.com/crep4ever/matrix-viewer.git
+>     cd matrix-viewer
+>     git checkout 1.5.0
+>     mkdir build && cd build
+>     cmake -DCMAKE_BUILD_TYPE=Release .. && make
+>     sudo make install
+>     matrix-viewer
+
 # Contact
 * romain.goffe@gmail.com
