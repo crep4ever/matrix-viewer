@@ -14,8 +14,8 @@ before_install:
 install:
   - sudo apt-get install -qq qt56base
   - source /opt/qt56/bin/qt56-env.sh
-  - sudo apt-get install cmake
-  - sudo apt-get install libopencv-dev
+  - sudo apt-get install -qq cmake
+  - sudo apt-get install -qq libopencv-dev
 
 before_script:
   - mkdir build
