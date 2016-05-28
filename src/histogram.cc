@@ -96,11 +96,13 @@ QBoxLayout * CHistogram::makeAxisBar() const
 void CHistogram::drawPixmap()
 {
   // normalize histogram
-  uint max = 0;
+  qreal max = 0.0;
   for (int i = 0; i < m_values.size(); ++i)
   {
     if (m_values[i] > max)
-    max = m_values[i];
+    {
+      max = m_values[i];
+    }
   }
 
   QVector<qreal> normalizedValues(m_values.size(), 0);
@@ -108,16 +110,16 @@ void CHistogram::drawPixmap()
   {
     for (int i = 0; i < 256; ++i)
     {
-      normalizedValues[i] = m_values[i] / (qreal) max;
+      normalizedValues[i] = m_values[i] / max;
     }
   }
 
   QPixmap pixmap(300, 50);
   QPainter painter(&pixmap);
 
-  const qreal w  = pixmap.width();
+  const qreal w = pixmap.width();
   const qreal h = pixmap.height();
-  const qreal barWidth = w / (qreal)normalizedValues.size();
+  const qreal barWidth = normalizedValues.empty() ? 0 : w / (qreal)normalizedValues.size();
 
   for (int i = 0; i < normalizedValues.size(); ++i)
   {
@@ -155,9 +157,9 @@ void CHistogram::computeStats()
     count += m_values[i];
   }
 
-  double mean = sum / (double) count;
-  const double meanSquare = squareSum / (double) count;
-  double standardDeviation = qSqrt(qAbs(meanSquare - mean * mean));
+  const double mean = (count == 0) ? 0.0 : sum / (double) count;
+  const double meanSquare = (count == 0) ? 0.0 : squareSum / (double) count;
+  const double standardDeviation = qSqrt(qAbs(meanSquare - mean * mean));
 
   // update labels
   m_count->setText(tr("Count: %1").arg(count));
