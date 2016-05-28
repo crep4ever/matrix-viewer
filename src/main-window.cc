@@ -535,7 +535,12 @@ QString CMainWindow::findProfile(const QString & filename) const
     profile = it.next();
 
     QFile file(profile);
-    file.open(QIODevice::ReadOnly);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+      qWarning() << "CMainWindow::loadProfile can't open file in read mode";
+      return QString();  
+    }
+
     QXmlStreamReader xml(&file);
     while (!xml.atEnd())
     {
