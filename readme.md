@@ -1,4 +1,4 @@
-![MatrixViewer](icons/matrix-viewer/48x48/matrix-viewer.png)
+# Matrix-Viewer ![MatrixViewer](icons/matrix-viewer/48x48/matrix-viewer.png)
 Frontend to [OpenCV](http://opencv.org/) matrices for visualization and edition as tabular or image data.
 
 [![Build Status](https://travis-ci.org/crep4ever/matrix-viewer.svg?branch=master)](https://travis-ci.org/crep4ever/matrix-viewer)
