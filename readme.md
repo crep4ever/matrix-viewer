@@ -2,6 +2,7 @@
 Frontend to [OpenCV](http://opencv.org/) matrices for visualization and edition as tabular or image data.
 
 [![Build Status](https://travis-ci.org/crep4ever/matrix-viewer.svg?branch=master)](https://travis-ci.org/crep4ever/matrix-viewer)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/crep4ever-matrix-viewer)](https://img.shields.io/coverity/scan/4241.svg)
 
 ![MatrixViewer](doc/img/main.png)
 
