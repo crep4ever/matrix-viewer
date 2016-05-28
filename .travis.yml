@@ -1,24 +1,31 @@
- language: cpp
+language: cpp
 
- compiler:
-   - gcc
-   - clang
+compiler:
+  - gcc
+  - clang
 
- before_install:
-  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+sudo: required
+dist: trusty
+
+before_install:
+  - sudo add-apt-repository ppa:beineri/opt-qt56-trusty -y; fi
   - sudo apt-get update -qq
-  - sudo apt-get install -qq qt5-qmake qtbase5-dev
-  - sudo apt-get install -qq cmake libopencv-dev
 
- before_script:
-   - mkdir build
-   - cd build
-   - cmake -DCMAKE_BUILD_TYPE=Debug ..
+install:
+  - sudo apt-get install -qq qt56base
+  - source /opt/qt56/bin/qt56-env.sh
+  - sudo apt-get install cmake
+  - sudo apt-get install libopencv-dev
 
- script: make
+before_script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
 
- notifications:
-   email:
-     - romain.goffe@gmail.com
-   on_success: change
-   on_failure: always
+script: make
+
+notifications:
+    email:
+      - romain.goffe@gmail.com
+    on_success: change
+    on_failure: always
