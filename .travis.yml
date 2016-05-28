@@ -29,3 +29,17 @@ notifications:
       - romain.goffe@gmail.com
     on_success: change
     on_failure: always
+
+env:
+  global:
+   - secure: "w7cRCxDTxuQrgeqSI9SCiPZpAo4L2JhmffNk831daVJHJrbtrNTUj5FzaHzDW6I2m0PKPvSDHpE8SMldbyGumtbEoiztYM0RC3Wnd0qWZetEp8o6o/b4RKtg10QOvWfi+tn/UUVH3n6Cp84oXySJw2FvAE0B8JX5kTE+SpkyTFbDFDb6D4IQfyqXSI/4wxBobh2HA1VlYwRGDtTOPjFHI1UV3IZbNJ7uaxT0eCbhvMhroJqag9X9zz9n9RAHURM8JZ/R8lTpvTTaSpKTUr1XPXg/daaDiq+o3eMeHR5rL01Ycp3UwvjWDGsN98S+oI3D+xKXM/caBcVpsBw9d6H1zE5LkbI6JGWbkcE9UNeZcQPSUsy7vcvnq5TKA5wYZuhZFDtPP5H0mlXsxdw2EAcaS84Xkj00E1C/fP+1vRW0CCXMFBFLI9HFJBUfUn9Y29SbtZ9Iey+xpam1oQHuZpnbzCXCXjlYN7ea2Y8OeXDJ8PAbztN7DgYMLMGPyX9jwAcOcFGbOuM/7ZbTpb/U6GMM1BndJa4Z1jrgzg3spOkY0p3vb4ZuLRJEysgFgMkke32UG6iXUneOBHoTmU6XxdBMIOzJlJC3+5BLqAFhEC3bJutq2IJF68c1DDgX7c/LYHOYTSTYnEODSiFmXFF5sygPq1XqVG1jGD+XKy7HxahIjik="
+
+addons:
+  coverity_scan:
+    project:
+      name: "crep4ever/matrix-viewer"
+      description: "Build submitted via Travis CI"
+    notification_email: romain.goffe@gmail.com
+    build_command_prepend: "mkdir build; cd build; cmake -DCMAKE_BUILD_TYPE=Debug .."
+    build_command:   "make"
+    branch_pattern: master
