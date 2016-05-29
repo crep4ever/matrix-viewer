@@ -24,6 +24,17 @@
 #include <QElapsedTimer>
 #include <QDebug>
 
+/*!
+  \file elapsed-timer.hh
+  \class CElapsedTimer
+  \brief Extension of QElapsedTimer that fallbacks in millisecond precision for Qt < 4.8
+
+  The class QElapsedTimer provides nanosecond accuracy since Qt 4.8
+  through the QElapsedTimer::nsecsElapsed() method.
+
+  This class fakes a nsecsElapsed() for Qt < 4.8
+  that actually have millisecond precision through QElapsedTimer::elapsed().
+*/
 class CElapsedTimer : public QElapsedTimer
 {
 public:
@@ -39,7 +50,7 @@ public:
 #else
     ns = QElapsedTimer::nsecsElapsed();
 #endif
-    
+
     return ns;
   }
 };

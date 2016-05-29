@@ -35,6 +35,15 @@ class CMatrixModel;
 class CPoint2DWidget;
 class CFileChooser;
 
+/*!
+  \file operations-widget.hh
+  \class COperationWidget
+  \brief Base widget class for applying OpenCV operations on current matrix
+
+  A COperationWidget defines an interface to the CMatrixModel with apply() and
+  reset() actions. It owns the layout but derived classes can append their
+  own widgets through the addParameter() method.
+*/
 class COperationWidget : public QWidget
 {
   Q_OBJECT
@@ -80,10 +89,12 @@ private:
   QFormLayout *m_parametersLayout;
 };
 
-/*
-  Format
-*/
+/*!
+  \class CFormatWidget
+  \brief Operation widget to change the OpenCV format of the matrix
 
+  This widget relies on cv::convertTo() method.
+*/
 class CFormatWidget : public COperationWidget
 {
   Q_OBJECT
@@ -103,10 +114,12 @@ private:
   QDoubleSpinBox *m_betaWidget;
 };
 
-/*
-  Scalar operations
-*/
+/*!
+  \class CScalarWidget
+  \brief Operation widget to apply matrix | scalar operations
 
+  This widget wraps cv::add() and cv::multiply() methods.
+*/
 class CScalarWidget : public COperationWidget
 {
   Q_OBJECT
@@ -125,10 +138,12 @@ private:
   QDoubleSpinBox *m_multiplyWidget;
 };
 
-/*
-  Rotation widget
-*/
+/*!
+  \class CRotationWidget
+  \brief Operation widget to apply rotation on the matrix
 
+  This widget wraps cv::warpAffine() method.
+*/
 class CRotationWidget : public COperationWidget
 {
   Q_OBJECT
@@ -148,10 +163,12 @@ private:
   QDoubleSpinBox *m_scaleWidget;
 };
 
-/*
-  Normalize
-*/
+/*!
+  \class CNormalizeWidget
+  \brief Operation widget to apply normalization on the matrix
 
+  This widget wraps cv::normalize() method.
+*/
 class CNormalizeWidget : public COperationWidget
 {
   Q_OBJECT
@@ -171,10 +188,13 @@ private:
   QComboBox *m_normWidget;
 };
 
-/*
-  Transformations
-*/
 
+/*!
+  \class CTransformationsWidget
+  \brief Operation widget to apply flip and transposition on the matrix
+
+  This widget wraps cv::flip() and cv::t() methods.
+*/
 class CTransformationsWidget : public COperationWidget
 {
   Q_OBJECT
@@ -195,10 +215,13 @@ private:
   QPushButton *m_mulTransposeWidget;
 };
 
-/*
-  ColorMap
-*/
+/*!
+  \class CColorMapWidget
+  \brief Operation widget to apply a color map on the matrix
 
+  This widget wraps cv::colormap().
+  Note that this feature requires OpenCV 2.4.
+*/
 class CColorMapWidget : public COperationWidget
 {
   Q_OBJECT
@@ -217,10 +240,12 @@ private:
   QComboBox *m_colorMapWidget;
 };
 
-/*
-  Threshold
-*/
+/*!
+  \class CThresholdWidget
+  \brief Operation widget to apply thresholding on the matrix
 
+  This widget wraps cv::threshold().
+*/
 class CThresholdWidget : public COperationWidget
 {
   Q_OBJECT
@@ -241,10 +266,12 @@ private:
   QCheckBox *m_otsuWidget;
 };
 
-/*
-  Matrix-Matrix
-*/
+/*!
+  \class CMatrixWidget
+  \brief Operation widget to apply matrix | matrix operations
 
+  This widget wraps cv::absDiff(), cv::multiply(), and cv::Mat::operator*().
+*/
 class CMatrixWidget : public COperationWidget
 {
   Q_OBJECT
@@ -270,10 +297,13 @@ private:
   QPushButton *m_multiplyMatrixWidget;
 };
 
-/*
-  Channels
-*/
+/*!
+  \class CChannelsWidget
+  \brief Operation widget to merge matrix channels
 
+  This widget wraps cv::split(), cv::merge().
+  Its main use is to combine separate RGB layers into a single CV_8UC3 image.
+*/
 class CChannelsWidget : public COperationWidget
 {
   Q_OBJECT
