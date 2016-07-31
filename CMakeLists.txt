@@ -86,6 +86,7 @@ set(MATRIX_VIEWER_UIS
 set(MATRIX_VIEWER_RCS
   icons/matrix-viewer/matrix.qrc
   icons/tango/tango.qrc
+  matrix.rc
   )
 
 # }}}
