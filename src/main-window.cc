@@ -21,6 +21,8 @@
 #include <QAction>
 #include <QBoxLayout>
 #include <QCloseEvent>
+#include <QDropEvent>
+#include <QMimeData>
 #include <QDesktopServices>
 #include <QMenu>
 #include <QMenuBar>
@@ -73,7 +75,6 @@ const QStringList CMainWindow::_fileTypeFilters = QStringList()
 << "TXT (*.txt *.TXT);;"
 << "XML (*.xml *.XML);;";
 
-
 CMainWindow::CMainWindow(QWidget *p_parent) :
 QMainWindow(p_parent)
 , m_mainWidget(new CTabWidget(this))
@@ -102,6 +103,7 @@ QMainWindow(p_parent)
 {
   setWindowTitle("Matrix viewer");
   setWindowIcon(QIcon(":/icons/matrix-viewer/256x256/matrix-viewer.png"));
+  setAcceptDrops(true);
 
   createActions();
   createMenus();
@@ -163,6 +165,17 @@ void CMainWindow::writeSettings()
   settings.setValue( "openPath", m_openPath );
   settings.setValue( "savePath", m_savePath );
   settings.endGroup();
+}
+
+bool CMainWindow::isFilenameSupported(const QString & p_filename)
+{
+  return (p_filename.endsWith(".xml") ||
+  p_filename.endsWith(".txt") ||
+  p_filename.endsWith(".bmp") ||
+  p_filename.endsWith(".png") ||
+  p_filename.endsWith(".jpg") ||
+  p_filename.endsWith(".mfe") ||
+  p_filename.endsWith(".raw"));
 }
 
 void CMainWindow::createActions()
@@ -393,6 +406,25 @@ void CMainWindow::closeEvent(QCloseEvent *p_event)
   p_event->accept();
 }
 
+
+void CMainWindow::dropEvent(QDropEvent *p_event)
+{
+  QList<QUrl> urls = p_event->mimeData()->urls();
+  foreach (QUrl url, urls)
+  {
+    const QString path = url.toLocalFile();
+    if (QFile(path).exists() && isFilenameSupported(path))
+    {
+      open(path);
+    }
+  }
+}
+
+void CMainWindow::dragEnterEvent(QDragEnterEvent *p_event)
+{
+  p_event->accept();
+}
+
 void CMainWindow::createMenus()
 {
   menuBar()->setContextMenuPolicy(Qt::PreventContextMenu);
@@ -538,7 +570,7 @@ QString CMainWindow::findProfile(const QString & filename) const
     if (!file.open(QIODevice::ReadOnly))
     {
       qWarning() << "CMainWindow::loadProfile can't open file in read mode";
-      return QString();  
+      return QString();
     }
 
     QXmlStreamReader xml(&file);

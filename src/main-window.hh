@@ -24,6 +24,7 @@
 
 class QTabWidget;
 class QToolBar;
+class QDropEvent;
 class CProgressBar;
 class CPosition;
 class CTabWidget;
@@ -60,7 +61,14 @@ class CMainWindow : public QMainWindow
 {
   Q_OBJECT
 
-  public slots:
+public:
+  /*!
+  Return \a true if \a p_filename ends with a supported extensions,
+  \a false otherwise.
+  */
+  static bool isFilenameSupported(const QString & p_filename);
+
+public slots:
   /*!
   Open file from \a p_filePath
   */
@@ -68,7 +76,7 @@ class CMainWindow : public QMainWindow
 
 public:
   /// Constructor
-  CMainWindow(QWidget *parent = 0);
+  CMainWindow(QWidget *p_parent = 0);
 
   /// Destructor
   ~CMainWindow();
@@ -112,9 +120,13 @@ protected:
   /*!
   Saves settings before closing the application
   */
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *p_event);
 
-  private slots:
+  void dropEvent(QDropEvent *p_event);
+
+  void dragEnterEvent(QDragEnterEvent *p_event);
+
+private slots:
   void open();
   void save();
   void saveAs();

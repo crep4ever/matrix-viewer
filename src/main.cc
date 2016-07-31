@@ -41,17 +41,6 @@
 #include "parser.hh"
 #include "benchmark-result.hh"
 
-bool isFilenameSupported(const QString & filename)
-{
-  return (filename.endsWith(".xml") ||
-  filename.endsWith(".txt") ||
-  filename.endsWith(".bmp") ||
-  filename.endsWith(".png") ||
-  filename.endsWith(".jpg") ||
-  filename.endsWith(".mfe") ||
-  filename.endsWith(".raw"));
-}
-
 void printUsage()
 {
   QTextStream out(stdout);
@@ -191,7 +180,7 @@ int main(int argc, char *argv[])
 
   foreach (const QString & arg, arguments)
   {
-    if (QFile(arg).exists() && isFilenameSupported(arg))
+    if (QFile(arg).exists() && CMainWindow::isFilenameSupported(arg))
     {
       mainWindow.open(arg);
     }
