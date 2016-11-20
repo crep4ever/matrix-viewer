@@ -57,12 +57,14 @@
 #include "config.hh"
 
 const QStringList CMainWindow::_fileExtensions = QStringList()
-<< "*.mfe" << "*.raw"
+<< "*.mfe" << "*.MFE"
+<< "*.raw" << "*.RAW"
 << "*.png" << "*.PNG"
-<< "*.jpg" << "*.jpeg" << "*.JPG"
 << "*.bmp" << "*.BMP"
-<< "*.tif" << "*.tiff" << "*.TIFF"
-<< "*.txt" << "*.xml";
+<< "*.xml" << "*.XML"
+<< "*.txt" << "*.TXT"
+<< "*.jpg" << "*.jpeg" << "*.JPG"
+<< "*.tif" << "*.tiff" << "*.TIFF";
 
 const QStringList CMainWindow::_fileTypeFilters = QStringList()
 << "All files (*.*);;"

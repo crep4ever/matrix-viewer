@@ -87,24 +87,44 @@ void CMatrixConverter::setRawType(const int p_value)
 
 bool CMatrixConverter::load(const QString & filename)
 {
-  if (filename.endsWith(".xml"))
+  if (filename.endsWith(".xml", Qt::CaseInsensitive))
   {
+    m_format = Format_Xml;
     return loadFromXml(filename);
   }
-  else if (filename.endsWith(".txt"))
+  else if (filename.endsWith(".txt", Qt::CaseInsensitive))
   {
+    m_format = Format_Txt;
     return loadFromTxt(filename);
   }
-  else if (filename.endsWith(".raw"))
+  else if (filename.endsWith(".raw", Qt::CaseInsensitive))
   {
+    m_format = Format_Raw;
     return loadFromRaw(filename);
   }
-  else if (filename.endsWith(".mfe"))
+  else if (filename.endsWith(".mfe", Qt::CaseInsensitive))
   {
+    m_format = Format_Mfe;
     return loadFromMfe(filename);
+  }
+  else if (filename.endsWith(".bmp", Qt::CaseInsensitive))
+  {
+    m_format = Format_Bmp;
+    return loadFromImage(filename);
+  }
+  else if (filename.endsWith(".jpg", Qt::CaseInsensitive) || filename.endsWith(".jpeg", Qt::CaseInsensitive))
+  {
+    m_format = Format_Jpg;
+    return loadFromImage(filename);
+  }
+  else if (filename.endsWith(".png", Qt::CaseInsensitive))
+  {
+    m_format = Format_Png;
+    return loadFromImage(filename);
   }
   else
   {
+    m_format = Format_Unknown;
     return loadFromImage(filename);
   }
 
@@ -113,24 +133,44 @@ bool CMatrixConverter::load(const QString & filename)
 
 bool CMatrixConverter::save(const QString & filename)
 {
-  if (filename.endsWith(".xml"))
+  if (filename.endsWith(".xml", Qt::CaseInsensitive))
   {
+    m_format = Format_Xml;
     return saveToXml(filename);
   }
-  else if (filename.endsWith(".txt"))
+  else if (filename.endsWith(".txt", Qt::CaseInsensitive))
   {
+    m_format = Format_Txt;
     return saveToTxt(filename);
   }
-  else if (filename.endsWith(".raw"))
+  else if (filename.endsWith(".raw", Qt::CaseInsensitive))
   {
+    m_format = Format_Raw;
     return saveToRaw(filename);
   }
-  else if (filename.endsWith(".mfe"))
+  else if (filename.endsWith(".mfe", Qt::CaseInsensitive))
   {
+    m_format = Format_Mfe;
     return saveToMfe(filename);
+  }
+  else if (filename.endsWith(".bmp", Qt::CaseInsensitive))
+  {
+    m_format = Format_Bmp;
+    return saveToImage(filename);
+  }
+  else if (filename.endsWith(".jpg", Qt::CaseInsensitive) || filename.endsWith(".jpeg", Qt::CaseInsensitive))
+  {
+    m_format = Format_Jpg;
+    return saveToImage(filename);
+  }
+  else if (filename.endsWith(".png", Qt::CaseInsensitive))
+  {
+    m_format = Format_Png;
+    return saveToImage(filename);
   }
   else
   {
+    m_format = Format_Unknown;
     return saveToImage(filename);
   }
 
@@ -182,9 +222,6 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
     }
 
     file.close();
-
-    // Set file format
-    m_format = Format_Txt;
 
     return true;
   }
@@ -240,9 +277,6 @@ bool CMatrixConverter::loadFromXml(const QString & filename)
     return false;
   }
 
-  // Set file format
-  m_format = Format_Xml;
-
   return true;
 }
 
@@ -276,20 +310,6 @@ bool CMatrixConverter::loadFromImage(const QString & filename)
     return false;
   }
 
-  // Set file format according to extension
-  if (filename.endsWith(".bmp", Qt::CaseInsensitive))
-  {
-    m_format = Format_Bmp;
-  }
-  else if (filename.endsWith(".jpg", Qt::CaseInsensitive))
-  {
-    m_format = Format_Jpg;
-  }
-  else if (filename.endsWith(".png", Qt::CaseInsensitive))
-  {
-    m_format = Format_Png;
-  }
-
   return true;
 }
 
@@ -298,7 +318,21 @@ bool CMatrixConverter::saveToImage(const QString & filename)
   bool ret;
   try
   {
-    ret = cv::imwrite(filename.toStdString(), m_data);
+    std::vector<int> compression_params;
+    if (m_format == Format_Png)
+    {
+      compression_params.push_back(CV_IMWRITE_PNG_STRATEGY);
+      compression_params.push_back(CV_IMWRITE_PNG_STRATEGY_DEFAULT);
+      compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+      compression_params.push_back(9);
+    }
+    else if (m_format == Format_Jpg)
+    {
+      compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
+      compression_params.push_back(80);
+    }
+
+    ret = cv::imwrite(filename.toStdString(), m_data, compression_params);
   }
   catch (cv::Exception & e)
   {
@@ -346,8 +380,6 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
     return false;
   }
 
-  m_format = Format_Raw;
-
   return true;
 }
 
@@ -365,7 +397,6 @@ bool CMatrixConverter::loadFromMfe(const QString & filename)
     MatrixFormatExchange mfe;
     mfe.read(filename);
     m_data = mfe.data();
-    m_format = Format_Mfe;
   }
   catch (cv::Exception & e)
   {
