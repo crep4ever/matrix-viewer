@@ -59,9 +59,10 @@ bool CMatrixModel::isFormatData() const
 
 bool CMatrixModel::isFormatImage() const
 {
-  return (m_format == CMatrixConverter::Format_Bmp ||
-          m_format == CMatrixConverter::Format_Jpg ||
-          m_format == CMatrixConverter::Format_Png ||
+  return (m_format == CMatrixConverter::Format_Bmp  ||
+          m_format == CMatrixConverter::Format_Jpg  ||
+          m_format == CMatrixConverter::Format_Png  ||
+          m_format == CMatrixConverter::Format_Webp ||
           m_format == CMatrixConverter::Format_Raw);
 }
 
