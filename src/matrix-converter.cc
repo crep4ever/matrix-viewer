@@ -122,6 +122,11 @@ bool CMatrixConverter::load(const QString & filename)
     m_format = Format_Png;
     return loadFromImage(filename);
   }
+  else if (filename.endsWith(".webp", Qt::CaseInsensitive))
+  {
+    m_format = Format_Webp;
+    return loadFromImage(filename);
+  }
   else
   {
     m_format = Format_Unknown;
@@ -166,6 +171,11 @@ bool CMatrixConverter::save(const QString & filename)
   else if (filename.endsWith(".png", Qt::CaseInsensitive))
   {
     m_format = Format_Png;
+    return saveToImage(filename);
+  }
+  else if (filename.endsWith(".webp", Qt::CaseInsensitive))
+  {
+    m_format = Format_Webp;
     return saveToImage(filename);
   }
   else
