@@ -60,7 +60,9 @@ const QStringList CMainWindow::_fileExtensions = QStringList()
 << "*.mfe" << "*.MFE"
 << "*.raw" << "*.RAW"
 << "*.png" << "*.PNG"
+#if CV_MAJOR_VERSION >= 3
 << "*.webp" << "*.WEBP"
+#endif
 << "*.bmp" << "*.BMP"
 << "*.xml" << "*.XML"
 << "*.txt" << "*.TXT"
@@ -71,7 +73,9 @@ const QStringList CMainWindow::_fileTypeFilters = QStringList()
 << "All files (*.*);;"
 << "JPEG (*.jpg *.jpeg *.JPG);;"
 << "PNG (*.png *.PNG);;"
+#if CV_MAJOR_VERSION >= 3
 << "WEBP (*.webp *.WEBP);;"
+#endif
 << "BMP (*.bmp *.BMP);;"
 << "TIFF (*.tif *.tiff *.TIFF);;"
 << "RAW (*.raw *.RAW);;"
@@ -177,7 +181,9 @@ bool CMainWindow::isFilenameSupported(const QString & p_filename)
   p_filename.endsWith(".txt") ||
   p_filename.endsWith(".bmp") ||
   p_filename.endsWith(".png") ||
+#if CV_MAJOR_VERSION >= 3
   p_filename.endsWith(".webp") ||
+#endif
   p_filename.endsWith(".jpg") ||
   p_filename.endsWith(".mfe") ||
   p_filename.endsWith(".raw"));
