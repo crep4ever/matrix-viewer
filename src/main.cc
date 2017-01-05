@@ -72,7 +72,7 @@ void printUsage()
   out << "\t--jpg \t" << "JPEG format." << endl;
   out << "\t--bmp \t" << "BMP format." << endl;
   out << "\t--png \t" << "PNG format." << endl;
-  out << "\t--webp\t" << "WEBP format." << endl;
+  out << "\t--webp\t" << "WEBP format (requires OpenCV 3.X)." << endl;
   out << "\t--raw \t" << "Raw images (16bits unsigned, little-endian byte order)." << endl;
   out << "\t--mfe \t" << "Matrix Format Exchange." << endl;
   out << endl;
