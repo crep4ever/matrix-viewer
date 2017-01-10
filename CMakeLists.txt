@@ -40,6 +40,7 @@ set(MATRIX_VIEWER_SOURCES
   src/common-widgets.cc
   src/parser.cc
   src/mfe.cc
+  src/new-matrix-dialog.cc
   )
 
 # header (moc)
@@ -64,6 +65,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/histogram-widget.hh
   src/operations-widget.hh
   src/common-widgets.hh
+  src/new-matrix-dialog.hh
   )
 
 # matrix profiles

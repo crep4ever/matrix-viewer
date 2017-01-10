@@ -50,6 +50,7 @@
 #include "matrix-converter.hh"
 #include "operations-dialog.hh"
 #include "benchmark-dialog.hh"
+#include "new-matrix-dialog.hh"
 #include "tab-widget.hh"
 #include "tab.hh"
 #include "position.hh"
@@ -99,6 +100,7 @@ QMainWindow(p_parent)
 , m_exitAct(0)
 , m_nextFileAct(0)
 , m_previousFileAct(0)
+, m_newAct(0)
 , m_openAct(0)
 , m_saveAct(0)
 , m_saveAsAct(0)
@@ -191,6 +193,12 @@ bool CMainWindow::isFilenameSupported(const QString & p_filename)
 
 void CMainWindow::createActions()
 {
+  m_newAct = new QAction(tr("&New..."), this);
+  m_newAct->setIcon(QIcon::fromTheme("document-new", QIcon(":/icons/tango/32x32/actions/document-new.png")));
+  m_newAct->setShortcut(QKeySequence::New);
+  m_newAct->setStatusTip(tr("Create a new matrix"));
+  connect(m_newAct, SIGNAL(triggered()), this, SLOT(newMatrix()));
+
   m_openAct = new QAction(tr("&Open..."), this);
   m_openAct->setIcon(QIcon::fromTheme("document-open", QIcon(":/icons/tango/32x32/actions/document-open.png")));
   m_openAct->setShortcut(QKeySequence::Open);
@@ -276,6 +284,74 @@ void CMainWindow::createActions()
   m_nextFileAct->setIcon(QIcon::fromTheme("go-next", QIcon(":/icons/tango/48x48/go-next.png")));
   m_nextFileAct->setStatusTip(tr("Load next data file in current folder"));
   connect(m_nextFileAct, SIGNAL(triggered()), SLOT(nextFile()));
+}
+
+void CMainWindow::newMatrix()
+{
+  NewMatrixDialog dialog(this);
+
+  if (dialog.exec() == QDialog::Rejected)
+  {
+    return;
+  }
+
+  readSettings();
+
+  QSettings settings;
+  settings.beginGroup("new-matrix");
+  const int rows      = settings.value("rows",     3).toInt();
+  const int cols      = settings.value("cols",     3).toInt();
+  const int channels  = settings.value("channels", 1).toInt();
+  const int type      = settings.value("type",     1).toInt();
+  const double value1 = settings.value("value1",   0.0).toDouble();
+  const double value2 = settings.value("value2",   0.0).toDouble();
+  const double value3 = settings.value("value3",   0.0).toDouble();
+  settings.endGroup();
+
+  // Build model from parameters
+  CMatrixModel *model = new CMatrixModel(rows, cols,
+                                         type + 8 * (channels - 1),
+                                         value1, value2, value3);
+  positionWidget()->setValueDescription(model->valueDescription());
+
+  // New tab
+  CTab *tab = new CTab();
+
+  // Set up the views
+  CMatrixView *matrixView = new CMatrixView(this);
+  matrixView->setModel(model);
+  tab->addWidget(matrixView);
+
+  CImageView *imgView = new CImageView(this);
+  imgView->setModel(model);
+  tab->addWidget(imgView);
+
+  QString filename = QString("matrix_%1x%2_%3.mfe")
+    .arg(QString::number(rows))
+    .arg(QString::number(cols))
+    .arg(model->typeString(true));
+
+  m_mainWidget->addTab(tab, filename);
+  m_mainWidget->setCurrentWidget(tab);
+
+  imgView->bestSize();
+
+  if (model->isFormatData())
+  {
+    m_dataViewAct->setChecked(true);
+    toggleDataView(m_dataViewAct->isChecked());
+  }
+
+  if (model->isFormatImage())
+  {
+    m_imageViewAct->setChecked(true);
+    toggleImageView(m_imageViewAct->isChecked());
+  }
+
+  connect(tab, SIGNAL(labelChanged(const QString&)),
+  m_mainWidget, SLOT(changeTabText(const QString&)));
+
+  currentWidget()->setModified(true);
 }
 
 void CMainWindow::nextFile()
@@ -441,6 +517,7 @@ void CMainWindow::createMenus()
   menuBar()->setContextMenuPolicy(Qt::PreventContextMenu);
 
   QMenu *fileMenu = menuBar()->addMenu(tr("&Matrix"));
+  fileMenu->addAction(m_newAct);
   fileMenu->addAction(m_openAct);
   fileMenu->addAction(m_saveAct);
   fileMenu->addAction(m_saveAsAct);
@@ -468,6 +545,7 @@ void CMainWindow::createToolBar()
   m_mainToolBar = new QToolBar(tr("Matrix"), this);
   m_mainToolBar->setMovable(false);
   m_mainToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+  m_mainToolBar->addAction(m_newAct);
   m_mainToolBar->addAction(m_openAct);
   m_mainToolBar->addAction(m_saveAct);
   m_mainToolBar->addAction(m_saveAsAct);
