@@ -65,6 +65,13 @@ public:
 
   Qt::ItemFlags flags(const QModelIndex & index) const;
 
+  virtual bool removeRows   (int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+  virtual bool removeColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+
+  virtual bool insertRows   (int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+  virtual bool insertColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+
+
   void setProfile(const QString & profile);
 
   QImage* toQImage() const;
