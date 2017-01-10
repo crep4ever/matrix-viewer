@@ -183,7 +183,7 @@ QVariant CMatrixModel::data(const QModelIndex & p_index, int p_role) const
   return QVariant();
 }
 
-bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, int p_role)
+bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & p_value, int p_role)
 {
   if (p_role != Qt::EditRole)
   {
@@ -194,11 +194,11 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
   QStringList tokens;
   if (channels() > 1)
   {
-    tokens = value.toString().split(" | ");
+    tokens = p_value.toString().split(" | ");
     if (tokens.count() != channels())
     {
       qWarning() << tr("Invalid value %1 for matrix of type %2")
-      .arg(value.toString())
+      .arg(p_value.toString())
       .arg(typeString(true));
       return false;
     }
@@ -210,7 +210,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
   switch(type())
   {
     case CV_8UC1:
-    m_data.at< uchar >(r, c) = (uchar) value.toInt();
+    m_data.at< uchar >(r, c) = (uchar) p_value.toInt();
     break;
 
     case CV_8UC2:
@@ -226,7 +226,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_16UC1:
-    m_data.at< unsigned short >(r, c) = (unsigned short) value.toInt();
+    m_data.at< unsigned short >(r, c) = (unsigned short) p_value.toInt();
     break;
 
     case CV_16UC2:
@@ -242,7 +242,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_32SC1:
-    m_data.at< int >(r, c) = value.toInt();
+    m_data.at< int >(r, c) = p_value.toInt();
     break;
 
     case CV_32SC2:
@@ -258,7 +258,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_32FC1:
-    m_data.at< float >(r, c) = value.toFloat();
+    m_data.at< float >(r, c) = p_value.toFloat();
     break;
 
     case CV_32FC2:
@@ -274,7 +274,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_64FC1:
-    m_data.at< double >(r, c) = value.toDouble();
+    m_data.at< double >(r, c) = p_value.toDouble();
     break;
 
     case CV_64FC2:
