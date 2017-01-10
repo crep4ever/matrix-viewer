@@ -46,6 +46,47 @@ QAbstractTableModel()
   m_format = converter.format();
 }
 
+CMatrixModel::CMatrixModel(const int p_rows, const int p_cols,
+                           const int p_type,
+                           const double p_value1, const double p_value2, const double p_value3) :
+QAbstractTableModel()
+, m_data()
+, m_format(CMatrixConverter::Format_Mfe)
+, m_horizontalHeaderLabels()
+, m_verticalHeaderLabels()
+{
+  try
+  {
+    const int nbChannels = p_type / 8 + 1;
+
+    cv::Scalar value;
+    switch (nbChannels)
+    {
+      case 1:
+        value = cv::Scalar(p_value1);
+        break;
+
+      case 2:
+        value = cv::Scalar(p_value1, p_value2);
+        break;
+
+      case 3:
+        value = cv::Scalar(p_value1, p_value2, p_value3);
+        break;
+
+      default:
+        qWarning() << tr("Invalid number of channels");
+        break;
+    }
+
+    m_data = cv::Mat(p_rows, p_cols, p_type, value);
+  }
+  catch (cv::Exception & e)
+  {
+    qWarning() << e;
+  }
+}
+
 CMatrixModel::~CMatrixModel()
 {
 }

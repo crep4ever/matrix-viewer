@@ -41,6 +41,9 @@ public:
   /// Constructor.
   CMatrixModel();
   CMatrixModel(const QString & p_filePath);
+  CMatrixModel(const int p_rows, const int p_cols,
+               const int p_type,
+               const double p_value1, const double p_value2, const double p_value3);
 
   /// Destructor.
   virtual ~CMatrixModel();
