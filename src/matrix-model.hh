@@ -82,7 +82,7 @@ public:
   size_t total() const;
   int countNonZeros() const;
   void minMaxLoc(double* p_minVal, double* p_maxVal = 0,
-		 QPoint* p_minLoc = 0, QPoint* p_maxLoc = 0);
+                 QPoint* p_minLoc = 0, QPoint* p_maxLoc = 0);
 
   void meanStdDev(double* mean, double* stddev);
 
@@ -92,8 +92,8 @@ public slots:
 
   // format
   void convertTo(const int p_type,
-		 const double p_alpha,
-		 const double p_beta);
+                 const double p_alpha,
+                 const double p_beta);
 
   // channels
   void merge(const QStringList & p_channels);
@@ -113,12 +113,12 @@ public slots:
   void horizontalFlip();
 
   void rotate(const QPointF & p_center,
-	      const double p_angle_dg,
-	      const double p_scaleFactor);
+              const double p_angle_dg,
+              const double p_scaleFactor);
 
   void normalize(const double p_alpha,
-		 const double p_beta,
-		 const int p_norm);
+                 const double p_beta,
+                 const int p_norm);
 
   // matrix-matrix
   void absdiff(const cv::Mat & p_other);
@@ -131,8 +131,8 @@ public slots:
   void applyColorMap(const int p_colorMap);
 
   void threshold(const double p_threshold,
-		 const double p_maxValue,
-		 const int p_type);
+                 const double p_maxValue,
+                 const int p_type);
 
 private:
 
