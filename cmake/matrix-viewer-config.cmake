@@ -9,8 +9,8 @@ set(CODENAME "")
 # CMake build options
 #-------------------------------------------------------------------------------
 
-option(GENERATE_MANPAGES "generate manpages" ON)
-option(COMPRESS_MANPAGES "compress manpages" ON)
+option(GENERATE_MANPAGES "generate manpages" OFF)
+option(COMPRESS_MANPAGES "compress manpages" OFF)
 
 #-------------------------------------------------------------------------------
 # Compiler options
