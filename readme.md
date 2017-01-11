@@ -13,7 +13,7 @@ This is a graphical frontend in Qt4/C++ to OpenCV matrices format
 >     git clone git://github.com/crep4ever/matrix-viewer.git
 >     cd matrix-viewer
 >     mkdir build && cd build
->     cmake -DCMAKE_BUILD_TYPE=Release .. && make
+>     cmake .. && make
 >     sudo make install
 >     matrix-viewer
 
