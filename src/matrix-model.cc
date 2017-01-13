@@ -375,13 +375,15 @@ bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex & p_pare
     // copy top part of the matrix
     if (p_row > 0)
     {
-      m_data.rowRange(0, p_row).copyTo(dst.rowRange(0, p_row));
+      cv::Mat top = dst.rowRange(0, p_row);
+      m_data.rowRange(0, p_row).copyTo(top);
     }
 
     // copy bottom part of the matrix
     if (p_row + p_count < m_data.rows)
     {
-      m_data.rowRange(p_row + p_count, m_data.rows).copyTo(dst.rowRange(p_row, dst.rows));
+      cv::Mat bottom = dst.rowRange(p_row, dst.rows);
+      m_data.rowRange(p_row + p_count, m_data.rows).copyTo(bottom);
     }
 
     m_data = dst;
@@ -409,13 +411,15 @@ bool CMatrixModel::removeColumns(int p_col, int p_count, const QModelIndex & p_p
     // copy left part of the matrix
     if (p_col > 0)
     {
-      m_data.colRange(0, p_col).copyTo(dst.colRange(0, p_col));
+      cv::Mat left = dst.colRange(0, p_col);
+      m_data.colRange(0, p_col).copyTo(left);
     }
 
     // copy right part of the matrix
     if (p_col + p_count < m_data.cols)
     {
-      m_data.colRange(p_col + p_count, m_data.cols).copyTo(dst.colRange(p_col, dst.cols));
+      cv::Mat right = dst.colRange(p_col, dst.cols);
+      m_data.colRange(p_col + p_count, m_data.cols).copyTo(right);
     }
 
     m_data = dst;
@@ -443,13 +447,15 @@ bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex & p_pare
     // copy top part of the matrix
     if (p_row > 0)
     {
-      m_data.rowRange(0, p_row).copyTo(dst.rowRange(0, p_row));
+      cv::Mat top = dst.rowRange(0, p_row);
+      m_data.rowRange(0, p_row).copyTo(top);
     }
 
     // copy bottom part of the matrix
     if (p_row < m_data.rows)
     {
-      m_data.rowRange(p_row, m_data.rows).copyTo(dst.rowRange(p_row + p_count, dst.rows));
+      cv::Mat bottom = dst.rowRange(p_row + p_count, dst.rows);
+      m_data.rowRange(p_row, m_data.rows).copyTo(bottom);
     }
 
     m_data = dst;
@@ -477,13 +483,15 @@ bool CMatrixModel::insertColumns(int p_col, int p_count, const QModelIndex & p_p
     // copy left part of the matrix
     if (p_col > 0)
     {
-      m_data.colRange(0, p_col).copyTo(dst.colRange(0, p_col));
+      cv::Mat left = dst.colRange(0, p_col);
+      m_data.colRange(0, p_col).copyTo(left);
     }
 
     // copy right part of the matrix
     if (p_col < m_data.cols)
     {
-      m_data.colRange(p_col, m_data.cols).copyTo(dst.colRange(p_col + p_count, dst.cols));
+      cv::Mat right = dst.colRange(p_col + p_count, dst.cols);
+      m_data.colRange(p_col, m_data.cols).copyTo(right);
     }
 
     m_data = dst;
