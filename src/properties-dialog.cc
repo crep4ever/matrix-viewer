@@ -108,13 +108,13 @@ QDialog(p)
     item = new QTableWidgetItem(tr("Min"));
     matrixInfo->setItem(6, 0, item);
 
-    item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(min).arg(minLoc.x()).arg(minLoc.y()));
+    item = new QTableWidgetItem(QString("%1 @ [row: %2, col: %3]").arg(min).arg(minLoc.y()).arg(minLoc.x()));
     matrixInfo->setItem(6, 1, item);
 
     item = new QTableWidgetItem(tr("Max"));
     matrixInfo->setItem(7, 0, item);
 
-    item = new QTableWidgetItem(QString("%1 @ [%2, %3]").arg(max).arg(maxLoc.x()).arg(maxLoc.y()));
+    item = new QTableWidgetItem(QString("%1 @ [row: %2, col: %3]").arg(max).arg(maxLoc.y()).arg(maxLoc.x()));
     matrixInfo->setItem(7, 1, item);
 
 
