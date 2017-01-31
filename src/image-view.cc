@@ -188,14 +188,20 @@ void CImageView::keyPressEvent(QKeyEvent *p_event)
 
 void CImageView::selectItem(int p_row, int p_col)
 {
-  m_selectionBox->setPos(p_col, p_row);
+  int r = qMax(0, p_row);
+  r = qMin(r, model()->rowCount() - 1);
+
+  int c = qMax(0, p_col);
+  c = qMin(c, model()->columnCount() - 1);
+
+  m_selectionBox->setPos(c, r);
 
   if (parent())
   {
-    parent()->positionWidget()->setRow(p_row);
-    parent()->positionWidget()->setCol(p_col);
+    parent()->positionWidget()->setRow(r);
+    parent()->positionWidget()->setCol(c);
 
-    const QModelIndex index = m_model->index(p_row, p_col);
+    const QModelIndex index = m_model->index(r, c);
     const QString value = m_model->data(index, Qt::DisplayRole).toString();
     parent()->positionWidget()->setValue(value);
   }

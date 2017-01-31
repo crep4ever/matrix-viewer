@@ -88,8 +88,14 @@ void CMatrixView::setModel(QAbstractItemModel * p_model)
 
 void CMatrixView::selectItem(int p_row, int p_col)
 {
-  setCurrentIndex(model()->index(p_row, p_col));
-  scrollTo(model()->index(p_row, p_col));
+  int r = qMax(0, p_row);
+  r = qMin(r, model()->rowCount() - 1);
+
+  int c = qMax(0, p_col);
+  c = qMin(c, model()->columnCount() - 1);
+
+  setCurrentIndex(model()->index(r, c));
+  scrollTo(model()->index(r, c));
 }
 
 void CMatrixView::keyPressEvent(QKeyEvent *p_event)
