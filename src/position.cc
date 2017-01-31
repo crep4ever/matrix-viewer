@@ -32,6 +32,8 @@ QWidget(p_parent)
 , m_valueLabel(new QLabel)
 , m_valueDescription(tr("Value"))
 {
+  m_valueLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
   m_rowSpinBox->setMaximum(std::numeric_limits<int>::max());
   m_colSpinBox->setMaximum(std::numeric_limits<int>::max());
 
