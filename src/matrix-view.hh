@@ -21,6 +21,7 @@
 
 #include <QTableView>
 #include <QColor>
+#include <QPoint>
 
 class CMainWindow;
 class QAction;
@@ -61,13 +62,28 @@ protected:
   */
   virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  void keyPressEvent(QKeyEvent *event);
+  virtual void keyPressEvent(QKeyEvent *event);
+
+private slots:
+  void verticalHeaderContextMenu(const QPoint & p_pos);
+  void horizontalHeaderContextMenu(const QPoint & p_pos);
+
+  void removeCurrentRow();
+  void removeCurrentColumn();
+
+  void removeOtherRows();
+  void removeOtherColumns();
+
+  void insertRowBeforeCurrent();
+  void insertColumnBeforeCurrent();
 
 private:
   CMainWindow *m_parent;
 
   QAction *m_adjustColumnsAct;
   QAction *m_propertiesAct;
+
+  QModelIndex m_currentSelection;
 };
 
 #endif  // __MATRIX_VIEW_HH__

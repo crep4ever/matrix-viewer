@@ -127,6 +127,7 @@ protected:
   void dragEnterEvent(QDragEnterEvent *p_event);
 
 private slots:
+  void newMatrix();
   void open();
   void save();
   void saveAs();
@@ -187,6 +188,7 @@ private:
   QAction *m_nextFileAct;
   QAction *m_previousFileAct;
 
+  QAction *m_newAct;
   QAction *m_openAct;
   QAction *m_saveAct;
   QAction *m_saveAsAct;

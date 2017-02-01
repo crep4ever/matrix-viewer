@@ -41,6 +41,7 @@ set(MATRIX_VIEWER_SOURCES
   src/parser.cc
   src/mfe.cc
   src/double-spinbox.cc
+  src/new-matrix-dialog.cc
   )
 
 # header (moc)
@@ -66,6 +67,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/operations-widget.hh
   src/common-widgets.hh
   src/double-spinbox.hh
+  src/new-matrix-dialog.hh
   )
 
 # matrix profiles

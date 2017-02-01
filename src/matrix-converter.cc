@@ -122,6 +122,11 @@ bool CMatrixConverter::load(const QString & filename)
     m_format = Format_Png;
     return loadFromImage(filename);
   }
+  else if (filename.endsWith(".webp", Qt::CaseInsensitive))
+  {
+    m_format = Format_Webp;
+    return loadFromImage(filename);
+  }
   else
   {
     m_format = Format_Unknown;
@@ -166,6 +171,11 @@ bool CMatrixConverter::save(const QString & filename)
   else if (filename.endsWith(".png", Qt::CaseInsensitive))
   {
     m_format = Format_Png;
+    return saveToImage(filename);
+  }
+  else if (filename.endsWith(".webp", Qt::CaseInsensitive))
+  {
+    m_format = Format_Webp;
     return saveToImage(filename);
   }
   else
@@ -321,10 +331,12 @@ bool CMatrixConverter::saveToImage(const QString & filename)
     std::vector<int> compression_params;
     if (m_format == Format_Png)
     {
+#if (CV_MAJOR_VERSION >= 2) and (CV_MINOR_VERSION >= 4)
       compression_params.push_back(CV_IMWRITE_PNG_STRATEGY);
       compression_params.push_back(CV_IMWRITE_PNG_STRATEGY_DEFAULT);
       compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
       compression_params.push_back(9);
+#endif
     }
     else if (m_format == Format_Jpg)
     {

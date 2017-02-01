@@ -62,7 +62,8 @@ public:
     Format_Jpg,
     Format_Png,
     Format_Raw,
-    Format_Mfe
+    Format_Mfe,
+    Format_Webp
   };
 
   /// Constructor.

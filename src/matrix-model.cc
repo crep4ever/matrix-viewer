@@ -46,6 +46,47 @@ QAbstractTableModel()
   m_format = converter.format();
 }
 
+CMatrixModel::CMatrixModel(const int p_rows, const int p_cols,
+                           const int p_type,
+                           const double p_value1, const double p_value2, const double p_value3) :
+QAbstractTableModel()
+, m_data()
+, m_format(CMatrixConverter::Format_Mfe)
+, m_horizontalHeaderLabels()
+, m_verticalHeaderLabels()
+{
+  try
+  {
+    const int nbChannels = p_type / 8 + 1;
+
+    cv::Scalar value;
+    switch (nbChannels)
+    {
+      case 1:
+        value = cv::Scalar(p_value1);
+        break;
+
+      case 2:
+        value = cv::Scalar(p_value1, p_value2);
+        break;
+
+      case 3:
+        value = cv::Scalar(p_value1, p_value2, p_value3);
+        break;
+
+      default:
+        qWarning() << tr("Invalid number of channels");
+        break;
+    }
+
+    m_data = cv::Mat(p_rows, p_cols, p_type, value);
+  }
+  catch (cv::Exception & e)
+  {
+    qWarning() << e;
+  }
+}
+
 CMatrixModel::~CMatrixModel()
 {
 }
@@ -59,9 +100,10 @@ bool CMatrixModel::isFormatData() const
 
 bool CMatrixModel::isFormatImage() const
 {
-  return (m_format == CMatrixConverter::Format_Bmp ||
-          m_format == CMatrixConverter::Format_Jpg ||
-          m_format == CMatrixConverter::Format_Png ||
+  return (m_format == CMatrixConverter::Format_Bmp  ||
+          m_format == CMatrixConverter::Format_Jpg  ||
+          m_format == CMatrixConverter::Format_Png  ||
+          m_format == CMatrixConverter::Format_Webp ||
           m_format == CMatrixConverter::Format_Raw);
 }
 
@@ -182,7 +224,7 @@ QVariant CMatrixModel::data(const QModelIndex & p_index, int p_role) const
   return QVariant();
 }
 
-bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, int p_role)
+bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & p_value, int p_role)
 {
   if (p_role != Qt::EditRole)
   {
@@ -193,11 +235,11 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
   QStringList tokens;
   if (channels() > 1)
   {
-    tokens = value.toString().split(" | ");
+    tokens = p_value.toString().split(" | ");
     if (tokens.count() != channels())
     {
       qWarning() << tr("Invalid value %1 for matrix of type %2")
-      .arg(value.toString())
+      .arg(p_value.toString())
       .arg(typeString(true));
       return false;
     }
@@ -209,7 +251,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
   switch(type())
   {
     case CV_8UC1:
-    m_data.at< uchar >(r, c) = (uchar) value.toInt();
+    m_data.at< uchar >(r, c) = (uchar) p_value.toInt();
     break;
 
     case CV_8UC2:
@@ -225,7 +267,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_16UC1:
-    m_data.at< unsigned short >(r, c) = (unsigned short) value.toInt();
+    m_data.at< unsigned short >(r, c) = (unsigned short) p_value.toInt();
     break;
 
     case CV_16UC2:
@@ -241,7 +283,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_32SC1:
-    m_data.at< int >(r, c) = value.toInt();
+    m_data.at< int >(r, c) = p_value.toInt();
     break;
 
     case CV_32SC2:
@@ -257,7 +299,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_32FC1:
-    m_data.at< float >(r, c) = value.toFloat();
+    m_data.at< float >(r, c) = p_value.toFloat();
     break;
 
     case CV_32FC2:
@@ -273,7 +315,7 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & value, 
 
 
     case CV_64FC1:
-    m_data.at< double >(r, c) = value.toDouble();
+    m_data.at< double >(r, c) = p_value.toDouble();
     break;
 
     case CV_64FC2:
@@ -321,6 +363,149 @@ Qt::ItemFlags CMatrixModel::flags(const QModelIndex & p_index) const
   return Qt::ItemIsSelectable | Qt::ItemIsEditable  | Qt::ItemIsEnabled;
 }
 
+bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex & p_parent)
+{
+  QAbstractTableModel::beginRemoveRows(p_parent, p_row, p_row + p_count - 1);
+
+  try
+  {
+    // allocate output
+    cv::Mat dst(m_data.rows - p_count, m_data.cols, m_data.type());
+
+    // copy top part of the matrix
+    if (p_row > 0)
+    {
+      cv::Mat top = dst.rowRange(0, p_row);
+      m_data.rowRange(0, p_row).copyTo(top);
+    }
+
+    // copy bottom part of the matrix
+    if (p_row + p_count < m_data.rows)
+    {
+      cv::Mat bottom = dst.rowRange(p_row, dst.rows);
+      m_data.rowRange(p_row + p_count, m_data.rows).copyTo(bottom);
+    }
+
+    m_data = dst;
+  }
+  catch (cv::Exception & e)
+  {
+    qWarning() << e;
+    return false;
+  }
+
+  QAbstractTableModel::endRemoveRows();
+
+  return true;
+}
+
+bool CMatrixModel::removeColumns(int p_col, int p_count, const QModelIndex & p_parent)
+{
+  QAbstractTableModel::beginRemoveColumns(p_parent, p_col, p_col + p_count - 1);
+
+  try
+  {
+    // allocate output
+    cv::Mat dst(m_data.rows, m_data.cols - p_count, m_data.type());
+
+    // copy left part of the matrix
+    if (p_col > 0)
+    {
+      cv::Mat left = dst.colRange(0, p_col);
+      m_data.colRange(0, p_col).copyTo(left);
+    }
+
+    // copy right part of the matrix
+    if (p_col + p_count < m_data.cols)
+    {
+      cv::Mat right = dst.colRange(p_col, dst.cols);
+      m_data.colRange(p_col + p_count, m_data.cols).copyTo(right);
+    }
+
+    m_data = dst;
+  }
+  catch (cv::Exception & e)
+  {
+    qWarning() << e;
+    return false;
+  }
+
+  QAbstractTableModel::endRemoveColumns();
+
+  return true;
+}
+
+bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex & p_parent)
+{
+  QAbstractTableModel::beginInsertRows(p_parent, p_row, p_row + p_count - 1);
+
+  try
+  {
+    // allocate output
+    cv::Mat dst = cv::Mat::zeros(m_data.rows + p_count, m_data.cols, m_data.type());
+
+    // copy top part of the matrix
+    if (p_row > 0)
+    {
+      cv::Mat top = dst.rowRange(0, p_row);
+      m_data.rowRange(0, p_row).copyTo(top);
+    }
+
+    // copy bottom part of the matrix
+    if (p_row < m_data.rows)
+    {
+      cv::Mat bottom = dst.rowRange(p_row + p_count, dst.rows);
+      m_data.rowRange(p_row, m_data.rows).copyTo(bottom);
+    }
+
+    m_data = dst;
+  }
+  catch (cv::Exception & e)
+  {
+    qWarning() << e;
+    return false;
+  }
+
+  QAbstractTableModel::endInsertRows();
+
+  return true;
+}
+
+bool CMatrixModel::insertColumns(int p_col, int p_count, const QModelIndex & p_parent)
+{
+  QAbstractTableModel::beginInsertColumns(p_parent, p_col, p_col + p_count - 1);
+
+  try
+  {
+    // allocate output
+    cv::Mat dst = cv::Mat::zeros(m_data.rows, m_data.cols + p_count, m_data.type());
+
+    // copy left part of the matrix
+    if (p_col > 0)
+    {
+      cv::Mat left = dst.colRange(0, p_col);
+      m_data.colRange(0, p_col).copyTo(left);
+    }
+
+    // copy right part of the matrix
+    if (p_col < m_data.cols)
+    {
+      cv::Mat right = dst.colRange(p_col + p_count, dst.cols);
+      m_data.colRange(p_col, m_data.cols).copyTo(right);
+    }
+
+    m_data = dst;
+  }
+  catch (cv::Exception & e)
+  {
+    qWarning() << e;
+    return false;
+  }
+
+  QAbstractTableModel::endInsertColumns();
+
+  return true;
+}
 
 void CMatrixModel::sort(int column, Qt::SortOrder order)
 {
@@ -549,8 +734,7 @@ void CMatrixModel::add(double p_value)
   {
     try
     {
-      m_data += p_value;
-      emit(dataChanged(QModelIndex(), QModelIndex()));
+      setData(m_data + p_value);
     }
     catch (cv::Exception & e)
     {
@@ -565,8 +749,7 @@ void CMatrixModel::multiply(double p_value)
   {
     try
     {
-      m_data *= p_value;
-      emit(dataChanged(QModelIndex(), QModelIndex()));
+      setData(m_data * p_value);
     }
     catch (cv::Exception & e)
     {
@@ -580,7 +763,7 @@ void CMatrixModel::transpose()
   try
   {
     m_data = m_data.t();
-    emit(dataChanged(QModelIndex(), QModelIndex()));
+    emit(layoutChanged());
   }
   catch (cv::Exception & e)
   {

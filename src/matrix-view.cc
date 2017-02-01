@@ -41,6 +41,13 @@ QTableView(p)
   setSelectionMode(QAbstractItemView::SingleSelection);
 
   horizontalHeader()->setDefaultSectionSize(120);
+  horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(horizontalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)),
+          this, SLOT(horizontalHeaderContextMenu(const QPoint &)));
+
+  verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(verticalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)),
+          this, SLOT(verticalHeaderContextMenu(const QPoint &)));
 
   m_adjustColumnsAct = new QAction(tr("&Adjust columns"), this);
   m_adjustColumnsAct->setStatusTip(tr("Adjust columns of the table view to contents"));
@@ -61,9 +68,12 @@ CMatrixView::~CMatrixView()
 void CMatrixView::currentChanged(const QModelIndex & index, const QModelIndex & previous)
 {
   Q_UNUSED(previous);
-  parent()->positionWidget()->setRow(index.row());
-  parent()->positionWidget()->setCol(index.column());
-  parent()->positionWidget()->setValue(index.data().toString());
+  if (parent() && parent()->positionWidget() && index.isValid())
+  {
+    parent()->positionWidget()->setRow(index.row());
+    parent()->positionWidget()->setCol(index.column());
+    parent()->positionWidget()->setValue(index.data().toString());
+  }
 }
 
 void CMatrixView::setModel(QAbstractItemModel * p_model)
@@ -78,8 +88,14 @@ void CMatrixView::setModel(QAbstractItemModel * p_model)
 
 void CMatrixView::selectItem(int p_row, int p_col)
 {
-  setCurrentIndex(model()->index(p_row, p_col));
-  scrollTo(model()->index(p_row, p_col));
+  int r = qMax(0, p_row);
+  r = qMin(r, model()->rowCount() - 1);
+
+  int c = qMax(0, p_col);
+  c = qMin(c, model()->columnCount() - 1);
+
+  setCurrentIndex(model()->index(r, c));
+  scrollTo(model()->index(r, c));
 }
 
 void CMatrixView::keyPressEvent(QKeyEvent *p_event)
@@ -131,3 +147,131 @@ CMainWindow* CMatrixView::parent() const
 
   return m_parent;
 }
+
+void CMatrixView::verticalHeaderContextMenu(const QPoint & p_pos)
+{
+  m_currentSelection = indexAt(p_pos);
+
+  setSelectionBehavior(QAbstractItemView::SelectRows);
+  selectRow(m_currentSelection.row());
+
+  QMenu *menu = new QMenu;
+
+  QAction * action = new QAction(tr("Insert row before current"), this);
+  connect(action, SIGNAL(triggered()), this, SLOT(insertRowBeforeCurrent()));
+  menu->addAction(action);
+
+  action = new QAction(tr("Remove current row"), this);
+  connect(action, SIGNAL(triggered()), this, SLOT(removeCurrentRow()));
+  menu->addAction(action);
+
+  action = new QAction(tr("Remove other rows"), this);
+  connect(action, SIGNAL(triggered()), this, SLOT(removeOtherRows()));
+  menu->addAction(action);
+
+  menu->exec(mapToGlobal(p_pos));
+  delete menu;
+
+  setSelectionBehavior(QAbstractItemView::SelectItems);
+}
+
+void CMatrixView::horizontalHeaderContextMenu(const QPoint & p_pos)
+{
+  m_currentSelection = indexAt(p_pos);
+
+  setSelectionBehavior(QAbstractItemView::SelectColumns);
+  selectColumn(m_currentSelection.column());
+
+  QMenu *menu = new QMenu;
+
+  QAction * action = new QAction(tr("Insert column before current"), this);
+  connect(action, SIGNAL(triggered()), this, SLOT(insertColumnBeforeCurrent()));
+  menu->addAction(action);
+
+  action = new QAction(tr("Remove current column"), this);
+  connect(action, SIGNAL(triggered()), this, SLOT(removeCurrentColumn()));
+  menu->addAction(action);
+
+  action = new QAction(tr("Remove other columns"), this);
+  connect(action, SIGNAL(triggered()), this, SLOT(removeOtherColumns()));
+  menu->addAction(action);
+
+  menu->exec(mapToGlobal(p_pos));
+  delete menu;
+
+  setSelectionBehavior(QAbstractItemView::SelectItems);
+}
+
+void CMatrixView::removeCurrentRow()
+{
+  const int idx = m_currentSelection.row();
+  if (!model()->removeRow(idx))
+  {
+    qWarning() << "Can't remove row " << idx;
+  }
+}
+
+void CMatrixView::removeCurrentColumn()
+{
+  const int idx = m_currentSelection.column();
+  if (!model()->removeColumn(idx))
+  {
+    qWarning() << "Can't remove column " << idx;
+  }
+}
+
+void CMatrixView::removeOtherRows()
+{
+  bool success = true;
+  const int idx = m_currentSelection.row();
+
+  // remove top part
+  if (idx > 0)
+      success = success && model()->removeRows(0, idx);
+
+  // remove bottom part
+  success = success && model()->removeRows(1, model()->rowCount() - 1);
+
+
+  if (!success)
+  {
+    qWarning() << "Can't remove all other rows than " << idx;
+  }
+}
+
+void CMatrixView::removeOtherColumns()
+{
+  bool success = true;
+  const int idx = m_currentSelection.column();
+
+  // remove left part
+  if (idx > 0)
+      success = success && model()->removeColumns(0, idx);
+
+  // remove right part
+  success = success && model()->removeColumns(1, model()->columnCount() - 1);
+
+  if (!success)
+  {
+    qWarning() << "Can't remove all other columns than " << idx;
+  }
+}
+
+void CMatrixView::insertRowBeforeCurrent()
+{
+  const int idx = m_currentSelection.row();
+  if (!model()->insertRow(idx))
+  {
+    qWarning() << "Can't insert row before index " << idx;
+  }
+}
+
+void CMatrixView::insertColumnBeforeCurrent()
+{
+  const int idx = m_currentSelection.column();
+  if (!model()->insertColumn(idx))
+  {
+    qWarning() << "Can't insert column before index " << idx;
+  }
+}
+
