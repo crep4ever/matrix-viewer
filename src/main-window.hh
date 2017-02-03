@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MAIN_WINDOW_HH__
-#define __MAIN_WINDOW_HH__
+#pragma once
 
 #include <QMainWindow>
 #include <QDir>
@@ -206,5 +205,3 @@ public:
   static const QStringList _fileExtensions;
   static const QStringList _fileTypeFilters;
 };
-
-#endif  // __MAIN_WINDOW_HH__

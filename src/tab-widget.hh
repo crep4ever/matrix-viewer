@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __TAB_WIDGET_HH__
-#define __TAB_WIDGET_HH__
+#pragma once
 
 #include <QTabWidget>
 #include <QTabBar>
@@ -75,5 +74,3 @@ protected:
   */
   virtual void mouseReleaseEvent(QMouseEvent *event);
 };
-
-#endif  // __TAB_WIDGET_HH__

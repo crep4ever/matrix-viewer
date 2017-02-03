@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __BENCHMARK_DIALOG_HH__
-#define __BENCHMARK_DIALOG_HH__
+#pragma once
 
 #include <QDialog>
 #include <QList>
@@ -85,5 +84,3 @@ private:
   bool m_cancelRequested;
   int m_progress;
 };
-
-#endif  // __BENCHMARK_DIALOG_HH__

@@ -17,8 +17,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __PROGRESS_BAR_HH__
-#define __PROGRESS_BAR_HH__
+#pragma once
 
 #include <QProgressBar>
 
@@ -120,5 +119,3 @@ private:
   QToolButton *m_cancelButton;
   bool m_cancelable;
 };
-
-#endif  // __FILE_CHOOSER_HH__

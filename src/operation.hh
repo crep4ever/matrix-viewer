@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __OPERATION_HH__
-#define __OPERATION_HH__
+#pragma once
 
 #include <QList>
 #include <QString>
@@ -48,5 +47,3 @@ private:
   QString m_description;
   QUrl m_url;
 };
-
-#endif // __OPERATION_HH__

@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __OPERATIONS_DIALOG_HH__
-#define __OPERATIONS_DIALOG_HH__
+#pragma once
 
 #include <QDialog>
 #include <QList>
@@ -81,5 +80,3 @@ private:
   QListWidget *m_categoriesWidget;
   QStackedWidget *m_operationsWidget;
 };
-
-#endif  // __OPERATIONS_DIALOG_HH__

@@ -17,8 +17,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __FILE_CHOOSER_HH__
-#define __FILE_CHOOSER_HH__
+#pragma once
 
 #include <QWidget>
 #include <QString>
@@ -137,5 +136,3 @@ private:
   QString m_filter;
   QFileDialog::Options m_options;
 };
-
-#endif  // __FILE_CHOOSER_HH__

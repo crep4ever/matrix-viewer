@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __BENCHMARK_THREAD_HH__
-#define __BENCHMARK_THREAD_HH__
+#pragma once
 
 #include <QThread>
 #include <QString>
@@ -51,6 +50,3 @@ private:
   CMatrixModel *m_model;
   bool m_cancelRequested;
 };
-
-
-#endif // __BENCHMARK_THREAD_HH__

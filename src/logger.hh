@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __LOGGER_HH__
-#define __LOGGER_HH__
+#pragma once
 
 #include <QDebug>
 #include <QString>
@@ -41,6 +40,3 @@ QDebug operator<<(QDebug stream, const cv::Exception & e)
   stream << info;
   return stream;
 }
-
-
-#endif
