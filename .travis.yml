@@ -22,7 +22,6 @@ install:
   - sudo apt-get install -qq cmake libopencv-dev g++-6 qt57-meta-full
   - QT_ENV_SCRIPT=$(find /opt -name 'qt*-env.sh')
   - source $QT_ENV_SCRIPT
-  - source /opt/qt57/bin/qt57-env.sh
 
 before_script:
   - mkdir build
