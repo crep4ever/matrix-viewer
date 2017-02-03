@@ -8,14 +8,21 @@ sudo: required
 dist: trusty
 
 before_install:
+
+  # GCC 6
+  - sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
+  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+
+  # Qt 5.7
   - sudo add-apt-repository ppa:beineri/opt-qt57-trusty -y
+  
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -qq qt57base
+  - sudo apt-get install -qq cmake libopencv-dev g++-6 qt57-meta-full
+  - QT_ENV_SCRIPT=$(find /opt -name 'qt*-env.sh')
+  - source $QT_ENV_SCRIPT
   - source /opt/qt57/bin/qt57-env.sh
-  - sudo apt-get install -qq cmake
-  - sudo apt-get install -qq libopencv-dev
 
 before_script:
   - mkdir build
