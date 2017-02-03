@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __DOUBLE_SPINBOX_HH__
-#define __DOUBLE_SPINBOX_HH__
+#pragma once
 
 #include <QDoubleSpinBox>
 
@@ -38,5 +37,3 @@ public:
   ~CDoubleSpinBox();
 
 };
-
-#endif  // __DOUBLE_SPINBOX_HH__

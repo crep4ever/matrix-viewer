@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MFE_H_
-#define __MFE_H_
+#pragma once
 
 #include <iostream>
 #include <iomanip>
@@ -248,5 +247,3 @@ private:
     std::string m_comment;
     cv::Mat m_data;
 };
-
-#endif // __MFE_H_

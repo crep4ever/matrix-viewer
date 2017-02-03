@@ -15,8 +15,8 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //******************************************************************************
-#ifndef __NEW_MATRIX_DIALOG_HH__
-#define __NEW_MATRIX_DIALOG_HH__
+
+#pragma once
 
 #include <QDialog>
 
@@ -51,5 +51,3 @@ private:
   QDoubleSpinBox *m_value2;
   QDoubleSpinBox *m_value3;
 };
-
-#endif //__NEW_MATRIX_DIALOG_HH__

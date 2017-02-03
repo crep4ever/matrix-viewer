@@ -17,8 +17,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __POSITION_HH__
-#define __POSITION_HH__
+#pragma once
 
 #include <QWidget>
 
@@ -61,5 +60,3 @@ private:
   QLabel*   m_valueLabel;
   QString   m_valueDescription;
 };
-
-#endif  // __POSITION_HH__

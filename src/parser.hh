@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __PARSER_HH__
-#define __PARSER_HH__
+#pragma once
 
 #include <QStringList>
 
@@ -47,5 +46,3 @@ private:
 
     QStringList m_command;
 };
-
-#endif  // __PARSER_HH__

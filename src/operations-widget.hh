@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __OPERATIONS_WIDGET_HH__
-#define __OPERATIONS_WIDGET_HH__
+#pragma once
 
 #include <QWidget>
 #include <QString>
@@ -325,6 +324,3 @@ private:
   QString m_greenOpenPath;
   QString m_blueOpenPath;
 };
-
-
-#endif // __OPERATIONS_WIDGET_HH__

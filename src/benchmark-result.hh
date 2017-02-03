@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __BENCHMARK_RESULT_HH__
-#define __BENCHMARK_RESULT_HH__
+#pragma once
 
 #include <QObject>
 #include <QMetaType>
@@ -69,5 +68,3 @@ private:
 };
 
 Q_DECLARE_METATYPE(BenchmarkResult)
-
-#endif // __BENCHMARK_RESULT_HH__

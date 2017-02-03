@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __PROPERTIES_DIALOG_HH__
-#define __PROPERTIES_DIALOG_HH__
+#pragma once
 
 #include <QDialog>
 
@@ -46,5 +45,3 @@ private:
 
   CMainWindow *m_parent;
 };
-
-#endif  // __PROPERTIES_DIALOG_HH__

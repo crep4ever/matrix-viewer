@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __TAB_HH__
-#define __TAB_HH__
+#pragma once
 
 #include <QSplitter>
 #include <QModelIndex>
@@ -60,5 +59,3 @@ private:
   bool m_isModified;
   QString m_filePath;
 };
-
-#endif  // __TAB_HH__

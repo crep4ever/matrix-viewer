@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __IMAGE_VIEW_HH__
-#define __IMAGE_VIEW_HH__
+#pragma once
 
 #include <QGraphicsView>
 #include <QModelIndex>
@@ -104,5 +103,3 @@ private:
 
   QAction *m_histogramAct;
 };
-
-#endif  // __IMAGE_VIEW_HH__

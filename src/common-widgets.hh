@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __COMMON_WIDGET_HH__
-#define __COMMON_WIDGET_HH__
+#pragma once
 
 #include <QWidget>
 #include <QPointF>
@@ -49,6 +48,3 @@ private:
   QDoubleSpinBox *m_xInput;
   QDoubleSpinBox *m_yInput;
 };
-
-
-#endif // __COMMON_WIDGET_HH__

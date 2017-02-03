@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MATRIX_CONVERTER_HH__
-#define __MATRIX_CONVERTER_HH__
+#pragma once
 
 #include <QObject>
 #include <opencv2/opencv.hpp>
@@ -113,5 +112,3 @@ private:
   int m_rawWidth;
   int m_rawHeight;
 };
-
-#endif  // __MATRIX_CONVERTER_HH__

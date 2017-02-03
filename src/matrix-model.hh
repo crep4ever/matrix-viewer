@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MATRIX_MODEL_HH__
-#define __MATRIX_MODEL_HH__
+#pragma once
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -148,7 +147,3 @@ private:
   QStringList m_horizontalHeaderLabels;
   QStringList m_verticalHeaderLabels;
 };
-
-
-
-#endif  // __MATRIX_MODEL_HH__
