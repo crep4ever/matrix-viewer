@@ -22,8 +22,6 @@
 #include <QLabel>
 #include <QDebug>
 
-#include <opencv2/opencv.hpp>
-
 #include "double-spinbox.hh"
 
 /*

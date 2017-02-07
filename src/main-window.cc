@@ -40,8 +40,6 @@
 #include <QXmlStreamReader>
 #include <QDirIterator>
 
-#include <opencv2/opencv.hpp>
-
 #include "progress-bar.hh"
 #include "preferences.hh"
 #include "matrix-model.hh"
