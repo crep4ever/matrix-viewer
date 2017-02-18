@@ -26,7 +26,7 @@ set(MATRIX_VIEWER_SOURCES
   src/matrix-converter.cc
   src/operation.cc
   src/operations-dialog.cc
-  src/benchmark-thread.cc
+  src/benchmark-task.cc
   src/benchmark-result.cc
   src/benchmark-dialog.cc
   src/properties-dialog.cc
@@ -54,7 +54,7 @@ set(MATRIX_VIEWER_QT_HEADER
   src/image-view.hh
   src/matrix-converter.hh
   src/operations-dialog.hh
-  src/benchmark-thread.hh
+  src/benchmark-task.hh
   src/benchmark-result.hh
   src/benchmark-dialog.hh
   src/properties-dialog.hh
