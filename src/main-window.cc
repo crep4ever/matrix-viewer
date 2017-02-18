@@ -595,11 +595,13 @@ void CMainWindow::about()
   QMessageBox::about(this, title, tr("<p>%1</p>"
   "<p><b>Version:</b> %2</p>"
   "<p><b>Authors:</b> %3</p>"
-  "<p><b>Qt:</b> %4</p>")
+  "<p><b>Qt:</b> %4</p>"
+  "<p><b>OpenCV:</b> %5</p>")
   .arg(description)
   .arg(version)
   .arg(authors)
-  .arg(QT_VERSION_STR));
+  .arg(QT_VERSION_STR)
+  .arg(CV_VERSION));
 }
 
 void CMainWindow::operations()
