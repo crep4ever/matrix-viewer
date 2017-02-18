@@ -16,7 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#include "benchmark-thread.hh"
+#include "benchmark-task.hh"
 
 #include <QStringList>
 #include <QDebug>
@@ -25,8 +25,9 @@
 #include "matrix-model.hh"
 #include "elapsed-timer.hh"
 
-BenchmarkThread::BenchmarkThread(const QString & p_name, const int p_iterations, CMatrixModel* p_model) :
-QObject()
+BenchmarkTask::BenchmarkTask(const QString & p_name,
+                             const int p_iterations,
+                             CMatrixModel* p_model) : QObject()
 , m_name(p_name)
 , m_iterations(p_iterations)
 , m_model(p_model)
@@ -34,11 +35,11 @@ QObject()
 {
 }
 
-BenchmarkThread::~BenchmarkThread()
+BenchmarkTask::~BenchmarkTask()
 {
 }
 
-void BenchmarkThread::run()
+void BenchmarkTask::execute()
 {
   if (!m_model)
   return;
@@ -177,7 +178,7 @@ void BenchmarkThread::run()
   emit resultReady(result);
 }
 
-void BenchmarkThread::cancel()
+void BenchmarkTask::cancel()
 {
   m_cancelRequested = true;
 }
