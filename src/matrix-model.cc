@@ -953,9 +953,9 @@ QImage* CMatrixModel::toQImage() const
   if (stretch)
   {
     double min = 0, max = 0;
+    cv::minMaxLoc(m_data, &min, &max);
     cv::Mat tmp = m_data - min;
-    cv::minMaxLoc(tmp, &min, &max);
-    imgData = tmp * 255 / max;
+    imgData = tmp * 255 / (max - min);
   }
   else
   {
