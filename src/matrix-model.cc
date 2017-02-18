@@ -770,6 +770,7 @@ void CMatrixModel::transpose()
   try
   {
     m_data = m_data.t();
+    emit(dataChanged(QModelIndex(), QModelIndex()));
     emit(layoutChanged());
   }
   catch (cv::Exception & e)
