@@ -20,7 +20,6 @@
 
 #include <QDialog>
 #include <QList>
-#include <opencv2/opencv.hpp>
 
 class CMainWindow;
 class CMatrixModel;
@@ -32,7 +31,7 @@ class QListWidgetItem;
 /*!
   \file operations-dialog.hh
   \class COperationsDialog
-  \brief COperationsDialog exposes common OpenCV operations
+  \brief COperationsDialog exposes common OpenCV operations through the CMatrixModel wrapper
 
   This dialog relies on the CMatrixModel to apply OpenCV
   transformations. For example, changing the internal type, applying
@@ -73,8 +72,7 @@ private:
   void createIcons();
 
   CMainWindow *m_parent;
-
-  cv::Mat m_backupData;
+  CMatrixModel *m_backup;
 
   // Operations widgets
   QListWidget *m_categoriesWidget;

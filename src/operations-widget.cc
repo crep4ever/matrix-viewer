@@ -41,7 +41,7 @@
 COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) : QWidget(p_parent)
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_wasModified(false)
-, m_backup(p_model->data())
+, m_backup(p_model->clone())
 , m_applyButton(new QPushButton(tr("Apply"), this))
 , m_openPath(QDir::homePath())
 , m_savePath(QDir::homePath())
@@ -69,6 +69,7 @@ COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_mod
 
 COperationWidget::~COperationWidget()
 {
+  delete m_backup;
 }
 
 QString COperationWidget::title() const
@@ -241,7 +242,7 @@ void CRotationWidget::reset()
 
 void CRotationWidget::apply()
 {
-  model()->setData(m_backup.clone());
+  model()->setData(m_backup->data().clone());
 
   model()->rotate(m_centerWidget->point(),
   m_angleWidget->value(),
@@ -290,7 +291,7 @@ void CNormalizeWidget::reset()
 
 void CNormalizeWidget::apply()
 {
-  model()->setData(m_backup.clone());
+  model()->setData(m_backup->data().clone());
 
   int norm = 0;
   if (m_normWidget->currentText() == "L1")
@@ -421,7 +422,7 @@ void CColorMapWidget::apply()
   qWarning() << tr("Minimum required OpenCV version: 2.4");
   return;
   #else
-  cv::Mat m = m_backup.clone();
+  cv::Mat m = m_backup->data().clone();
 
   if (model()->channels() == 1)
   {
@@ -545,7 +546,7 @@ void CThresholdWidget::reset()
 
 void CThresholdWidget::apply()
 {
-  model()->setData(m_backup.clone());
+  model()->setData(m_backup->data().clone());
 
   int type = 0;
   if (m_typeWidget->currentText() == "BINARY")
@@ -636,7 +637,7 @@ void CMatrixWidget::absDiff()
     return;
   }
 
-  model()->setData(m_backup.clone());
+  model()->setData(m_backup->data().clone());
   CMatrixModel other(m_fileChooserWidget->path());
   model()->absdiff(other.data());
 
@@ -733,7 +734,7 @@ void CChannelsWidget::apply()
     return;
   }
 
-  model()->setData(m_backup.clone());
+  model()->setData(m_backup->data().clone());
 
   QStringList paths;
   paths << m_blueOpenPath;
