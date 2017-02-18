@@ -21,8 +21,6 @@
 #include <QWidget>
 #include <QString>
 
-#include <opencv2/opencv.hpp>
-
 class QFormLayout;
 class QDoubleSpinBox;
 class QComboBox;
@@ -76,7 +74,7 @@ private:
   bool m_wasModified;
 
 protected:
-  cv::Mat m_backup;
+  CMatrixModel *m_backup;
   QPushButton *m_applyButton;
 
   QString m_openPath;
