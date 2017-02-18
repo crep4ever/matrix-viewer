@@ -25,12 +25,19 @@
 
 #include "logger.hh"
 
-CMatrixModel::CMatrixModel() :
-QAbstractTableModel()
+CMatrixModel::CMatrixModel() : QAbstractTableModel()
 , m_data()
 , m_format(CMatrixConverter::Format_Unknown)
 , m_horizontalHeaderLabels()
 , m_verticalHeaderLabels()
+{
+}
+
+CMatrixModel::CMatrixModel(const CMatrixModel & p_other) : QAbstractTableModel()
+, m_data(p_other.data().clone())
+, m_format(p_other.m_format)
+, m_horizontalHeaderLabels(p_other.m_horizontalHeaderLabels)
+, m_verticalHeaderLabels(p_other.m_verticalHeaderLabels)
 {
 }
 
@@ -989,9 +996,7 @@ QString CMatrixModel::valueDescription() const
 
 CMatrixModel* CMatrixModel::clone() const
 {
-  CMatrixModel *model = new CMatrixModel();
-  model->setData(m_data.clone());
-  return model;
+  return new CMatrixModel(*this);
 }
 
 bool CMatrixModel::compare(CMatrixModel *p_model, CMatrixModel *p_other)
