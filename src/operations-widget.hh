@@ -16,13 +16,10 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __OPERATIONS_WIDGET_HH__
-#define __OPERATIONS_WIDGET_HH__
+#pragma once
 
 #include <QWidget>
 #include <QString>
-
-#include <opencv2/opencv.hpp>
 
 class QFormLayout;
 class QDoubleSpinBox;
@@ -77,7 +74,7 @@ private:
   bool m_wasModified;
 
 protected:
-  cv::Mat m_backup;
+  CMatrixModel *m_backup;
   QPushButton *m_applyButton;
 
   QString m_openPath;
@@ -325,6 +322,3 @@ private:
   QString m_greenOpenPath;
   QString m_blueOpenPath;
 };
-
-
-#endif // __OPERATIONS_WIDGET_HH__

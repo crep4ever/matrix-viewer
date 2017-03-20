@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __HISTOGRAM_WIDGET_HH__
-#define __HISTOGRAM_WIDGET_HH__
+#pragma once
 
 #include <QWidget>
 #include <QColor>
@@ -60,5 +59,3 @@ private:
   static const QColor _green;
   static const QColor _blue;
 };
-
-#endif  // __HISTOGRAM_DIALOG_HH__

@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __ELAPSED_TIMER_HH__
-#define __ELAPSED_TIMER_HH__
+#pragma once
 
 #include <QtGlobal>
 #include <QObject>
@@ -54,5 +53,3 @@ public:
     return ns;
   }
 };
-
-#endif // __ELAPSED_TIMER_HH__

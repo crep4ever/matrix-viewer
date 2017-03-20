@@ -16,28 +16,25 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __BENCHMARK_THREAD_HH__
-#define __BENCHMARK_THREAD_HH__
+#pragma once
 
-#include <QThread>
 #include <QString>
 
 #include "benchmark-result.hh"
 
 class CMatrixModel;
 
-class BenchmarkThread : public QObject
+class BenchmarkTask : public QObject
 {
   Q_OBJECT
 public:
-  BenchmarkThread(const QString & p_operationName,
-		  const int p_nbIterations,
-		  CMatrixModel * p_model);
+  BenchmarkTask(const QString & p_operationName,
+                const int p_nbIterations,
+                CMatrixModel * p_model);
 
-  ~BenchmarkThread();
+  ~BenchmarkTask();
 
-  void run();
-
+  void execute();
 
 signals:
   void resultReady(const BenchmarkResult & res);
@@ -51,6 +48,3 @@ private:
   CMatrixModel *m_model;
   bool m_cancelRequested;
 };
-
-
-#endif // __BENCHMARK_THREAD_HH__

@@ -35,7 +35,7 @@
 COperationsDialog::COperationsDialog(QWidget *p_parent) :
 QDialog(p_parent)
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
-, m_backupData()
+, m_backup(0)
 , m_categoriesWidget(0)
 , m_operationsWidget(0)
 {
@@ -86,16 +86,17 @@ QDialog(p_parent)
 
   // save a backup of the model data
   // that can be restored by the reset button
-  m_backupData = model()->data().clone();
+  m_backup = model()->clone();
 }
 
 COperationsDialog::~COperationsDialog()
 {
+  delete m_backup;
 }
 
 void COperationsDialog::reset()
 {
-  model()->setData(m_backupData.clone());
+  model()->setData(m_backup->data().clone());
 
   for (int i = 0; i < m_operationsWidget->count(); ++i)
   {

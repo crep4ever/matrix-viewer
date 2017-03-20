@@ -15,8 +15,8 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 // 02110-1301, USA.
 //******************************************************************************
-#ifndef __PREFERENCES_HH__
-#define __PREFERENCES_HH__
+
+#pragma once
 
 #include <QDialog>
 #include <QWidget>
@@ -150,5 +150,3 @@ private:
   QSpinBox *m_rawHeight;
   QCheckBox *m_rawLittleEndianByteOrder;
 };
-
-#endif // __PREFERENCES_HH__

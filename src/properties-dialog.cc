@@ -29,9 +29,8 @@
 #include "matrix-view.hh"
 #include "image-view.hh"
 
-CPropertiesDialog::CPropertiesDialog(QWidget *p) :
-QDialog(p)
-, m_parent(qobject_cast<CMainWindow*>(p))
+CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent)
+, m_parent(qobject_cast<CMainWindow*>(p_parent))
 {
   setWindowTitle(tr("Matrix properties"));
 
@@ -42,103 +41,105 @@ QDialog(p)
     parent()->showMessage(tr("Can't display properties of invalid models"));
     close();
   }
-
-  QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok);
-  connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-
-
-  QTableWidgetItem  *item;
-
-  // model info
-  const int nbProperties = (model->channels() == 1) ? 10 : 5;
-
-  QTableWidget * matrixInfo = new QTableWidget(nbProperties, 2, this);
-  matrixInfo->setAlternatingRowColors(true);
-  matrixInfo->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
-  matrixInfo->verticalHeader()->setVisible(false);
-  matrixInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  matrixInfo->horizontalHeader()->setStretchLastSection(true);
-  matrixInfo->setSelectionMode(QAbstractItemView::NoSelection);
-  matrixInfo->setColumnWidth(0, 150);
-
-  item = new QTableWidgetItem(tr("Rows"));
-  matrixInfo->setItem(0, 0, item);
-
-  item = new QTableWidgetItem(QString::number(model->rowCount()));
-  matrixInfo->setItem(0, 1, item);
-
-  item = new QTableWidgetItem(tr("Columns"));
-  matrixInfo->setItem(1, 0, item);
-
-  item = new QTableWidgetItem(QString::number(model->columnCount()));
-  matrixInfo->setItem(1, 1, item);
-
-  item = new QTableWidgetItem(tr("Type"));
-  matrixInfo->setItem(2, 0, item);
-
-  item = new QTableWidgetItem(model->typeString());
-  matrixInfo->setItem(2, 1, item);
-
-  item = new QTableWidgetItem(tr("Channels"));
-  matrixInfo->setItem(3, 0, item);
-
-  item = new QTableWidgetItem(QString::number(model->channels()));
-  matrixInfo->setItem(3, 1, item);
-
-  item = new QTableWidgetItem(tr("Elements"));
-  matrixInfo->setItem(4, 0, item);
-
-  item = new QTableWidgetItem(QString::number(model->total()));
-  matrixInfo->setItem(4, 1, item);
-
-  // Properties only available for single-channel matrices
-  if (model->channels() == 1)
+  else
   {
-    item = new QTableWidgetItem(tr("Non-zeros"));
-    matrixInfo->setItem(5, 0, item);
-
-    item = new QTableWidgetItem(QString::number(model->countNonZeros()));
-    matrixInfo->setItem(5, 1, item);
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok);
+    connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
 
 
-    double min, max;
-    QPoint minLoc, maxLoc;
-    model->minMaxLoc(&min, &max, &minLoc, &maxLoc);
+    QTableWidgetItem  *item;
 
-    item = new QTableWidgetItem(tr("Min"));
-    matrixInfo->setItem(6, 0, item);
+    // model info
+    const int nbProperties = (model->channels() == 1) ? 10 : 5;
 
-    item = new QTableWidgetItem(QString("%1 @ [row: %2, col: %3]").arg(min).arg(minLoc.y()).arg(minLoc.x()));
-    matrixInfo->setItem(6, 1, item);
+    QTableWidget * matrixInfo = new QTableWidget(nbProperties, 2, this);
+    matrixInfo->setAlternatingRowColors(true);
+    matrixInfo->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    matrixInfo->verticalHeader()->setVisible(false);
+    matrixInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    matrixInfo->horizontalHeader()->setStretchLastSection(true);
+    matrixInfo->setSelectionMode(QAbstractItemView::NoSelection);
+    matrixInfo->setColumnWidth(0, 150);
 
-    item = new QTableWidgetItem(tr("Max"));
-    matrixInfo->setItem(7, 0, item);
+    item = new QTableWidgetItem(tr("Rows"));
+    matrixInfo->setItem(0, 0, item);
 
-    item = new QTableWidgetItem(QString("%1 @ [row: %2, col: %3]").arg(max).arg(maxLoc.y()).arg(maxLoc.x()));
-    matrixInfo->setItem(7, 1, item);
+    item = new QTableWidgetItem(QString::number(model->rowCount()));
+    matrixInfo->setItem(0, 1, item);
+
+    item = new QTableWidgetItem(tr("Columns"));
+    matrixInfo->setItem(1, 0, item);
+
+    item = new QTableWidgetItem(QString::number(model->columnCount()));
+    matrixInfo->setItem(1, 1, item);
+
+    item = new QTableWidgetItem(tr("Type"));
+    matrixInfo->setItem(2, 0, item);
+
+    item = new QTableWidgetItem(model->typeString());
+    matrixInfo->setItem(2, 1, item);
+
+    item = new QTableWidgetItem(tr("Channels"));
+    matrixInfo->setItem(3, 0, item);
+
+    item = new QTableWidgetItem(QString::number(model->channels()));
+    matrixInfo->setItem(3, 1, item);
+
+    item = new QTableWidgetItem(tr("Elements"));
+    matrixInfo->setItem(4, 0, item);
+
+    item = new QTableWidgetItem(QString::number(model->total()));
+    matrixInfo->setItem(4, 1, item);
+
+    // Properties only available for single-channel matrices
+    if (model->channels() == 1)
+    {
+      item = new QTableWidgetItem(tr("Non-zeros"));
+      matrixInfo->setItem(5, 0, item);
+
+      item = new QTableWidgetItem(QString::number(model->countNonZeros()));
+      matrixInfo->setItem(5, 1, item);
 
 
-    double mean, stddev;
-    model->meanStdDev(&mean, &stddev);
+      double min, max;
+      QPoint minLoc, maxLoc;
+      model->minMaxLoc(&min, &max, &minLoc, &maxLoc);
 
-    item = new QTableWidgetItem(tr("Mean"));
-    matrixInfo->setItem(8, 0, item);
+      item = new QTableWidgetItem(tr("Min"));
+      matrixInfo->setItem(6, 0, item);
 
-    item = new QTableWidgetItem(QString::number(mean));
-    matrixInfo->setItem(8, 1, item);
+      item = new QTableWidgetItem(QString("%1 @ [row: %2, col: %3]").arg(min).arg(minLoc.y()).arg(minLoc.x()));
+      matrixInfo->setItem(6, 1, item);
 
-    item = new QTableWidgetItem(tr("StdDev"));
-    matrixInfo->setItem(9, 0, item);
+      item = new QTableWidgetItem(tr("Max"));
+      matrixInfo->setItem(7, 0, item);
 
-    item = new QTableWidgetItem(QString::number(stddev));
-    matrixInfo->setItem(9, 1, item);
+      item = new QTableWidgetItem(QString("%1 @ [row: %2, col: %3]").arg(max).arg(maxLoc.y()).arg(maxLoc.x()));
+      matrixInfo->setItem(7, 1, item);
+
+
+      double mean, stddev;
+      model->meanStdDev(&mean, &stddev);
+
+      item = new QTableWidgetItem(tr("Mean"));
+      matrixInfo->setItem(8, 0, item);
+
+      item = new QTableWidgetItem(QString::number(mean));
+      matrixInfo->setItem(8, 1, item);
+
+      item = new QTableWidgetItem(tr("StdDev"));
+      matrixInfo->setItem(9, 0, item);
+
+      item = new QTableWidgetItem(QString::number(stddev));
+      matrixInfo->setItem(9, 1, item);
+    }
+
+    QBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(matrixInfo, 1);
+    mainLayout->addWidget(buttons);
+    setLayout(mainLayout);
+    resize(400, 400);
   }
-
-  QBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addWidget(matrixInfo, 1);
-  mainLayout->addWidget(buttons);
-  setLayout(mainLayout);
-  resize(400, 400);
 }
 
 CPropertiesDialog::~CPropertiesDialog()
@@ -151,6 +152,6 @@ CMainWindow* CPropertiesDialog::parent() const
   {
     qWarning() << "CPropertiesDialog::parent invalid parent";
   }
-  
+
   return m_parent;
 }

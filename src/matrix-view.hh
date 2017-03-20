@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MATRIX_VIEW_HH__
-#define __MATRIX_VIEW_HH__
+#pragma once
 
 #include <QTableView>
 #include <QColor>
@@ -85,5 +84,3 @@ private:
 
   QModelIndex m_currentSelection;
 };
-
-#endif  // __MATRIX_VIEW_HH__

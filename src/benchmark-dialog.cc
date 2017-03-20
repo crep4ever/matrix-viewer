@@ -39,7 +39,7 @@
 #include "matrix-model.hh"
 #include "operation.hh"
 #include "progress-bar.hh"
-#include "benchmark-thread.hh"
+#include "benchmark-task.hh"
 
 CBenchmarkDialog::CBenchmarkDialog(QWidget *p_parent)
 : QDialog(p_parent)
@@ -216,17 +216,17 @@ void CBenchmarkDialog::run()
   {
     if (!m_cancelRequested && checkBox->isChecked())
     {
-      BenchmarkThread worker(checkBox->text(),
-      m_iterations->value(),
-      model());
+      BenchmarkTask task(checkBox->text(),
+                         m_iterations->value(),
+                         model());
 
-      connect(&worker, SIGNAL(resultReady(const BenchmarkResult &)),
-      this, SLOT(handleResult(const BenchmarkResult &)));
+      connect(&task, SIGNAL(resultReady(const BenchmarkResult &)),
+              this, SLOT(handleResult(const BenchmarkResult &)));
 
       connect(m_progressBar, SIGNAL(canceled()),
-      &worker, SLOT(cancel()));
+              &task, SLOT(cancel()));
 
-      worker.run();
+      task.execute();
     }
   }
 

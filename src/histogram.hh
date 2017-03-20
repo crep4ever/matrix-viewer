@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __HISTOGRAM_HH__
-#define __HISTOGRAM_HH__
+#pragma once
 
 #include <QWidget>
 #include <QVector>
@@ -60,5 +59,3 @@ private:
   QLabel * m_mean;
   QLabel * m_standardDeviation;
 };
-
-#endif // __HISTOGRAM_HH__

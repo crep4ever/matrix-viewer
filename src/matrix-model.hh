@@ -16,8 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 
-#ifndef __MATRIX_MODEL_HH__
-#define __MATRIX_MODEL_HH__
+#pragma once
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -38,9 +37,16 @@ class CMatrixModel : public QAbstractTableModel
   Q_OBJECT
 
 public:
-  /// Constructor.
+  /// Default constructor.
   CMatrixModel();
+
+  /// Copy constructor.
+  CMatrixModel(const CMatrixModel & p_other);
+
+  /// Loader constructor.
   CMatrixModel(const QString & p_filePath);
+
+  /// OpenCV wrapper constructor.
   CMatrixModel(const int p_rows, const int p_cols,
                const int p_type,
                const double p_value1, const double p_value2, const double p_value3);
@@ -148,7 +154,3 @@ private:
   QStringList m_horizontalHeaderLabels;
   QStringList m_verticalHeaderLabels;
 };
-
-
-
-#endif  // __MATRIX_MODEL_HH__
