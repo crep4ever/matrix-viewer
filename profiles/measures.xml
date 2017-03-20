@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix>
+  <regexp>
+    *[mM]easure*
+  </regexp>
+
+  <columns>
+    <column id="0" label="Deposit" />
+    <column id="1" label="Bridge" />
+    <column id="2" label="Height" />
+    <column id="3" label="Surface" />
+    <column id="4" label="Volume" />
+    <column id="5" label="Offset X" />
+    <column id="6" label="Offset Y" />
+  </columns>
+
+</matrix>
+
