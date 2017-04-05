@@ -59,6 +59,8 @@ public:
   bool isFormatData() const;
   bool isFormatImage() const;
 
+  const QString & filePath() const;
+
   cv::Mat data() const;
   void setData(const cv::Mat & matrix);
 
@@ -149,6 +151,7 @@ public slots:
 
 private:
 
+  QString m_filePath;
   cv::Mat m_data;
   CMatrixConverter::FileFormat m_format;
   QStringList m_horizontalHeaderLabels;

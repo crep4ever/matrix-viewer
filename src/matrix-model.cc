@@ -26,6 +26,7 @@
 #include "logger.hh"
 
 CMatrixModel::CMatrixModel() : QAbstractTableModel()
+, m_filePath()
 , m_data()
 , m_format(CMatrixConverter::Format_Unknown)
 , m_horizontalHeaderLabels()
@@ -34,6 +35,7 @@ CMatrixModel::CMatrixModel() : QAbstractTableModel()
 }
 
 CMatrixModel::CMatrixModel(const CMatrixModel & p_other) : QAbstractTableModel()
+, m_filePath(p_other.filePath())
 , m_data(p_other.data().clone())
 , m_format(p_other.m_format)
 , m_horizontalHeaderLabels(p_other.m_horizontalHeaderLabels)
@@ -43,6 +45,7 @@ CMatrixModel::CMatrixModel(const CMatrixModel & p_other) : QAbstractTableModel()
 
 CMatrixModel::CMatrixModel(const QString & p_filePath) :
 QAbstractTableModel()
+, m_filePath(p_filePath)
 , m_data()
 , m_format(CMatrixConverter::Format_Unknown)
 , m_horizontalHeaderLabels()
@@ -57,6 +60,7 @@ CMatrixModel::CMatrixModel(const int p_rows, const int p_cols,
                            const int p_type,
                            const double p_value1, const double p_value2, const double p_value3) :
 QAbstractTableModel()
+, m_filePath()
 , m_data()
 , m_format(CMatrixConverter::Format_Mfe)
 , m_horizontalHeaderLabels()
@@ -96,6 +100,11 @@ QAbstractTableModel()
 
 CMatrixModel::~CMatrixModel()
 {
+}
+
+const QString & CMatrixModel::filePath() const
+{
+  return m_filePath;
 }
 
 bool CMatrixModel::isFormatData() const
