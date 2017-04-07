@@ -935,9 +935,9 @@ void CMatrixModel::threshold(const double p_threshold, const double p_maxValue, 
 void CMatrixModel::merge(const QStringList & p_channels)
 {
   std::vector<cv::Mat> layers;
-  foreach (const QString & filePath, p_channels)
+  foreach (const QString & channel, p_channels)
   {
-    layers.push_back(CMatrixConverter(filePath).data());
+    layers.push_back(CMatrixConverter(channel).data());
   }
 
   try
