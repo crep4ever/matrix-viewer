@@ -5,13 +5,26 @@
   </regexp>
 
   <columns>
-    <column id="0" label="Deposit" />
-    <column id="1" label="Bridge" />
-    <column id="2" label="Height" />
-    <column id="3" label="Surface" />
-    <column id="4" label="Volume" />
-    <column id="5" label="Offset X" />
-    <column id="6" label="Offset Y" />
+    <column id="0"  label="Type" />
+    <column id="1"  label="Deposit" />
+    <column id="2"  label="Bridge" />
+    <column id="3"  label="Volume" />
+    <column id="4"  label="Height" />
+    <column id="5"  label="Surface" />
+    <column id="6"  label="Offset 2D X" />
+    <column id="7"  label="Offset 2D Y" />
+    <column id="8"  label="Shape 2D" />
+    <column id="9"  label="Shape 3D" />
+    <column id="10" label="Volume (th)" />
+    <column id="11" label="Height (th)" />
+    <column id="12" label="Surface (th) " />
+    <column id="13" label="Volume (pct)" />
+    <column id="14" label="Height (pct)" />
+    <column id="15" label="Surface (pct)" />
+    <column id="16" label="caROI" />
+    <column id="17" label="panel" />
+    <column id="18" label="Offset 3D X" />
+    <column id="19" label="Offset 3D Y" />
   </columns>
 
 </matrix>
