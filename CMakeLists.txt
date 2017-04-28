@@ -77,6 +77,7 @@ set(MATRIX_VIEWER_PROFILES
   profiles/tool.xml
   profiles/lines.xml
   profiles/dataRelocalization.xml
+  profiles/measures.xml
   )
 
 
