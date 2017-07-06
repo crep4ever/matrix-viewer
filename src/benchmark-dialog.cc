@@ -342,7 +342,7 @@ void CBenchmarkDialog::addHeaderInfo()
 
 void CBenchmarkDialog::save()
 {
-  QString filename = QFileDialog::getSaveFileName(this,
+  QString filename = QFileDialog::getSaveFileName(0,
     tr("Save benchmark report"),
     m_savePath,
     tr("Data files (*.txt *.html)"));

@@ -66,9 +66,9 @@ void CFileChooser::browse()
 {
   QString selection;
   if (options() & QFileDialog::ShowDirsOnly)
-  selection = QFileDialog::getExistingDirectory(this, caption(), directory());
+  selection = QFileDialog::getExistingDirectory(0, caption(), directory());
   else
-  selection = QFileDialog::getOpenFileName(this, caption(), directory(), filter(), 0, options());
+  selection = QFileDialog::getOpenFileName(0, caption(), directory(), filter(), 0, options());
 
   if (!selection.isEmpty())
   setPath(selection);

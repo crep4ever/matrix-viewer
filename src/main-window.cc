@@ -740,10 +740,13 @@ void CMainWindow::open(const QString & filename)
 
 void CMainWindow::open()
 {
-  QStringList filenames = QFileDialog::getOpenFileNames(this,
+  QString selectedFilter = tr("All files (*.*)");
+
+  QStringList filenames = QFileDialog::getOpenFileNames(0,
     tr("Open data file"),
     m_openPath,
-    tr("%1").arg(_fileTypeFilters.join(" ")));
+    tr("%1").arg(_fileTypeFilters.join(" ")),
+    &selectedFilter);
 
   foreach (const QString & filename, filenames)
   {
@@ -786,7 +789,7 @@ void CMainWindow::saveAs()
     return;
   }
 
-  QString filename = QFileDialog::getSaveFileName(this,
+  QString filename = QFileDialog::getSaveFileName(0,
     tr("Save data file"),
     m_savePath,
     tr("Matrices (%1)").arg(_fileTypeFilters.join(" ")));
