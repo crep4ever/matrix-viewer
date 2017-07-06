@@ -634,9 +634,9 @@ void CMainWindow::loadProfile()
     return;
   }
 
-  QString filename = QFileDialog::getOpenFileName(this,
+  QString filename = QFileDialog::getOpenFileName(0,
     tr("Open profile file"),
-    QString(MATRIX_VIEWER_DATA_PATH) + "/profiles",
+    QString(PROJECT_DATA_PATH) + "/profiles",
     tr("Profile files (*.xml)"));
 
   if (!filename.isEmpty())
@@ -650,7 +650,7 @@ QString CMainWindow::findProfile(const QString & filename) const
   QFileInfo fi(filename);
   QString profile;
   bool foundProfile = false;
-  QDirIterator it(QString(MATRIX_VIEWER_DATA_PATH) + "/profiles", QDir::Files, QDirIterator::NoIteratorFlags);
+  QDirIterator it(QString(PROJECT_DATA_PATH) + "/profiles", QDir::Files, QDirIterator::NoIteratorFlags);
   while (it.hasNext() && !foundProfile)
   {
     profile = it.next();
