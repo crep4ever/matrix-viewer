@@ -39,16 +39,16 @@ class CHistogramWidget : public QWidget
 
 public:
   /// Constructor.
-  CHistogramWidget(QWidget *parent = 0);
+  CHistogramWidget(QWidget *p_parent = 0);
 
   /// Destructor.
   virtual ~CHistogramWidget();
 
-  void setImage(QImage *image);
+  void setImage(QImage *p_image);
 
 protected:
   virtual QSize sizeHint() const;
-  void paintEvent(QPaintEvent* event);
+  void paintEvent(QPaintEvent *p_event);
 
 private:
   CHistogram *m_redHistogram;

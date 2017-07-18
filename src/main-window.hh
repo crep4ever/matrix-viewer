@@ -69,9 +69,9 @@ public:
 
 public slots:
   /*!
-  Open file from \a p_filePath
+  Open file from the path \a p_filename
   */
-  void open(const QString & p_filePath);
+  void open(const QString & p_filename);
 
 public:
   /// Constructor
@@ -130,8 +130,8 @@ private slots:
   void open();
   void save();
   void saveAs();
-  void closeTab(int index);
-  void changeTab(int index);
+  void closeTab(int p_index);
+  void changeTab(int p_index);
   void operations();
   void benchmark();
 
@@ -154,7 +154,7 @@ private slots:
   void loadProfile();
 
 private:
-  void readSettings(bool firstLaunch = false);
+  void readSettings(bool p_firstLaunch = false);
   void writeSettings();
 
   void createActions();
@@ -164,8 +164,8 @@ private:
   bool isToolBarDisplayed();
   bool isStatusBarDisplayed();
 
-  void save(const QString & filename);
-  QString findProfile(const QString & filename) const;
+  void save(const QString & p_filename);
+  QString findProfile(const QString & p_filename) const;
 
   // Widgets
   CTabWidget *m_mainWidget;

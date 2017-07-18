@@ -94,12 +94,12 @@ void CPosition::changeCol(int p_col)
   emit(positionChanged(m_rowSpinBox->value(), p_col));
 }
 
-void CPosition::setValue(const QString & value)
+void CPosition::setValue(const QString & p_value)
 {
-  m_valueLabel->setText(tr("%1: %2").arg(m_valueDescription).arg(value));
+  m_valueLabel->setText(tr("%1: %2").arg(m_valueDescription).arg(p_value));
 }
 
-void CPosition::setValueDescription(const QString & desc)
+void CPosition::setValueDescription(const QString & p_desc)
 {
-  m_valueDescription = desc;
+  m_valueDescription = p_desc;
 }

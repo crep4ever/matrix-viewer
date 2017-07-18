@@ -35,7 +35,7 @@ class CPosition : public QWidget
 
 public:
   /// Constructor.
-  CPosition(QWidget *parent=0);
+  CPosition(QWidget *p_parent = 0);
 
   /// Destructor.
   ~CPosition();
@@ -44,15 +44,15 @@ public:
   uint col() const;
 
 public slots:
-  void setRow(const uint row);
-  void setCol(const uint col);
-  void setValue(const QString & value);
-  void setValueDescription(const QString & desc);
-  void changeRow(int row);
-  void changeCol(int col);
+  void setRow(const uint p_row);
+  void setCol(const uint p_col);
+  void setValue(const QString & p_value);
+  void setValueDescription(const QString & p_desc);
+  void changeRow(int p_row);
+  void changeCol(int p_col);
 
 signals:
-  void positionChanged(int row, int col);
+  void positionChanged(int p_row, int p_col);
 
 private:
   QSpinBox* m_rowSpinBox;

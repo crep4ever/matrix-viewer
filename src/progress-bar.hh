@@ -44,7 +44,7 @@ class CProgressBar : public QWidget
 
 public:
   /// Constructor.
-  CProgressBar(QWidget* parent=0);
+  CProgressBar(QWidget *p_parent = 0);
 
   /// Destructor.
   ~CProgressBar();
@@ -54,13 +54,13 @@ public:
     Sets the range for the progress bar.
     \sa QProgressBar::setRange
   */
-  void setRange(int start, int stop);
+  void setRange(const int p_start, const int p_stop);
 
   /*!
     Sets the visibility of the text over the progress bar to \a value.
     \sa QProgressBar::setTextVisible
   */
-  void setTextVisible(bool value);
+  void setTextVisible(const bool p_value);
 
   /*!
     Returns \a true if the action of the progress can be canceled; \a false otherwise.
@@ -72,7 +72,7 @@ public:
     Sets the cancelable property of the progress bar to \a value.
     \sa isCancelable
   */
-  void setCancelable(bool value);
+  void setCancelable(const bool p_value);
 
 public slots:
   /*!
@@ -92,11 +92,11 @@ public slots:
     Sets the current progress of the progress bar.
     \sa QProgressBar::setValue
   */
-  void setValue(int value);
+  void setValue(const int p_value);
 
-  void setMinimum(int value);
+  void setMinimum(const int p_value);
 
-  void setMaximum(int value);
+  void setMaximum(const int p_value);
 
   /*!
     Rewinds the progress of the progress bar.

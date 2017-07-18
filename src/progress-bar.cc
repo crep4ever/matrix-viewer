@@ -62,32 +62,34 @@ void CProgressBar::show()
 {
   m_progressBar->show();
   if (isCancelable())
-  m_cancelButton->show();
+  {
+    m_cancelButton->show();
+  }
 }
 
-void CProgressBar::setTextVisible(bool value)
+void CProgressBar::setTextVisible(const bool p_value)
 {
-  m_progressBar->setTextVisible(value);
+  m_progressBar->setTextVisible(p_value);
 }
 
-void CProgressBar::setRange(int start, int stop)
+void CProgressBar::setRange(const int p_start, const int p_stop)
 {
-  m_progressBar->setRange(start, stop);
+  m_progressBar->setRange(p_start, p_stop);
 }
 
-void CProgressBar::setMaximum(int value)
+void CProgressBar::setMaximum(const int p_value)
 {
-  m_progressBar->setMaximum(value);
+  m_progressBar->setMaximum(p_value);
 }
 
-void CProgressBar::setMinimum(int value)
+void CProgressBar::setMinimum(const int p_value)
 {
-  m_progressBar->setMinimum(value);
+  m_progressBar->setMinimum(p_value);
 }
 
-void CProgressBar::setValue(int value)
+void CProgressBar::setValue(const int p_value)
 {
-  m_progressBar->setValue(value);
+  m_progressBar->setValue(p_value);
 }
 
 void CProgressBar::reset()
@@ -100,7 +102,7 @@ bool CProgressBar::isCancelable() const
   return m_cancelable;
 }
 
-void CProgressBar::setCancelable(bool value)
+void CProgressBar::setCancelable(const bool p_value)
 {
-  m_cancelable = value;
+  m_cancelable = p_value;
 }

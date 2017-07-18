@@ -25,9 +25,8 @@
 #include <QLabel>
 #include <QDebug>
 
-CHistogram::CHistogram(const QColor & color, QWidget* p_parent) :
-QWidget(p_parent)
-, m_color(color)
+CHistogram::CHistogram(const QColor & p_color, QWidget *p_parent) : QWidget(p_parent)
+, m_color(p_color)
 , m_values()
 , m_pixmapLabel(new QLabel(this))
 , m_count(new QLabel(this))
@@ -65,7 +64,7 @@ CHistogram::~CHistogram()
 {
 }
 
-void CHistogram::setValues(const QVector<uint>& p_values)
+void CHistogram::setValues(const QVector<uint> & p_values)
 {
   m_values = p_values;
 

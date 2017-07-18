@@ -38,10 +38,10 @@ class CHistogram : public QWidget
   Q_OBJECT
 
   public:
-  CHistogram(const QColor & color, QWidget* parent = 0);
+  CHistogram(const QColor & p_color, QWidget *p_parent = 0);
   virtual ~CHistogram();
 
-  void setValues(const QVector<uint>& values);
+  void setValues(const QVector<uint> & p_values);
 
 private:
   void drawPixmap();

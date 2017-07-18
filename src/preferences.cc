@@ -79,7 +79,7 @@ QDialog(p_parent)
 CMainWindow* ConfigDialog::parent() const
 {
   CMainWindow *p = qobject_cast<CMainWindow*>(QDialog::parent());
-  if (!p)
+  if (p == nullptr)
   {
     qWarning() << tr("ConfigDialog::parent() invalid parent");
   }
@@ -105,25 +105,24 @@ void ConfigDialog::createIcons()
   this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 }
 
-void ConfigDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
+void ConfigDialog::changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous)
 {
-  if (!current)
+  if (p_current == nullptr)
   {
-    current = previous;
+    p_current = p_previous;
   }
 
-  m_pagesWidget->setCurrentIndex(m_contentsWidget->row(current));
+  m_pagesWidget->setCurrentIndex(m_contentsWidget->row(p_current));
 }
 
 void ConfigDialog::closeEvent(QCloseEvent *p_event)
 {
   Q_UNUSED(p_event);
-  for ( int i = 0 ; i < m_pagesWidget->count() ; ++i )
+  for (int i = 0; i < m_pagesWidget->count(); ++i)
   {
     m_pagesWidget->widget(i)->close();
   }
 }
-
 
 // Page
 
@@ -136,7 +135,10 @@ QScrollArea(p_parent)
 ConfigDialog * Page::parent() const
 {
   ConfigDialog *p = qobject_cast<ConfigDialog*>(QScrollArea::parent());
-  if (!p) qWarning() << tr("Page::parent() invalid parent");
+  if (p == nullptr)
+  {
+    qWarning() << tr("Page::parent() invalid parent");
+  }
   return p;
 }
 

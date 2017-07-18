@@ -45,7 +45,7 @@ class CImageView : public QGraphicsView
 
 public:
   /// Constructor.
-  CImageView(QWidget *parent = 0);
+  CImageView(QWidget *p_parent = 0);
 
   /// Destructor.
   virtual ~CImageView();
@@ -53,14 +53,14 @@ public:
   CMainWindow* parent() const;
 
   CMatrixModel * model() const;
-  virtual void setModel(CMatrixModel *model);
+  virtual void setModel(CMatrixModel *p_model);
 
-  void wheelEvent(QWheelEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
+  void wheelEvent(QWheelEvent *p_event);
+  void mousePressEvent(QMouseEvent *p_event);
+  void keyPressEvent(QKeyEvent *p_event);
 
 public slots:
-  void selectItem(int row, int col);
+  void selectItem(int p_row, int p_col);
 
   void zoomIn();
   void zoomOut();
@@ -71,7 +71,7 @@ public slots:
   void toggleHistogram(bool p_visible);
 
   void update(const QModelIndex & p_begin = QModelIndex(),
-	      const QModelIndex & p_end = QModelIndex());
+	            const QModelIndex & p_end = QModelIndex());
 
   void draw();
 
@@ -80,7 +80,7 @@ protected:
     Provides custom context menu with specific actions that are relevant to the image view.
     For example, zoom actions
   */
-  virtual void contextMenuEvent(QContextMenuEvent *event);
+  virtual void contextMenuEvent(QContextMenuEvent *p_event);
 
 private:
   void createActions();

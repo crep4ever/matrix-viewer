@@ -46,7 +46,7 @@ class COperationsDialog : public QDialog
 
 public:
   /// Constructor.
-  COperationsDialog(QWidget *parent = 0);
+  COperationsDialog(QWidget *p_parent = 0);
 
   /// Destructor.
   virtual ~COperationsDialog();
@@ -64,7 +64,7 @@ public slots:
   /*!
     Changes the configuration page from \a previous to \a current.
   */
-  void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+  void changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous);
 
 private:
 

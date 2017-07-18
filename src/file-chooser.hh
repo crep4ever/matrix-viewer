@@ -44,7 +44,7 @@ class CFileChooser : public QWidget
 
 public:
   /// Constructor.
-  CFileChooser(QWidget *parent=0);
+  CFileChooser(QWidget *p_parent = 0);
 
   /// Destructor.
   ~CFileChooser();
@@ -53,75 +53,75 @@ public:
     Returns the options of the QFileDialog .
     \sa setOptions
   */
-  QFileDialog::Options options() const;
+  const QFileDialog::Options & options() const;
 
   /*!
     Sets the options of the QFileDialog .
     \sa options
   */
-  void setOptions(const QFileDialog::Options &options);
+  void setOptions(const QFileDialog::Options & p_options);
 
   /*!
     Returns the filter of the QFileDialog.
     \sa setFilter
   */
-  QString filter() const;
+  const QString  & filter() const;
 
   /*!
     Sets the filter of the QFileDialog.
     \sa filter
   */
-  void setFilter(const QString &filter);
+  void setFilter(const QString & p_filter);
 
   /*!
     Returns the caption of the QFileDialog.
     \sa setCaption
   */
-  QString caption() const;
+  const QString & caption() const;
 
   /*!
     Sets the caption of the QFileDialog.
     \sa caption
   */
-  void setCaption(const QString &caption);
+  void setCaption(const QString & p_caption);
 
   /*!
     Returns the base directory from which the QFileDialog is opened.
     \sa setDirectory
   */
-  QString directory() const;
+  const QString & directory() const;
 
   /*!
     Sets the base directory from which the QFileDialog is opened.
     \sa directory
   */
-  void setDirectory(const QString &directory);
+  void setDirectory(const QString & p_directory);
 
   /*!
     Sets the base directory from which the QFileDialog is opened.
     \sa directory
   */
-  void setDirectory(const QDir &directory);
+  void setDirectory(const QDir & p_directory);
 
   /*!
     Returns the path from the QLineEdit.
     \sa setPath
   */
-  QString path() const;
+  const QString & path() const;
 
 public slots:
   /*!
     Sets the path for the QLineEdit.
     \sa path
   */
-  void setPath(const QString &path);
+  void setPath(const QString & p_path);
 
 signals:
   /*!
     This signal is emitted when the path is changed in the QLineEdit.
     \sa path, setPath
   */
-  void pathChanged(const QString &path);
+  void pathChanged(const QString & p_path);
 
 private slots:
   void browse();

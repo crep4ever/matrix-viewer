@@ -36,7 +36,7 @@
 #include "common-widgets.hh"
 
 
-COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) : QWidget()
+COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) : QWidget(p_parent)
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_wasModified(false)
 , m_backup(p_model->clone())
@@ -49,7 +49,7 @@ COperationWidget::COperationWidget(const QString & p_title, CMatrixModel * p_mod
 {
   readSettings();
 
-  if (m_parent && m_parent->currentWidget())
+  if (m_parent != nullptr && m_parent->currentWidget() != nullptr)
   {
     m_wasModified = m_parent->currentWidget()->isModified();
   }
@@ -71,7 +71,7 @@ COperationWidget::~COperationWidget()
   delete m_backup;
 }
 
-QString COperationWidget::title() const
+const QString & COperationWidget::title() const
 {
   return m_title;
 }
@@ -112,7 +112,7 @@ void COperationWidget::writeSettings()
 
 void COperationWidget::reset()
 {
-  if (!m_wasModified && m_parent && m_parent->currentWidget())
+  if (!m_wasModified && m_parent != nullptr && m_parent->currentWidget() != nullptr)
   {
     m_parent->currentWidget()->setModified(false);
   }
@@ -430,7 +430,9 @@ void CColorMapWidget::apply()
   const QString type = m_colorMapWidget->currentText();
 
   if (type == "NONE")
-  return;
+  {
+    return;
+  }
 
   int colorMap = 0;
   if (type == "AUTUMN")

@@ -62,25 +62,25 @@ public:
   const QString & filePath() const;
 
   cv::Mat data() const;
-  void setData(const cv::Mat & matrix);
+  void setData(const cv::Mat & p_matrix);
 
-  virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-  virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
-  virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-  virtual bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
-  virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  virtual int rowCount(const QModelIndex & p_parent = QModelIndex()) const;
+  virtual int columnCount(const QModelIndex & p_parent = QModelIndex()) const;
+  virtual QVariant data(const QModelIndex & p_index, int p_role = Qt::DisplayRole) const;
+  virtual bool setData(const QModelIndex & p_index, const QVariant & p_value, int p_role = Qt::EditRole);
+  virtual void sort(int p_column, Qt::SortOrder p_order = Qt::AscendingOrder);
+  virtual QVariant headerData(int p_section, Qt::Orientation p_orientation, int p_role = Qt::DisplayRole) const;
 
-  Qt::ItemFlags flags(const QModelIndex & index) const;
+  Qt::ItemFlags flags(const QModelIndex & p_index) const;
 
-  virtual bool removeRows   (int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+  virtual bool removeRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex());
   virtual bool removeColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
 
-  virtual bool insertRows   (int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+  virtual bool insertRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex());
   virtual bool insertColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
 
 
-  void setProfile(const QString & profile);
+  void setProfile(const QString & p_profile);
 
   QImage* toQImage() const;
 
@@ -92,14 +92,14 @@ public:
   // OpenCV wrappers
   int channels() const;
   int type() const;
-  QString typeString(const bool full = false) const;
+  QString typeString(const bool p_full = false) const;
 
   size_t total() const;
   int countNonZeros() const;
-  void minMaxLoc(double* p_minVal, double* p_maxVal = 0,
-                 QPoint* p_minLoc = 0, QPoint* p_maxLoc = 0);
+  void minMaxLoc(double *p_minVal, double *p_maxVal = 0,
+                 QPoint *p_minLoc = 0, QPoint *p_maxLoc = 0);
 
-  void meanStdDev(double* mean, double* stddev);
+  void meanStdDev(double* p_mean, double *p_stddev);
 
   QPointF center() const;
 
@@ -114,9 +114,9 @@ public slots:
   void merge(const QStringList & p_channels);
 
   // scalar
-  void add(double p_value);
+  void add(const double p_value);
 
-  void multiply(double p_value);
+  void multiply(const double p_value);
 
   // transform
   void transpose();

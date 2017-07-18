@@ -66,72 +66,81 @@ void CFileChooser::browse()
 {
   QString selection;
   if (options() & QFileDialog::ShowDirsOnly)
-  selection = QFileDialog::getExistingDirectory(0, caption(), directory());
+  {
+    selection = QFileDialog::getExistingDirectory(0, caption(), directory());
+  }
   else
-  selection = QFileDialog::getOpenFileName(0, caption(), directory(), filter(), 0, options());
+  {
+    selection = QFileDialog::getOpenFileName(0, caption(), directory(), filter(), 0, options());
+  }
 
   if (!selection.isEmpty())
-  setPath(selection);
+  {
+    setPath(selection);
+  }
 }
 
-QFileDialog::Options CFileChooser::options() const
+const QFileDialog::Options & CFileChooser::options() const
 {
   return m_options;
 }
 
-void CFileChooser::setOptions(const QFileDialog::Options &p_opts)
+void CFileChooser::setOptions(const QFileDialog::Options & p_options)
 {
-  m_options = p_opts;
+  m_options = p_options;
 }
 
-QString CFileChooser::filter() const
+const QString & CFileChooser::filter() const
 {
   return m_filter;
 }
 
-void CFileChooser::setFilter(const QString &p_filter)
+void CFileChooser::setFilter(const QString & p_filter)
 {
   m_filter = p_filter;
 }
 
-QString CFileChooser::caption() const
+const QString & CFileChooser::caption() const
 {
   return m_caption;
 }
 
-void CFileChooser::setCaption(const QString &p_caption)
+void CFileChooser::setCaption(const QString & p_caption)
 {
   m_caption = p_caption;
 }
 
-QString CFileChooser::directory() const
+const QString & CFileChooser::directory() const
 {
   return m_directory;
 }
 
-void CFileChooser::setDirectory(const QString &p_directory)
+void CFileChooser::setDirectory(const QString & p_directory)
 {
   m_directory = p_directory;
 }
 
-void CFileChooser::setDirectory(const QDir &p_directory)
+void CFileChooser::setDirectory(const QDir & p_directory)
 {
   m_directory = p_directory.absolutePath();
 }
 
-
-QString CFileChooser::path() const
+const QString & CFileChooser::path() const
 {
   return m_path;
 }
 
-void CFileChooser::setPath(const QString &p_path)
+void CFileChooser::setPath(const QString & p_path)
 {
   if (QString::compare(m_path, p_path, Qt::CaseSensitive) == 0)
-  return;
+  {
+    return;
+  }
 
   if (m_lineEdit->text() != p_path)
-  m_lineEdit->setText(p_path);
+  {
+    m_lineEdit->setText(p_path);
+  }
 
   m_path = p_path;
 

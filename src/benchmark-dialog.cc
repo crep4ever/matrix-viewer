@@ -41,8 +41,7 @@
 #include "progress-bar.hh"
 #include "benchmark-task.hh"
 
-CBenchmarkDialog::CBenchmarkDialog(QWidget *p_parent)
-: QDialog(p_parent)
+CBenchmarkDialog::CBenchmarkDialog(QWidget *p_parent) : QDialog(p_parent)
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_tabs(new QTabWidget)
 , m_progressBar(new CProgressBar)
@@ -185,8 +184,11 @@ void CBenchmarkDialog::writeSettings()
 
 CMainWindow* CBenchmarkDialog::parent() const
 {
-  if (!m_parent)
-  qWarning() << "CBenchmarkDialog::parent invalid parent";
+  if (m_parent == nullptr)
+  {
+    qWarning() << "CBenchmarkDialog::parent invalid parent";
+  }
+
   return m_parent;
 }
 
@@ -221,7 +223,7 @@ void CBenchmarkDialog::run()
                          model());
 
       connect(&task, SIGNAL(resultReady(const BenchmarkResult &)),
-              this, SLOT(handleResult(const BenchmarkResult &)));
+              this, SLOT(processResult(const BenchmarkResult &)));
 
       connect(m_progressBar, SIGNAL(canceled()),
               &task, SLOT(cancel()));
@@ -236,7 +238,7 @@ void CBenchmarkDialog::run()
 }
 
 
-void CBenchmarkDialog::handleResult(const BenchmarkResult & p_result)
+void CBenchmarkDialog::processResult(const BenchmarkResult & p_result)
 {
   m_progressBar->setValue(++m_progress);
 
@@ -286,7 +288,9 @@ int CBenchmarkDialog::countOperations() const
   foreach (QCheckBox *checkBox, m_operations)
   {
     if (checkBox->isChecked())
-    ++count;
+    {
+      ++count;
+    }
   }
 
   return count;
@@ -348,7 +352,9 @@ void CBenchmarkDialog::save()
     tr("Data files (*.txt *.html)"));
     QFileInfo fi(filename);
     if (filename.isEmpty())
-    return;
+    {
+      return;
+    }
 
     m_savePath = fi.absolutePath();
     QFile file(filename);

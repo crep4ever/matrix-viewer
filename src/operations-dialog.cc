@@ -106,7 +106,7 @@ void COperationsDialog::reset()
 
 CMainWindow* COperationsDialog::parent() const
 {
-  if (!m_parent)
+  if (m_parent == nullptr)
   {
     qWarning() << "COperationsDialog::parent invalid parent";
   }
@@ -136,7 +136,7 @@ void COperationsDialog::createIcons()
 
 void COperationsDialog::changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous)
 {
-  if (!p_current)
+  if (p_current == nullptr)
   {
     p_current = p_previous;
   }

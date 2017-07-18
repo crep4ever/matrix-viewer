@@ -92,48 +92,51 @@ bool CMatrixConverter::load(const QString & filename)
     m_format = Format_Xml;
     return loadFromXml(filename);
   }
-  else if (filename.endsWith(".txt", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".txt", Qt::CaseInsensitive))
   {
     m_format = Format_Txt;
     return loadFromTxt(filename);
   }
-  else if (filename.endsWith(".raw", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".raw", Qt::CaseInsensitive))
   {
     m_format = Format_Raw;
     return loadFromRaw(filename);
   }
-  else if (filename.endsWith(".mfe", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".mfe", Qt::CaseInsensitive))
   {
     m_format = Format_Mfe;
     return loadFromMfe(filename);
   }
-  else if (filename.endsWith(".bmp", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".bmp", Qt::CaseInsensitive))
   {
     m_format = Format_Bmp;
     return loadFromImage(filename);
   }
-  else if (filename.endsWith(".jpg", Qt::CaseInsensitive) || filename.endsWith(".jpeg", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".jpg", Qt::CaseInsensitive) || filename.endsWith(".jpeg", Qt::CaseInsensitive))
   {
     m_format = Format_Jpg;
     return loadFromImage(filename);
   }
-  else if (filename.endsWith(".png", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".png", Qt::CaseInsensitive))
   {
     m_format = Format_Png;
     return loadFromImage(filename);
   }
-  else if (filename.endsWith(".webp", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".webp", Qt::CaseInsensitive))
   {
     m_format = Format_Webp;
     return loadFromImage(filename);
   }
-  else
-  {
-    m_format = Format_Unknown;
-    return loadFromImage(filename);
-  }
 
-  return false;
+  m_format = Format_Unknown;
+  return loadFromImage(filename);
 }
 
 bool CMatrixConverter::save(const QString & filename)
@@ -143,48 +146,51 @@ bool CMatrixConverter::save(const QString & filename)
     m_format = Format_Xml;
     return saveToXml(filename);
   }
-  else if (filename.endsWith(".txt", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".txt", Qt::CaseInsensitive))
   {
     m_format = Format_Txt;
     return saveToTxt(filename);
   }
-  else if (filename.endsWith(".raw", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".raw", Qt::CaseInsensitive))
   {
     m_format = Format_Raw;
     return saveToRaw(filename);
   }
-  else if (filename.endsWith(".mfe", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".mfe", Qt::CaseInsensitive))
   {
     m_format = Format_Mfe;
     return saveToMfe(filename);
   }
-  else if (filename.endsWith(".bmp", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".bmp", Qt::CaseInsensitive))
   {
     m_format = Format_Bmp;
     return saveToImage(filename);
   }
-  else if (filename.endsWith(".jpg", Qt::CaseInsensitive) || filename.endsWith(".jpeg", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".jpg", Qt::CaseInsensitive) || filename.endsWith(".jpeg", Qt::CaseInsensitive))
   {
     m_format = Format_Jpg;
     return saveToImage(filename);
   }
-  else if (filename.endsWith(".png", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".png", Qt::CaseInsensitive))
   {
     m_format = Format_Png;
     return saveToImage(filename);
   }
-  else if (filename.endsWith(".webp", Qt::CaseInsensitive))
+
+  if (filename.endsWith(".webp", Qt::CaseInsensitive))
   {
     m_format = Format_Webp;
     return saveToImage(filename);
   }
-  else
-  {
-    m_format = Format_Unknown;
-    return saveToImage(filename);
-  }
 
-  return false;
+  m_format = Format_Unknown;
+  return saveToImage(filename);
 }
 
 cv::Mat CMatrixConverter::data() const
@@ -235,11 +241,9 @@ bool CMatrixConverter::loadFromTxt(const QString & filename)
 
     return true;
   }
-  else
-  {
-    qWarning() << tr("CMatrixConverter::loadFromTxt unable to open: ") << filename;
-    return false;
-  }
+
+  qWarning() << tr("CMatrixConverter::loadFromTxt unable to open: ") << filename;
+  return false;
 }
 
 bool CMatrixConverter::saveToTxt(const QString & filename)
@@ -263,11 +267,9 @@ bool CMatrixConverter::saveToTxt(const QString & filename)
     file.close();
     return true;
   }
-  else
-  {
-    qWarning() << tr("CMatrixConverter::saveToTxt unable to open: ") << filename;
-    return false;
-  }
+
+  qWarning() << tr("CMatrixConverter::saveToTxt unable to open: ") << filename;
+  return false;
 }
 
 bool CMatrixConverter::loadFromXml(const QString & filename)
@@ -276,7 +278,9 @@ bool CMatrixConverter::loadFromXml(const QString & filename)
   {
     cv::FileStorage fs;
     if (!fs.open(filename.toStdString(), cv::FileStorage::READ))
-    return false;
+    {
+      return false;
+    }
 
     fs["matrix"] >> m_data;
     fs.release();

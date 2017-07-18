@@ -139,16 +139,18 @@ CMainWindow::~CMainWindow()
 {
 }
 
-void CMainWindow::readSettings(bool firstLaunch)
+void CMainWindow::readSettings(bool p_firstLaunch)
 {
   QSettings settings;
   settings.beginGroup("general");
-  if (firstLaunch)
+  if (p_firstLaunch)
   {
     resize(settings.value("size", QSize(800,600)).toSize());
     move(settings.value("pos", QPoint(200, 200)).toPoint());
     if (settings.value("maximized", isMaximized()).toBool())
-    showMaximized();
+    {
+      showMaximized();
+    }
   }
   m_openPath = settings.value("openPath", QDir::homePath()).toString();
   m_savePath = settings.value("savePath", QDir::homePath()).toString();
@@ -354,8 +356,10 @@ void CMainWindow::newMatrix()
 
 void CMainWindow::nextFile()
 {
-  if (!currentWidget())
-  return;
+  if (currentWidget() == nullptr)
+  {
+    return;
+  }
 
   QFileInfo current(currentWidget()->filePath());
 
@@ -379,8 +383,10 @@ void CMainWindow::nextFile()
 
 void CMainWindow::previousFile()
 {
-  if (!currentWidget())
-  return;
+  if (currentWidget() == nullptr)
+  {
+    return;
+  }
 
   QFileInfo current(currentWidget()->filePath());
 
@@ -404,29 +410,37 @@ void CMainWindow::previousFile()
 
 void CMainWindow::toggleDataView(bool value)
 {
-  if (!currentWidget())
-  return;
+  if (currentWidget() == nullptr)
+  {
+    return;
+  }
 
   int nbChildren = currentWidget()->count();
   for (int i = 0; i < nbChildren; ++i)
   {
     CMatrixView *view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
-    if (view)
-    view->setVisible(value);
+    if (view != nullptr)
+    {
+      view->setVisible(value);
+    }
   }
 }
 
 void CMainWindow::toggleImageView(bool value)
 {
-  if (!currentWidget())
-  return;
+  if (currentWidget() == nullptr)
+  {
+    return;
+  }
 
   int nbChildren = currentWidget()->count();
   for (int i = 0; i < nbChildren; ++i)
   {
     CImageView *view = qobject_cast<CImageView*>(currentWidget()->widget(i));
-    if (view)
-    view->setVisible(value);
+    if (view != nullptr)
+    {
+      view->setVisible(value);
+    }
   }
 }
 
@@ -437,24 +451,30 @@ CTabWidget* CMainWindow::mainWidget() const
 
 CTab* CMainWindow::currentWidget() const
 {
-  if (!m_mainWidget)
-  return 0;
+  if (m_mainWidget == nullptr)
+  {
+    return 0;
+  }
 
   return qobject_cast<CTab*>(m_mainWidget->currentWidget());
 }
 
 CMatrixView* CMainWindow::currentView() const
 {
-  if (!currentWidget())
-  return 0;
+  if (currentWidget() == nullptr)
+  {
+    return 0;
+  }
 
   return qobject_cast<CMatrixView*>(currentWidget()->widget(0));
 }
 
 CMatrixModel* CMainWindow::currentModel() const
 {
-  if (!currentView())
-  return 0;
+  if (currentView() == nullptr)
+  {
+    return 0;
+  }
 
   return qobject_cast<CMatrixModel*>(currentView()->model());
 }
@@ -466,6 +486,7 @@ CPosition* CMainWindow::positionWidget() const
 
 void CMainWindow::setToolBarDisplayed(bool value)
 {
+  Q_ASSERT(m_mainToolBar);
   m_mainToolBar->setVisible(value);
 }
 
@@ -487,10 +508,10 @@ bool CMainWindow::isStatusBarDisplayed()
 
 void CMainWindow::closeEvent(QCloseEvent *p_event)
 {
+  Q_ASSERT(p_event);
   writeSettings();
   p_event->accept();
 }
-
 
 void CMainWindow::dropEvent(QDropEvent *p_event)
 {
@@ -507,6 +528,7 @@ void CMainWindow::dropEvent(QDropEvent *p_event)
 
 void CMainWindow::dragEnterEvent(QDragEnterEvent *p_event)
 {
+  Q_ASSERT(p_event);
   p_event->accept();
 }
 
@@ -604,7 +626,7 @@ void CMainWindow::about()
 
 void CMainWindow::operations()
 {
-  if (!currentModel())
+  if (currentModel() == nullptr)
   {
     showMessage(tr("Can't apply operations without matrix"));
     return;
@@ -616,7 +638,7 @@ void CMainWindow::operations()
 
 void CMainWindow::benchmark()
 {
-  if (!currentModel())
+  if (currentModel() == nullptr)
   {
     showMessage(tr("Can't apply benchmark without matrix"));
     return;
@@ -628,7 +650,7 @@ void CMainWindow::benchmark()
 
 void CMainWindow::loadProfile()
 {
-  if (!currentModel())
+  if (currentModel() == nullptr)
   {
     showMessage(tr("Can't load profiles for empty matrix"));
     return;
@@ -645,9 +667,9 @@ void CMainWindow::loadProfile()
   }
 }
 
-QString CMainWindow::findProfile(const QString & filename) const
+QString CMainWindow::findProfile(const QString & p_filename) const
 {
-  QFileInfo fi(filename);
+  QFileInfo fi(p_filename);
   QString profile;
   bool foundProfile = false;
   QDirIterator it(QString(PROJECT_DATA_PATH) + "/profiles", QDir::Files, QDirIterator::NoIteratorFlags);
@@ -689,16 +711,16 @@ QString CMainWindow::findProfile(const QString & filename) const
   return foundProfile ? profile : QString();
 }
 
-void CMainWindow::open(const QString & filename)
+void CMainWindow::open(const QString & p_filename)
 {
-  QFileInfo fi(filename);
+  QFileInfo fi(p_filename);
   m_openPath = fi.absolutePath();
 
   // Try to find a suitable profile for this file
-  QString profile = findProfile(filename);
+  QString profile = findProfile(p_filename);
 
   // Build model from data file
-  CMatrixModel *model = new CMatrixModel(filename);
+  CMatrixModel *model = new CMatrixModel(p_filename);
   model->setProfile(profile);
   positionWidget()->setValueDescription(model->valueDescription());
 
@@ -714,7 +736,7 @@ void CMainWindow::open(const QString & filename)
   imgView->setModel(model);
   tab->addWidget(imgView);
 
-  m_mainWidget->addTab(tab, filename);
+  m_mainWidget->addTab(tab, p_filename);
   m_mainWidget->setCurrentWidget(tab);
 
   imgView->bestSize();
@@ -734,7 +756,7 @@ void CMainWindow::open(const QString & filename)
   connect(tab, SIGNAL(labelChanged(const QString&)),
   m_mainWidget, SLOT(changeTabText(const QString&)));
 
-  showMessage(filename);
+  showMessage(p_filename);
   writeSettings(); // updates openPath
 }
 
@@ -757,22 +779,22 @@ void CMainWindow::open()
   }
 }
 
-void CMainWindow::save(const QString & filename)
+void CMainWindow::save(const QString & p_filename)
 {
-  if (!currentWidget() || filename.isEmpty())
+  if (currentWidget() == nullptr || p_filename.isEmpty())
   {
     showMessage(tr("Can't save empty matrix"));
     return;
   }
 
   currentWidget()->setModified(false);
-  currentWidget()->setFilePath(filename);
+  currentWidget()->setFilePath(p_filename);
 
   CMatrixConverter converter;
   converter.setData(currentModel()->data());
-  converter.save(filename);
+  converter.save(p_filename);
 
-  showMessage(tr("Save: %1").arg(filename));
+  showMessage(tr("Save: %1").arg(p_filename));
 }
 
 void CMainWindow::save()
@@ -783,7 +805,7 @@ void CMainWindow::save()
 
 void CMainWindow::saveAs()
 {
-  if (!currentModel())
+  if (currentModel() == nullptr)
   {
     showMessage(tr("Can't save empty matrix"));
     return;
@@ -808,10 +830,10 @@ CProgressBar* CMainWindow::progressBar() const
   return m_progressBar;
 }
 
-void CMainWindow::closeTab(int index)
+void CMainWindow::closeTab(int p_index)
 {
-  CTab *tab = qobject_cast<CTab*>(m_mainWidget->widget(index));
-  if (tab)
+  CTab *tab = qobject_cast<CTab*>(m_mainWidget->widget(p_index));
+  if (tab != nullptr)
   {
     const int nbChildren = tab->count();
     for (int i = 0; i < nbChildren; ++i)
@@ -820,21 +842,21 @@ void CMainWindow::closeTab(int index)
     }
   }
 
-  delete m_mainWidget->widget(index);
+  delete m_mainWidget->widget(p_index);
 }
 
-void CMainWindow::changeTab(int index)
+void CMainWindow::changeTab(int p_index)
 {
-  Q_UNUSED(index);
+  Q_UNUSED(p_index);
   toggleDataView(m_dataViewAct->isChecked());
   toggleImageView(m_imageViewAct->isChecked());
-  if (currentWidget())
+  if (currentWidget() != nullptr)
   {
     disconnect(positionWidget());
     connect(positionWidget(), SIGNAL(positionChanged(int, int)),
     currentWidget(), SLOT(selectItem(int, int)));
 
-    if (positionWidget() && currentModel())
+    if (positionWidget() != nullptr && currentModel() != nullptr)
     {
       positionWidget()->setValueDescription(currentModel()->valueDescription());
     }

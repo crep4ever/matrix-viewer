@@ -128,9 +128,9 @@ cv::Mat CMatrixModel::data() const
   return m_data;
 }
 
-void CMatrixModel::setData(const cv::Mat & matrix)
+void CMatrixModel::setData(const cv::Mat & p_matrix)
 {
-  m_data = matrix;
+  m_data = p_matrix;
   emit(dataChanged(QModelIndex(), QModelIndex()));
 }
 
@@ -355,19 +355,20 @@ bool CMatrixModel::setData(const QModelIndex & p_index, const QVariant & p_value
   return true;
 }
 
-QVariant CMatrixModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant CMatrixModel::headerData(int p_section, Qt::Orientation p_orientation, int p_role) const
 {
-  if (role == Qt::DisplayRole)
+  if (p_role == Qt::DisplayRole)
   {
-    if (orientation == Qt::Horizontal)
+    if (p_orientation == Qt::Horizontal)
     {
-      return section < m_horizontalHeaderLabels.size() ?
-      m_horizontalHeaderLabels.at(section) : QString::number(section);
+      return p_section < m_horizontalHeaderLabels.size() ?
+      m_horizontalHeaderLabels.at(p_section) : QString::number(p_section);
     }
-    else if (orientation == Qt::Vertical)
+
+    if (p_orientation == Qt::Vertical)
     {
-      return section < m_verticalHeaderLabels.size() ?
-      m_verticalHeaderLabels.at(section) : QString::number(section);
+      return p_section < m_verticalHeaderLabels.size() ?
+      m_verticalHeaderLabels.at(p_section) : QString::number(p_section);
     }
   }
   return QVariant();
@@ -415,9 +416,9 @@ bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex & p_pare
   return true;
 }
 
-bool CMatrixModel::removeColumns(int p_col, int p_count, const QModelIndex & p_parent)
+bool CMatrixModel::removeColumns(int p_column, int p_count, const QModelIndex & p_parent)
 {
-  QAbstractTableModel::beginRemoveColumns(p_parent, p_col, p_col + p_count - 1);
+  QAbstractTableModel::beginRemoveColumns(p_parent, p_column, p_column + p_count - 1);
 
   try
   {
@@ -425,17 +426,17 @@ bool CMatrixModel::removeColumns(int p_col, int p_count, const QModelIndex & p_p
     cv::Mat dst(m_data.rows, m_data.cols - p_count, m_data.type());
 
     // copy left part of the matrix
-    if (p_col > 0)
+    if (p_column > 0)
     {
-      cv::Mat left = dst.colRange(0, p_col);
-      m_data.colRange(0, p_col).copyTo(left);
+      cv::Mat left = dst.colRange(0, p_column);
+      m_data.colRange(0, p_column).copyTo(left);
     }
 
     // copy right part of the matrix
-    if (p_col + p_count < m_data.cols)
+    if (p_column + p_count < m_data.cols)
     {
-      cv::Mat right = dst.colRange(p_col, dst.cols);
-      m_data.colRange(p_col + p_count, m_data.cols).copyTo(right);
+      cv::Mat right = dst.colRange(p_column, dst.cols);
+      m_data.colRange(p_column + p_count, m_data.cols).copyTo(right);
     }
 
     m_data = dst;
@@ -487,9 +488,9 @@ bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex & p_pare
   return true;
 }
 
-bool CMatrixModel::insertColumns(int p_col, int p_count, const QModelIndex & p_parent)
+bool CMatrixModel::insertColumns(int p_column, int p_count, const QModelIndex & p_parent)
 {
-  QAbstractTableModel::beginInsertColumns(p_parent, p_col, p_col + p_count - 1);
+  QAbstractTableModel::beginInsertColumns(p_parent, p_column, p_column + p_count - 1);
 
   try
   {
@@ -497,17 +498,17 @@ bool CMatrixModel::insertColumns(int p_col, int p_count, const QModelIndex & p_p
     cv::Mat dst = cv::Mat::zeros(m_data.rows, m_data.cols + p_count, m_data.type());
 
     // copy left part of the matrix
-    if (p_col > 0)
+    if (p_column > 0)
     {
-      cv::Mat left = dst.colRange(0, p_col);
-      m_data.colRange(0, p_col).copyTo(left);
+      cv::Mat left = dst.colRange(0, p_column);
+      m_data.colRange(0, p_column).copyTo(left);
     }
 
     // copy right part of the matrix
-    if (p_col < m_data.cols)
+    if (p_column < m_data.cols)
     {
-      cv::Mat right = dst.colRange(p_col + p_count, dst.cols);
-      m_data.colRange(p_col, m_data.cols).copyTo(right);
+      cv::Mat right = dst.colRange(p_column + p_count, dst.cols);
+      m_data.colRange(p_column, m_data.cols).copyTo(right);
     }
 
     m_data = dst;
@@ -523,7 +524,7 @@ bool CMatrixModel::insertColumns(int p_col, int p_count, const QModelIndex & p_p
   return true;
 }
 
-void CMatrixModel::sort(int column, Qt::SortOrder order)
+void CMatrixModel::sort(int p_column, Qt::SortOrder p_order)
 {
   if (channels() != 1)
   {
@@ -531,11 +532,11 @@ void CMatrixModel::sort(int column, Qt::SortOrder order)
     return;
   }
 
-  const int cvOrder = (order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
+  const int cvOrder = (p_order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
 
   cv::Mat sortedData(m_data.size(), m_data.type());
   cv::Mat sortedColumnIndex;
-  cv::sortIdx(m_data.col(column), sortedColumnIndex, CV_SORT_EVERY_COLUMN | cvOrder);
+  cv::sortIdx(m_data.col(p_column), sortedColumnIndex, CV_SORT_EVERY_COLUMN | cvOrder);
   for (int i = 0; i < sortedColumnIndex.rows; ++i)
   {
     cv::Mat tmp = sortedData.row(i);
@@ -556,7 +557,7 @@ int CMatrixModel::type() const
   return m_data.type();
 }
 
-QString CMatrixModel::typeString(const bool full) const
+QString CMatrixModel::typeString(const bool p_full) const
 {
   QString res;
   switch (type() % 8)
@@ -594,7 +595,7 @@ QString CMatrixModel::typeString(const bool full) const
     break;
   }
 
-  if (full)
+  if (p_full)
   {
     res += "C" + QString::number(channels());
   }
@@ -602,19 +603,21 @@ QString CMatrixModel::typeString(const bool full) const
   return res;
 }
 
-void CMatrixModel::setProfile(const QString & profile)
+void CMatrixModel::setProfile(const QString & p_profile)
 {
-  if (profile.isEmpty())
-  return;
+  if (p_profile.isEmpty())
+  {
+    return;
+  }
 
   // Parse profile for rows/columns labels
   m_horizontalHeaderLabels.clear();
   m_verticalHeaderLabels.clear();
 
-  QFile file(profile);
+  QFile file(p_profile);
   if (!file.open(QIODevice::ReadOnly))
   {
-    qWarning() << tr("Can't open profile in read mode: %1").arg(profile);
+    qWarning() << tr("Can't open profile in read mode: %1").arg(p_profile);
     return;
   }
 
@@ -627,20 +630,24 @@ void CMatrixModel::setProfile(const QString & profile)
       {
         QString label = xml.attributes().value("label").toString().simplified();
         if (!label.isEmpty())
-        m_horizontalHeaderLabels << label;
+        {
+          m_horizontalHeaderLabels << label;
+        }
       }
       else if (xml.name() == "row")
       {
         QString label = xml.attributes().value("label").toString().simplified();
         if (!label.isEmpty())
-        m_verticalHeaderLabels << label;
+        {
+          m_verticalHeaderLabels << label;
+        }
       }
     }
   }
 
   if (xml.hasError())
   {
-    qWarning() << tr("Badly formed xml document: %1").arg(profile);
+    qWarning() << tr("Badly formed xml document: %1").arg(p_profile);
     qWarning() << tr("Error: %1").arg(xml.errorString());
   }
 
@@ -649,8 +656,6 @@ void CMatrixModel::setProfile(const QString & profile)
   emit(headerDataChanged(Qt::Horizontal, 0, m_horizontalHeaderLabels.size()));
   emit(headerDataChanged(Qt::Vertical, 0, m_verticalHeaderLabels.size()));
 }
-
-
 
 /*
 Operations
@@ -688,20 +693,20 @@ int CMatrixModel::countNonZeros() const
   return res;
 }
 
-void CMatrixModel::minMaxLoc(double* p_minVal, double* p_maxVal,
-                             QPoint* p_minLoc, QPoint* p_maxLoc)
+void CMatrixModel::minMaxLoc(double *p_minVal, double *p_maxVal,
+                             QPoint *p_minLoc, QPoint *p_maxLoc)
 {
   try
   {
     cv::Point minLoc, maxLoc;
     cv::minMaxLoc(m_data, p_minVal, p_maxVal, &minLoc, &maxLoc);
-    if (p_minLoc)
+    if (p_minLoc != nullptr)
     {
       p_minLoc->setX(minLoc.x);
       p_minLoc->setY(minLoc.y);
     }
 
-    if (p_maxLoc)
+    if (p_maxLoc != nullptr)
     {
       p_maxLoc->setX(maxLoc.x);
       p_maxLoc->setY(maxLoc.y);
@@ -713,7 +718,7 @@ void CMatrixModel::minMaxLoc(double* p_minVal, double* p_maxVal,
   }
 }
 
-void CMatrixModel::meanStdDev(double* p_mean, double* p_stddev)
+void CMatrixModel::meanStdDev(double *p_mean, double *p_stddev)
 {
   try
   {
@@ -744,7 +749,7 @@ void CMatrixModel::convertTo(const int p_type, const double p_alpha, const doubl
   }
 }
 
-void CMatrixModel::add(double p_value)
+void CMatrixModel::add(const double p_value)
 {
   if (p_value != 0)
   {
@@ -759,7 +764,7 @@ void CMatrixModel::add(double p_value)
   }
 }
 
-void CMatrixModel::multiply(double p_value)
+void CMatrixModel::multiply(const double p_value)
 {
   if (p_value != 1)
   {

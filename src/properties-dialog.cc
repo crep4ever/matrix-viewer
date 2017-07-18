@@ -36,7 +36,7 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent)
 
   CMatrixModel *model = parent()->currentModel();
 
-  if (!model)
+  if (model == nullptr)
   {
     parent()->showMessage(tr("Can't display properties of invalid models"));
     close();
@@ -154,7 +154,7 @@ CPropertiesDialog::~CPropertiesDialog()
 
 CMainWindow* CPropertiesDialog::parent() const
 {
-  if (!m_parent)
+  if (m_parent == nullptr)
   {
     qWarning() << "CPropertiesDialog::parent invalid parent";
   }

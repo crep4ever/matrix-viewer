@@ -38,18 +38,18 @@ class CMatrixView : public QTableView
 
 public:
   /// Constructor.
-  CMatrixView(QWidget *parent = 0);
+  CMatrixView(QWidget *p_parent = 0);
 
   /// Destructor.
   virtual ~CMatrixView();
 
   CMainWindow* parent() const;
 
-  virtual void setModel(QAbstractItemModel * model);
+  virtual void setModel(QAbstractItemModel * p_model);
 
 public slots:
-  void currentChanged(const QModelIndex & index, const QModelIndex & previous);
-  void selectItem(int row, int col);
+  void currentChanged(const QModelIndex & p_index, const QModelIndex & p_previous);
+  void selectItem(int p_row, int p_col);
 
   void properties();
   void adjustColumnsToContents();
@@ -59,9 +59,9 @@ protected:
     Provides custom context menu with specific actions that are relevant to the matrix view.
     For example, properties, adjustColumns
   */
-  virtual void contextMenuEvent(QContextMenuEvent *event);
+  virtual void contextMenuEvent(QContextMenuEvent *p_event);
 
-  virtual void keyPressEvent(QKeyEvent *event);
+  virtual void keyPressEvent(QKeyEvent *p_event);
 
 private slots:
   void verticalHeaderContextMenu(const QPoint & p_pos);

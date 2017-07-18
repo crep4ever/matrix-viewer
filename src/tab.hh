@@ -39,13 +39,13 @@ public:
   /// Destructor.
   virtual ~CTab();
 
-  virtual void addWidget(QWidget* widget);
+  virtual void addWidget(QWidget *p_widget);
 
   bool isModified() const;
-  void setModified(const bool value);
+  void setModified(const bool p_modified);
 
   QString filePath() const;
-  void setFilePath(const QString & path);
+  void setFilePath(const QString & p_path);
 
 signals:
   void labelChanged(const QString &);

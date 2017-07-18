@@ -28,9 +28,8 @@
 #include "position.hh"
 #include "properties-dialog.hh"
 
-CMatrixView::CMatrixView(QWidget *p) :
-QTableView(p)
-, m_parent(qobject_cast<CMainWindow*>(p))
+CMatrixView::CMatrixView(QWidget *p_parent) : QTableView(p_parent)
+, m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_adjustColumnsAct(0)
 , m_propertiesAct(0)
 {
@@ -65,18 +64,18 @@ CMatrixView::~CMatrixView()
   delete model();
 }
 
-void CMatrixView::currentChanged(const QModelIndex & index, const QModelIndex & previous)
+void CMatrixView::currentChanged(const QModelIndex & p_index, const QModelIndex & p_previous)
 {
-  Q_UNUSED(previous);
-  if (parent() && parent()->positionWidget() && index.isValid())
+  Q_UNUSED(p_previous);
+  if (parent() != nullptr && parent()->positionWidget() != nullptr && p_index.isValid())
   {
-    parent()->positionWidget()->setRow(index.row());
-    parent()->positionWidget()->setCol(index.column());
-    parent()->positionWidget()->setValue(index.data().toString());
+    parent()->positionWidget()->setRow(p_index.row());
+    parent()->positionWidget()->setCol(p_index.column());
+    parent()->positionWidget()->setValue(p_index.data().toString());
   }
 }
 
-void CMatrixView::setModel(QAbstractItemModel * p_model)
+void CMatrixView::setModel(QAbstractItemModel *p_model)
 {
   QItemSelectionModel *sm = selectionModel();
   QTableView::setModel(p_model);
@@ -140,7 +139,7 @@ void CMatrixView::adjustColumnsToContents()
 
 CMainWindow* CMatrixView::parent() const
 {
-  if (!m_parent)
+  if (m_parent == nullptr)
   {
     qWarning() << "CMatrixView::parent invalid parent";
   }
@@ -227,11 +226,12 @@ void CMatrixView::removeOtherRows()
 
   // remove top part
   if (idx > 0)
-      success = success && model()->removeRows(0, idx);
+  {
+    success = success && model()->removeRows(0, idx);
+  }
 
   // remove bottom part
   success = success && model()->removeRows(1, model()->rowCount() - 1);
-
 
   if (!success)
   {
@@ -246,7 +246,9 @@ void CMatrixView::removeOtherColumns()
 
   // remove left part
   if (idx > 0)
-      success = success && model()->removeColumns(0, idx);
+  {
+    success = success && model()->removeColumns(0, idx);
+  }
 
   // remove right part
   success = success && model()->removeColumns(1, model()->columnCount() - 1);
@@ -274,4 +276,3 @@ void CMatrixView::insertColumnBeforeCurrent()
     qWarning() << "Can't insert column before index " << idx;
   }
 }
-

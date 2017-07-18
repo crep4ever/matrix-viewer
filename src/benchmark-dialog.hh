@@ -45,7 +45,7 @@ class CBenchmarkDialog : public QDialog
 
 public:
   /// Constructor.
-  CBenchmarkDialog(QWidget *parent = 0);
+  CBenchmarkDialog(QWidget *p_parent = 0);
 
   /// Destructor.
   virtual ~CBenchmarkDialog();
@@ -56,7 +56,7 @@ public:
 public slots:
 
   void run();
-  void handleResult(const BenchmarkResult & p_res);
+  void processResult(const BenchmarkResult & p_result);
 
   void cancel();
   void save();

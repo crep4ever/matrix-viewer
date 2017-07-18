@@ -49,14 +49,14 @@ CHistogramWidget::~CHistogramWidget()
 {
 }
 
-void CHistogramWidget::setImage(QImage *image)
+void CHistogramWidget::setImage(QImage *p_image)
 {
-  QImage copy = image->convertToFormat(QImage::Format_ARGB32);
+  QImage copy = p_image->convertToFormat(QImage::Format_ARGB32);
   QVector<uint> redValues(256, 0), greenValues(256, 0), blueValues(256, 0);
-  for (int j = 0; j < image->height(); ++j)
+  for (int j = 0; j < p_image->height(); ++j)
   {
     QRgb *row = reinterpret_cast<QRgb *>(copy.scanLine(j));
-    for (int i = 0; i < image->width(); ++i)
+    for (int i = 0; i < p_image->width(); ++i)
     {
       ++redValues[qRed(row[i])];
       ++greenValues[qGreen(row[i])];
@@ -74,8 +74,9 @@ QSize CHistogramWidget::sizeHint() const
   return QSize(500, 300);
 }
 
-void CHistogramWidget::paintEvent(QPaintEvent* /*event*/)
+void CHistogramWidget::paintEvent(QPaintEvent *p_event)
 {
+  Q_UNUSED(p_event);
   QColor backgroundColor = palette().dark().color();
   backgroundColor.setAlpha(150);
   QPainter customPainter(this);

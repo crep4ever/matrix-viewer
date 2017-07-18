@@ -52,7 +52,7 @@ public:
 
   virtual ~COperationWidget();
 
-  QString title() const;
+  const QString & title() const;
   CMatrixModel * model() const;
   int channels() const;
 
@@ -61,9 +61,7 @@ public slots:
   virtual void apply() = 0;
 
 protected:
-  virtual void addParameter(const QString & p_label,
-			    QWidget * p_widget);
-
+  virtual void addParameter(const QString & p_label, QWidget * p_widget);
   virtual void readSettings();
   virtual void writeSettings();
 
@@ -97,10 +95,7 @@ class CFormatWidget : public COperationWidget
   Q_OBJECT
 
 public:
-  CFormatWidget(const QString & p_title,
-		CMatrixModel * p_model,
-		QWidget* p_parent = 0);
-
+  CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
   virtual ~CFormatWidget();
   void reset();
   void apply();
@@ -122,10 +117,7 @@ class CScalarWidget : public COperationWidget
   Q_OBJECT
 
 public:
-  CScalarWidget(const QString & p_title,
-		CMatrixModel * p_model,
-		QWidget* p_parent = 0);
-
+  CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
   virtual ~CScalarWidget();
   void reset();
   void apply();
@@ -146,10 +138,7 @@ class CRotationWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CRotationWidget(const QString & p_title,
-		  CMatrixModel * p_model,
-		  QWidget* p_parent = 0);
-
+  CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
   virtual ~CRotationWidget();
   void reset();
   void apply();
@@ -171,10 +160,7 @@ class CNormalizeWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CNormalizeWidget(const QString & p_title,
-		   CMatrixModel * p_model,
-		   QWidget* p_parent = 0);
-
+  CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
   virtual ~CNormalizeWidget();
   void reset();
   void apply();
@@ -197,10 +183,7 @@ class CTransformationsWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CTransformationsWidget(const QString & p_title,
-			 CMatrixModel * p_model,
-			 QWidget* p_parent = 0);
-
+  CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
   virtual ~CTransformationsWidget();
   void reset();
   void apply();
@@ -224,10 +207,7 @@ class CColorMapWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CColorMapWidget(const QString & p_title,
-		  CMatrixModel * p_model,
-		  QWidget* p_parent = 0);
-
+  CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
   virtual ~CColorMapWidget();
   void reset();
   void apply();
@@ -248,10 +228,7 @@ class CThresholdWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CThresholdWidget(const QString & p_title,
-		   CMatrixModel * p_model,
-		   QWidget* p_parent = 0);
-
+  CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
   virtual ~CThresholdWidget();
   void reset();
   void apply();
@@ -274,10 +251,7 @@ class CMatrixWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CMatrixWidget(const QString & p_title,
-		CMatrixModel * p_model,
-		QWidget* p_parent = 0);
-
+  CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
   virtual ~CMatrixWidget();
   void reset();
   void apply();
@@ -306,10 +280,7 @@ class CChannelsWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CChannelsWidget(const QString & p_title,
-		  CMatrixModel * p_model,
-		  QWidget* p_parent = 0);
-
+  CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = 0);
   virtual ~CChannelsWidget();
   void reset();
   void apply();

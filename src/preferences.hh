@@ -47,7 +47,7 @@ class ConfigDialog : public QDialog
 
 public:
   /// Constructor.
-  ConfigDialog(QWidget* parent=0);
+  ConfigDialog(QWidget* p_parent = 0);
 
   /*!
     Returns the parent widget (which is the main window of the application).
@@ -58,13 +58,13 @@ public slots:
   /*!
     Changes the configuration page from \a previous to \a current.
   */
-  void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+  void changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous);
 
 protected:
   /*!
     Saves all pages settings before closing.
   */
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *p_event);
 
 private:
   void createIcons();
@@ -80,7 +80,7 @@ class Page : public QScrollArea
   Q_OBJECT
 public:
   /// Constructor.
-  Page(QWidget *parent=0);
+  Page(QWidget *p_parent = 0);
 
   /*!
     Returns the parent widget (which is the ConfigDialog object).
@@ -90,13 +90,13 @@ public:
   /*!
     Applies the layout \a layout to the current page.
   */
-  void setLayout(QLayout *layout);
+  void setLayout(QLayout *p_layout);
 
 protected:
   /*!
     Saves settings before closing the page.
   */
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *p_event);
 
 private:
   virtual void readSettings();
@@ -117,7 +117,7 @@ class DisplayPage : public Page
 
 public:
   /// Constructor.
-  DisplayPage(QWidget *parent=0);
+  DisplayPage(QWidget *p_parent = 0);
 
 private:
   void readSettings();
@@ -137,7 +137,7 @@ class ImagePage : public Page
 
 public:
   /// Constructor.
-  ImagePage(QWidget *parent=0);
+  ImagePage(QWidget *p_parent = 0);
 
 private:
   void readSettings();

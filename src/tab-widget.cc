@@ -34,26 +34,26 @@ CTabWidget::~CTabWidget()
 {
 }
 
-void CTabWidget::changeTabText(const QString & str)
+void CTabWidget::changeTabText(const QString & p_str)
 {
-  setTabText(currentIndex(), str);
+  setTabText(currentIndex(), p_str);
 }
 
 
-void CTabWidget::addTab(QWidget * page, const QString & label)
+void CTabWidget::addTab(QWidget *p_page, const QString & p_label)
 {
-  QFileInfo fi(label);
-  CTab *tab = qobject_cast<CTab*>(page);
-  if (tab)
+  QFileInfo fi(p_label);
+  CTab *tab = qobject_cast<CTab*>(p_page);
+  if (tab != nullptr)
   {
     tab->setFilePath(fi.absoluteFilePath());
     tab->setWindowTitle(fi.fileName());
     setToolTip(fi.absoluteFilePath());
-    QTabWidget::addTab(page, fi.fileName());
+    QTabWidget::addTab(p_page, fi.fileName());
   }
   else
   {
-    QTabWidget::addTab(page, label);
+    QTabWidget::addTab(p_page, p_label);
   }
 }
 

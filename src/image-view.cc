@@ -34,9 +34,9 @@
 #include "matrix-model.hh"
 #include "histogram-widget.hh"
 
-CImageView::CImageView(QWidget *p) :
-QGraphicsView(p)
-, m_parent(qobject_cast<CMainWindow*>(p))
+CImageView::CImageView(QWidget *p_parent) :
+QGraphicsView(p_parent)
+, m_parent(qobject_cast<CMainWindow*>(p_parent))
 , m_model(0)
 , m_image(0)
 , m_histogramWidget(0)
@@ -105,7 +105,7 @@ CMatrixModel * CImageView::model() const
   return m_model;
 }
 
-void CImageView::setModel(CMatrixModel * p_model)
+void CImageView::setModel(CMatrixModel *p_model)
 {
   if (p_model != m_model)
   {
@@ -120,7 +120,7 @@ void CImageView::setModel(CMatrixModel * p_model)
 
 CMainWindow* CImageView::parent() const
 {
-  if (!m_parent)
+  if (m_parent == nullptr)
   {
     qWarning() << "CImageView::parent invalid parent";
   }
@@ -131,9 +131,13 @@ CMainWindow* CImageView::parent() const
 void CImageView::wheelEvent(QWheelEvent *p_event)
 {
   if (p_event->delta() > 0)
-  zoomIn();
+  {
+    zoomIn();
+  }
   else
-  zoomOut();
+  {
+    zoomOut();
+  }
 
   centerOn(mapToScene(p_event->pos()));
 
@@ -155,7 +159,7 @@ void CImageView::mousePressEvent(QMouseEvent *p_event)
 
 void CImageView::keyPressEvent(QKeyEvent *p_event)
 {
-  if (!parent())
+  if (parent() == nullptr)
   {
     return QGraphicsView::keyPressEvent(p_event);
   }
@@ -272,18 +276,21 @@ void CImageView::draw()
   m_scene->clear();
 
   // delete previous image
-  if (m_image)
-  delete m_image;
+  if (m_image != nullptr)
+  {
+    delete m_image;
+  }
 
   // set p_image as current image
   m_image = model()->toQImage();
 
-
   // rebuild histogram
   if (m_histogramAct->isChecked())
   {
-    if (!m_histogramWidget)
-    m_histogramWidget = new CHistogramWidget(this);
+    if (m_histogramWidget == nullptr)
+    {
+      m_histogramWidget = new CHistogramWidget(this);
+    }
 
     m_histogramWidget->setImage(m_image);
     m_histogramNeedsRedraw = false;

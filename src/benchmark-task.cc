@@ -25,11 +25,11 @@
 #include "matrix-model.hh"
 #include "elapsed-timer.hh"
 
-BenchmarkTask::BenchmarkTask(const QString & p_name,
-                             const int p_iterations,
+BenchmarkTask::BenchmarkTask(const QString & p_operationName,
+                             const int p_nbIterations,
                              CMatrixModel* p_model) : QObject()
-, m_name(p_name)
-, m_iterations(p_iterations)
+, m_name(p_operationName)
+, m_iterations(p_nbIterations)
 , m_model(p_model)
 , m_cancelRequested(false)
 {
@@ -41,8 +41,10 @@ BenchmarkTask::~BenchmarkTask()
 
 void BenchmarkTask::execute()
 {
-  if (!m_model)
-  return;
+  if (m_model == nullptr)
+  {
+    return;
+  }
 
   m_cancelRequested = false;
 
@@ -157,8 +159,15 @@ void BenchmarkTask::execute()
     m_model->setData(backup->data());
     delete backup;
 
-    if (ns < min) min = ns;
-    if (ns > max) max = ns;
+    if (ns < min)
+    {
+      min = ns;
+    }
+
+    if (ns > max)
+    {
+      max = ns;
+    }
     sum += ns;
   }
 
