@@ -10,6 +10,7 @@ Frontend to [OpenCV](http://opencv.org/) matrices for visualization and edition 
 
 * required packages: cmake; qt5 (core, widgets); libopencv-dev (2.4.11)
 * optionnal packages: python-opencv
+* static analysis: use cmake variable `-DCMAKE_CXX_CLANG_TIDY:STRING="clang-tidy;-checks=-*,readability-*"`
 
 ## Linux
 
@@ -23,8 +24,6 @@ Frontend to [OpenCV](http://opencv.org/) matrices for visualization and edition 
 ## CMake options
 
 * CMAKE_BUILD_TYPE [ `Release` (default), `Debug`]
-* GENERATE_MANPAGES [`ON` (default), `OFF`]: requires asciidoc; xmlto;
-* COMPRESS_MANPAGES [`ON` (default), `OFF`]: requires gzip;
 * OpenCV_DIR <Path>: absolute path to custom OpenCV build directory (windows)
 
 ## Integration with gdb
