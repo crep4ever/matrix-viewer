@@ -96,11 +96,11 @@ void CHistogram::drawPixmap()
 {
   // normalize histogram
   qreal max = 0.0;
-  for (int i = 0; i < m_values.size(); ++i)
+  for (unsigned int m_value : m_values)
   {
-    if (m_values[i] > max)
+    if (m_value > max)
     {
-      max = m_values[i];
+      max = m_value;
     }
   }
 
