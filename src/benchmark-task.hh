@@ -28,7 +28,7 @@ class BenchmarkTask : public QObject
 {
   Q_OBJECT
 public:
-  BenchmarkTask(const QString & p_operationName,
+  BenchmarkTask(QString  p_operationName,
                 const int p_nbIterations,
                 CMatrixModel * p_model);
 

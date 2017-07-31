@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QDebug>
 #include <QString>
+#include <utility>
 
 #include "matrix-converter.hh"
 
@@ -33,8 +34,8 @@ m_command()
 {
 }
 
-CParser::CParser(const QStringList & p_cliArguments) :
-m_command(p_cliArguments)
+CParser::CParser(QStringList  p_cliArguments) :
+m_command(std::move(p_cliArguments))
 {
 }
 

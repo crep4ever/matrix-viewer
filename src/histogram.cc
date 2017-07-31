@@ -24,9 +24,10 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QDebug>
+#include <utility>
 
-CHistogram::CHistogram(const QColor & p_color, QWidget *p_parent) : QWidget(p_parent)
-, m_color(p_color)
+CHistogram::CHistogram(QColor  p_color, QWidget *p_parent) : QWidget(p_parent)
+, m_color(std::move(p_color))
 , m_values()
 , m_pixmapLabel(new QLabel(this))
 , m_count(new QLabel(this))

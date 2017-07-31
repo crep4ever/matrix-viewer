@@ -19,6 +19,7 @@
 #include "benchmark-result.hh"
 
 #include <QDebug>
+#include <utility>
 
 BenchmarkResult::BenchmarkResult()
 : QObject()
@@ -30,9 +31,9 @@ BenchmarkResult::BenchmarkResult()
 {
 }
 
-BenchmarkResult::BenchmarkResult(const QString & p_name)
+BenchmarkResult::BenchmarkResult(QString  p_name)
 : QObject()
-, m_title(p_name)
+, m_title(std::move(p_name))
 , m_nsMin(0)
 , m_nsMax(0)
 , m_nsAvg(0)

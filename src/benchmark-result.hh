@@ -37,7 +37,7 @@ public:
     };
 
   BenchmarkResult();
-  BenchmarkResult(const QString & p_name);
+  BenchmarkResult(QString  p_name);
   BenchmarkResult(const BenchmarkResult & p_other);
   ~BenchmarkResult() override;
 

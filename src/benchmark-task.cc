@@ -21,14 +21,15 @@
 #include <QStringList>
 #include <QDebug>
 #include <QApplication>
+#include <utility>
 
 #include "matrix-model.hh"
 #include "elapsed-timer.hh"
 
-BenchmarkTask::BenchmarkTask(const QString & p_operationName,
+BenchmarkTask::BenchmarkTask(QString  p_operationName,
                              const int p_nbIterations,
                              CMatrixModel* p_model) : QObject()
-, m_name(p_operationName)
+, m_name(std::move(p_operationName))
 , m_iterations(p_nbIterations)
 , m_model(p_model)
 , m_cancelRequested(false)
