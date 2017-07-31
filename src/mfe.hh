@@ -22,7 +22,7 @@
 #include <iomanip>
 #include <fstream>
 #include <opencv2/opencv.hpp>
-#include <string.h>
+#include <cstring>
 #include <sstream>
 
 #include <QString>

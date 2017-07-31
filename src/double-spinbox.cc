@@ -16,7 +16,7 @@
 // 02110-1301, USA.
 //******************************************************************************
 #include "double-spinbox.hh"
-#include <float.h>
+#include <cfloat>
 
 CDoubleSpinBox::CDoubleSpinBox(QWidget *p_parent) :
 QDoubleSpinBox(p_parent)
