@@ -50,7 +50,7 @@ public:
 		   CMatrixModel * p_model,
 		   QWidget* p_parent);
 
-  virtual ~COperationWidget();
+  ~COperationWidget() override;
 
   const QString & title() const;
   CMatrixModel * model() const;
@@ -96,9 +96,9 @@ class CFormatWidget : public COperationWidget
 
 public:
   CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CFormatWidget();
-  void reset();
-  void apply();
+  ~CFormatWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QComboBox *m_typeWidget;
@@ -118,9 +118,9 @@ class CScalarWidget : public COperationWidget
 
 public:
   CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
-  virtual ~CScalarWidget();
-  void reset();
-  void apply();
+  ~CScalarWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QDoubleSpinBox *m_addWidget;
@@ -139,9 +139,9 @@ class CRotationWidget : public COperationWidget
 
   public:
   CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CRotationWidget();
-  void reset();
-  void apply();
+  ~CRotationWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   CPoint2DWidget *m_centerWidget;
@@ -161,9 +161,9 @@ class CNormalizeWidget : public COperationWidget
 
   public:
   CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CNormalizeWidget();
-  void reset();
-  void apply();
+  ~CNormalizeWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QDoubleSpinBox *m_alphaWidget;
@@ -184,9 +184,9 @@ class CTransformationsWidget : public COperationWidget
 
   public:
   CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CTransformationsWidget();
-  void reset();
-  void apply();
+  ~CTransformationsWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QPushButton *m_transposeWidget;
@@ -208,9 +208,9 @@ class CColorMapWidget : public COperationWidget
 
   public:
   CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CColorMapWidget();
-  void reset();
-  void apply();
+  ~CColorMapWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   CPoint2DWidget *m_rangeWidget;
@@ -229,9 +229,9 @@ class CThresholdWidget : public COperationWidget
 
   public:
   CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CThresholdWidget();
-  void reset();
-  void apply();
+  ~CThresholdWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QDoubleSpinBox *m_thresholdValueWidget;
@@ -252,9 +252,9 @@ class CMatrixWidget : public COperationWidget
 
   public:
   CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
-  virtual ~CMatrixWidget();
-  void reset();
-  void apply();
+  ~CMatrixWidget() override;
+  void reset() override;
+  void apply() override;
 
 private slots:
   void absDiff();
@@ -281,9 +281,9 @@ class CChannelsWidget : public COperationWidget
 
   public:
   CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = 0);
-  virtual ~CChannelsWidget();
-  void reset();
-  void apply();
+  ~CChannelsWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   CFileChooser *m_redFileChooserWidget;

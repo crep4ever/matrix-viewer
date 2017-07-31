@@ -39,7 +39,7 @@ public:
   BenchmarkResult();
   BenchmarkResult(const QString & p_name);
   BenchmarkResult(const BenchmarkResult & p_other);
-  ~BenchmarkResult();
+  ~BenchmarkResult() override;
 
   const QString & title() const;
   void setTitle(const QString & p_str);

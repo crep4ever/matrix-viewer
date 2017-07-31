@@ -48,16 +48,16 @@ public:
   CImageView(QWidget *p_parent = 0);
 
   /// Destructor.
-  virtual ~CImageView();
+  ~CImageView() override;
 
   CMainWindow* parent() const;
 
   CMatrixModel * model() const;
   virtual void setModel(CMatrixModel *p_model);
 
-  void wheelEvent(QWheelEvent *p_event);
-  void mousePressEvent(QMouseEvent *p_event);
-  void keyPressEvent(QKeyEvent *p_event);
+  void wheelEvent(QWheelEvent *p_event) override;
+  void mousePressEvent(QMouseEvent *p_event) override;
+  void keyPressEvent(QKeyEvent *p_event) override;
 
 public slots:
   void selectItem(int p_row, int p_col);
@@ -80,7 +80,7 @@ protected:
     Provides custom context menu with specific actions that are relevant to the image view.
     For example, zoom actions
   */
-  virtual void contextMenuEvent(QContextMenuEvent *p_event);
+  void contextMenuEvent(QContextMenuEvent *p_event) override;
 
 private:
   void createActions();

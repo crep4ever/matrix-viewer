@@ -47,7 +47,7 @@ public:
   CFileChooser(QWidget *p_parent = 0);
 
   /// Destructor.
-  ~CFileChooser();
+  ~CFileChooser() override;
 
   /*!
     Returns the options of the QFileDialog .

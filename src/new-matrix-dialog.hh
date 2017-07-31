@@ -37,7 +37,7 @@ private:
   void writeSettings();
 
 protected:
-  virtual void accept();
+  void accept() override;
 
 private slots:
   void channelsChanged(int p_nbChannels);

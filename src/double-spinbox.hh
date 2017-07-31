@@ -34,6 +34,6 @@ public:
   CDoubleSpinBox(QWidget *p_parent = 0);
 
   /// Destructor.
-  ~CDoubleSpinBox();
+  ~CDoubleSpinBox() override;
 
 };

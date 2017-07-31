@@ -42,13 +42,13 @@ public:
   CHistogramWidget(QWidget *p_parent = 0);
 
   /// Destructor.
-  virtual ~CHistogramWidget();
+  ~CHistogramWidget() override;
 
   void setImage(QImage *p_image);
 
 protected:
-  virtual QSize sizeHint() const;
-  void paintEvent(QPaintEvent *p_event);
+  QSize sizeHint() const override;
+  void paintEvent(QPaintEvent *p_event) override;
 
 private:
   CHistogram *m_redHistogram;

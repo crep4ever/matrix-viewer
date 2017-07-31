@@ -49,7 +49,7 @@ public:
   COperationsDialog(QWidget *p_parent = 0);
 
   /// Destructor.
-  virtual ~COperationsDialog();
+  ~COperationsDialog() override;
 
   CMainWindow* parent() const;
   CMatrixModel* model() const;

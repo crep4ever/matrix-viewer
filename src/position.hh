@@ -38,7 +38,7 @@ public:
   CPosition(QWidget *p_parent = 0);
 
   /// Destructor.
-  ~CPosition();
+  ~CPosition() override;
 
   uint row() const;
   uint col() const;

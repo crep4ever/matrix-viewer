@@ -52,7 +52,7 @@ public:
                const double p_value1, const double p_value2, const double p_value3);
 
   /// Destructor.
-  virtual ~CMatrixModel();
+  ~CMatrixModel() override;
 
   CMatrixModel* clone() const;
 
@@ -64,20 +64,20 @@ public:
   cv::Mat data() const;
   void setData(const cv::Mat & p_matrix);
 
-  virtual int rowCount(const QModelIndex & p_parent = QModelIndex()) const;
-  virtual int columnCount(const QModelIndex & p_parent = QModelIndex()) const;
-  virtual QVariant data(const QModelIndex & p_index, int p_role = Qt::DisplayRole) const;
-  virtual bool setData(const QModelIndex & p_index, const QVariant & p_value, int p_role = Qt::EditRole);
-  virtual void sort(int p_column, Qt::SortOrder p_order = Qt::AscendingOrder);
-  virtual QVariant headerData(int p_section, Qt::Orientation p_orientation, int p_role = Qt::DisplayRole) const;
+  int rowCount(const QModelIndex & p_parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex & p_parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex & p_index, int p_role = Qt::DisplayRole) const override;
+  bool setData(const QModelIndex & p_index, const QVariant & p_value, int p_role = Qt::EditRole) override;
+  void sort(int p_column, Qt::SortOrder p_order = Qt::AscendingOrder) override;
+  QVariant headerData(int p_section, Qt::Orientation p_orientation, int p_role = Qt::DisplayRole) const override;
 
-  Qt::ItemFlags flags(const QModelIndex & p_index) const;
+  Qt::ItemFlags flags(const QModelIndex & p_index) const override;
 
-  virtual bool removeRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex());
-  virtual bool removeColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+  bool removeRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex()) override;
+  bool removeColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex()) override;
 
-  virtual bool insertRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex());
-  virtual bool insertColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex());
+  bool insertRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex()) override;
+  bool insertColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex()) override;
 
 
   void setProfile(const QString & p_profile);

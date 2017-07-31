@@ -32,7 +32,7 @@ public:
                 const int p_nbIterations,
                 CMatrixModel * p_model);
 
-  ~BenchmarkTask();
+  ~BenchmarkTask() override;
 
   void execute();
 

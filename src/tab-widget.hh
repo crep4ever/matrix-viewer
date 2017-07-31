@@ -36,7 +36,7 @@ public:
   CTabWidget(QWidget *p_parent = 0);
 
   /// Destructor.
-  virtual ~CTabWidget();
+  ~CTabWidget() override;
 
   void addTab(QWidget *p_page, const QString & p_label);
 
@@ -65,12 +65,12 @@ public:
   /// Constructor.
   CTabBar(QWidget *p_parent = 0);
   /// Destructor.
-  ~CTabBar();
+  ~CTabBar() override;
 
 protected:
   /*!
     Reimplements QTabBar::mouseReleaseEvent to close
     tabs when they are middle-clicked.
   */
-  virtual void mouseReleaseEvent(QMouseEvent *p_event);
+  void mouseReleaseEvent(QMouseEvent *p_event) override;
 };

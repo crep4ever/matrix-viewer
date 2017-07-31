@@ -78,7 +78,7 @@ public:
   CMainWindow(QWidget *p_parent = 0);
 
   /// Destructor
-  ~CMainWindow();
+  ~CMainWindow() override;
 
   /*!
   Returns the progress bar that is embedded in the status bar
@@ -119,11 +119,11 @@ protected:
   /*!
   Saves settings before closing the application
   */
-  void closeEvent(QCloseEvent *p_event);
+  void closeEvent(QCloseEvent *p_event) override;
 
-  void dropEvent(QDropEvent *p_event);
+  void dropEvent(QDropEvent *p_event) override;
 
-  void dragEnterEvent(QDragEnterEvent *p_event);
+  void dragEnterEvent(QDragEnterEvent *p_event) override;
 
 private slots:
   void newMatrix();

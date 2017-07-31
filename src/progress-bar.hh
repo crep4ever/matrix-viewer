@@ -47,7 +47,7 @@ public:
   CProgressBar(QWidget *p_parent = 0);
 
   /// Destructor.
-  ~CProgressBar();
+  ~CProgressBar() override;
 
 public:
   /*!

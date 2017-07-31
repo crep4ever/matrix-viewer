@@ -64,7 +64,7 @@ protected:
   /*!
     Saves all pages settings before closing.
   */
-  void closeEvent(QCloseEvent *p_event);
+  void closeEvent(QCloseEvent *p_event) override;
 
 private:
   void createIcons();
@@ -96,7 +96,7 @@ protected:
   /*!
     Saves settings before closing the page.
   */
-  void closeEvent(QCloseEvent *p_event);
+  void closeEvent(QCloseEvent *p_event) override;
 
 private:
   virtual void readSettings();
@@ -120,8 +120,8 @@ public:
   DisplayPage(QWidget *p_parent = 0);
 
 private:
-  void readSettings();
-  void writeSettings();
+  void readSettings() override;
+  void writeSettings() override;
 
   QCheckBox *m_statusBarCheckBox;
   QCheckBox *m_toolBarCheckBox;
@@ -140,8 +140,8 @@ public:
   ImagePage(QWidget *p_parent = 0);
 
 private:
-  void readSettings();
-  void writeSettings();
+  void readSettings() override;
+  void writeSettings() override;
 
   QCheckBox *m_stretchDynamic;
 

@@ -48,7 +48,7 @@ public:
   CBenchmarkDialog(QWidget *p_parent = 0);
 
   /// Destructor.
-  virtual ~CBenchmarkDialog();
+  ~CBenchmarkDialog() override;
 
   CMainWindow* parent() const;
   CMatrixModel* model() const;

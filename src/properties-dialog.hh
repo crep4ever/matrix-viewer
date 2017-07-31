@@ -37,7 +37,7 @@ public:
   CPropertiesDialog(QWidget *p_parent = 0);
 
   /// Destructor.
-  virtual ~CPropertiesDialog();
+  ~CPropertiesDialog() override;
 
   CMainWindow* parent() const;
 
