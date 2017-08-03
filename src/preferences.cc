@@ -42,8 +42,8 @@
 
 ConfigDialog::ConfigDialog(QWidget* p_parent) :
 QDialog(p_parent)
-, m_contentsWidget(0)
-, m_pagesWidget(0)
+, m_contentsWidget(nullptr)
+, m_pagesWidget(nullptr)
 {
   m_contentsWidget = new QListWidget(this);
   m_contentsWidget->setViewMode(QListView::IconMode);
@@ -166,8 +166,8 @@ void Page::setLayout(QLayout *p_layout)
 
 DisplayPage::DisplayPage(QWidget *p_parent) :
 Page(p_parent)
-, m_statusBarCheckBox(0)
-, m_toolBarCheckBox(0)
+, m_statusBarCheckBox(nullptr)
+, m_toolBarCheckBox(nullptr)
 {
   QGroupBox *displayApplicationGroupBox = new QGroupBox(tr("Application"));
   m_statusBarCheckBox = new QCheckBox(tr("Status bar"));
@@ -208,11 +208,11 @@ void DisplayPage::writeSettings()
 
 ImagePage::ImagePage(QWidget *p_parent) :
 Page(p_parent)
-, m_stretchDynamic(0)
-, m_rawType(0)
-, m_rawWidth(0)
-, m_rawHeight(0)
-, m_rawLittleEndianByteOrder(0)
+, m_stretchDynamic(nullptr)
+, m_rawType(nullptr)
+, m_rawWidth(nullptr)
+, m_rawHeight(nullptr)
+, m_rawLittleEndianByteOrder(nullptr)
 {
   QGroupBox *displayGroupBox = new QGroupBox(tr("Display options"));
   m_stretchDynamic = new QCheckBox;

@@ -45,7 +45,7 @@ class CImageView : public QGraphicsView
 
 public:
   /// Constructor.
-  CImageView(QWidget *p_parent = 0);
+  CImageView(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CImageView() override;

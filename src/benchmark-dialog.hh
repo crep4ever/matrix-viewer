@@ -45,7 +45,7 @@ class CBenchmarkDialog : public QDialog
 
 public:
   /// Constructor.
-  CBenchmarkDialog(QWidget *p_parent = 0);
+  CBenchmarkDialog(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CBenchmarkDialog() override;

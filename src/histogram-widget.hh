@@ -39,7 +39,7 @@ class CHistogramWidget : public QWidget
 
 public:
   /// Constructor.
-  CHistogramWidget(QWidget *p_parent = 0);
+  CHistogramWidget(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CHistogramWidget() override;

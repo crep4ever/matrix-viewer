@@ -95,7 +95,7 @@ class CFormatWidget : public COperationWidget
   Q_OBJECT
 
 public:
-  CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
+  CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
   ~CFormatWidget() override;
   void reset() override;
   void apply() override;
@@ -117,7 +117,7 @@ class CScalarWidget : public COperationWidget
   Q_OBJECT
 
 public:
-  CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
+  CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = nullptr);
   ~CScalarWidget() override;
   void reset() override;
   void apply() override;
@@ -138,7 +138,7 @@ class CRotationWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
+  CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
   ~CRotationWidget() override;
   void reset() override;
   void apply() override;
@@ -160,7 +160,7 @@ class CNormalizeWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
+  CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
   ~CNormalizeWidget() override;
   void reset() override;
   void apply() override;
@@ -183,7 +183,7 @@ class CTransformationsWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
+  CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
   ~CTransformationsWidget() override;
   void reset() override;
   void apply() override;
@@ -207,7 +207,7 @@ class CColorMapWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
+  CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
   ~CColorMapWidget() override;
   void reset() override;
   void apply() override;
@@ -228,7 +228,7 @@ class CThresholdWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
+  CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
   ~CThresholdWidget() override;
   void reset() override;
   void apply() override;
@@ -251,7 +251,7 @@ class CMatrixWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
+  CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = nullptr);
   ~CMatrixWidget() override;
   void reset() override;
   void apply() override;
@@ -280,7 +280,7 @@ class CChannelsWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = 0);
+  CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = nullptr);
   ~CChannelsWidget() override;
   void reset() override;
   void apply() override;

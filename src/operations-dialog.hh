@@ -46,7 +46,7 @@ class COperationsDialog : public QDialog
 
 public:
   /// Constructor.
-  COperationsDialog(QWidget *p_parent = 0);
+  COperationsDialog(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~COperationsDialog() override;

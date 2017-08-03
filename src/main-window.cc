@@ -85,27 +85,27 @@ const QStringList CMainWindow::_fileTypeFilters = QStringList()
 CMainWindow::CMainWindow(QWidget *p_parent) :
 QMainWindow(p_parent)
 , m_mainWidget(new CTabWidget(this))
-, m_mainToolBar(0)
+, m_mainToolBar(nullptr)
 , m_progressBar(new CProgressBar(this))
 , m_position(new CPosition(this))
 , m_isToolBarDisplayed(true)
 , m_isStatusBarDisplayed(true)
-, m_loadProfileAct(0)
-, m_preferencesAct(0)
-, m_documentationAct(0)
-, m_bugsAct(0)
-, m_aboutAct(0)
-, m_exitAct(0)
-, m_nextFileAct(0)
-, m_previousFileAct(0)
-, m_newAct(0)
-, m_openAct(0)
-, m_saveAct(0)
-, m_saveAsAct(0)
-, m_operationsAct(0)
-, m_benchmarkAct(0)
-, m_dataViewAct(0)
-, m_imageViewAct(0)
+, m_loadProfileAct(nullptr)
+, m_preferencesAct(nullptr)
+, m_documentationAct(nullptr)
+, m_bugsAct(nullptr)
+, m_aboutAct(nullptr)
+, m_exitAct(nullptr)
+, m_nextFileAct(nullptr)
+, m_previousFileAct(nullptr)
+, m_newAct(nullptr)
+, m_openAct(nullptr)
+, m_saveAct(nullptr)
+, m_saveAsAct(nullptr)
+, m_operationsAct(nullptr)
+, m_benchmarkAct(nullptr)
+, m_dataViewAct(nullptr)
+, m_imageViewAct(nullptr)
 , m_openPath(QDir::homePath())
 , m_savePath(QDir::homePath())
 {
@@ -453,7 +453,7 @@ CTab* CMainWindow::currentWidget() const
 {
   if (m_mainWidget == nullptr)
   {
-    return 0;
+    return nullptr;
   }
 
   return qobject_cast<CTab*>(m_mainWidget->currentWidget());
@@ -463,7 +463,7 @@ CMatrixView* CMainWindow::currentView() const
 {
   if (currentWidget() == nullptr)
   {
-    return 0;
+    return nullptr;
   }
 
   return qobject_cast<CMatrixView*>(currentWidget()->widget(0));
@@ -473,7 +473,7 @@ CMatrixModel* CMainWindow::currentModel() const
 {
   if (currentView() == nullptr)
   {
-    return 0;
+    return nullptr;
   }
 
   return qobject_cast<CMatrixModel*>(currentView()->model());
@@ -656,7 +656,7 @@ void CMainWindow::loadProfile()
     return;
   }
 
-  QString filename = QFileDialog::getOpenFileName(0,
+  QString filename = QFileDialog::getOpenFileName(nullptr,
     tr("Open profile file"),
     QString(PROJECT_DATA_PATH) + "/profiles",
     tr("Profile files (*.xml)"));
@@ -764,7 +764,7 @@ void CMainWindow::open()
 {
   QString selectedFilter = tr("All files (*.*)");
 
-  QStringList filenames = QFileDialog::getOpenFileNames(0,
+  QStringList filenames = QFileDialog::getOpenFileNames(nullptr,
     tr("Open data file"),
     m_openPath,
     tr("%1").arg(_fileTypeFilters.join(" ")),
@@ -811,7 +811,7 @@ void CMainWindow::saveAs()
     return;
   }
 
-  QString filename = QFileDialog::getSaveFileName(0,
+  QString filename = QFileDialog::getSaveFileName(nullptr,
     tr("Save data file"),
     m_savePath,
     tr("Matrices (%1)").arg(_fileTypeFilters.join(" ")));

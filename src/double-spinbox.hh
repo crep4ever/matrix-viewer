@@ -31,7 +31,7 @@ class CDoubleSpinBox : public QDoubleSpinBox
 
 public:
   /// Constructor.
-  CDoubleSpinBox(QWidget *p_parent = 0);
+  CDoubleSpinBox(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CDoubleSpinBox() override;

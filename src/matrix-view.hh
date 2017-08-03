@@ -38,7 +38,7 @@ class CMatrixView : public QTableView
 
 public:
   /// Constructor.
-  CMatrixView(QWidget *p_parent = 0);
+  CMatrixView(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CMatrixView() override;

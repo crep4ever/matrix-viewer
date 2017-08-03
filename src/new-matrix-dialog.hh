@@ -30,7 +30,7 @@ class NewMatrixDialog : public QDialog
 
 public:
   /// Constructor.
-  NewMatrixDialog(QWidget* p_parent = 0);
+  NewMatrixDialog(QWidget* p_parent = nullptr);
 
 private:
   void readSettings();

@@ -29,7 +29,7 @@ class CPoint2DWidget : public QWidget
   Q_OBJECT
 
 public:
-  CPoint2DWidget(QWidget * p_parent = 0);
+  CPoint2DWidget(QWidget * p_parent = nullptr);
   ~CPoint2DWidget() override;
 
   QPointF point() const;

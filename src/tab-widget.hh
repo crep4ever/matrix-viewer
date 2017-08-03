@@ -33,7 +33,7 @@ class CTabWidget : public QTabWidget
 
 public:
   /// Constructor.
-  CTabWidget(QWidget *p_parent = 0);
+  CTabWidget(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CTabWidget() override;
@@ -63,7 +63,7 @@ class CTabBar : public QTabBar
 
 public:
   /// Constructor.
-  CTabBar(QWidget *p_parent = 0);
+  CTabBar(QWidget *p_parent = nullptr);
   /// Destructor.
   ~CTabBar() override;
 

@@ -34,7 +34,7 @@ class CPropertiesDialog : public QDialog
 
 public:
   /// Constructor.
-  CPropertiesDialog(QWidget *p_parent = 0);
+  CPropertiesDialog(QWidget *p_parent = nullptr);
 
   /// Destructor.
   ~CPropertiesDialog() override;

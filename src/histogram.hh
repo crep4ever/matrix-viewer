@@ -38,7 +38,7 @@ class CHistogram : public QWidget
   Q_OBJECT
 
   public:
-  CHistogram(QColor  p_color, QWidget *p_parent = 0);
+  CHistogram(QColor  p_color, QWidget *p_parent = nullptr);
   ~CHistogram() override;
 
   void setValues(const QVector<uint> & p_values);

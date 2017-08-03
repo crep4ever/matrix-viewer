@@ -35,9 +35,9 @@
 COperationsDialog::COperationsDialog(QWidget *p_parent) :
 QDialog(p_parent)
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
-, m_backup(0)
-, m_categoriesWidget(0)
-, m_operationsWidget(0)
+, m_backup(nullptr)
+, m_categoriesWidget(nullptr)
+, m_operationsWidget(nullptr)
 {
   setWindowTitle(tr("Operations"));
 

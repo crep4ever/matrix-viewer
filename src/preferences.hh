@@ -47,7 +47,7 @@ class ConfigDialog : public QDialog
 
 public:
   /// Constructor.
-  ConfigDialog(QWidget* p_parent = 0);
+  ConfigDialog(QWidget* p_parent = nullptr);
 
   /*!
     Returns the parent widget (which is the main window of the application).
@@ -80,7 +80,7 @@ class Page : public QScrollArea
   Q_OBJECT
 public:
   /// Constructor.
-  Page(QWidget *p_parent = 0);
+  Page(QWidget *p_parent = nullptr);
 
   /*!
     Returns the parent widget (which is the ConfigDialog object).
@@ -117,7 +117,7 @@ class DisplayPage : public Page
 
 public:
   /// Constructor.
-  DisplayPage(QWidget *p_parent = 0);
+  DisplayPage(QWidget *p_parent = nullptr);
 
 private:
   void readSettings() override;
@@ -137,7 +137,7 @@ class ImagePage : public Page
 
 public:
   /// Constructor.
-  ImagePage(QWidget *p_parent = 0);
+  ImagePage(QWidget *p_parent = nullptr);
 
 private:
   void readSettings() override;

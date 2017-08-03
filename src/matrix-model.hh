@@ -96,8 +96,8 @@ public:
 
   size_t total() const;
   int countNonZeros() const;
-  void minMaxLoc(double *p_minVal, double *p_maxVal = 0,
-                 QPoint *p_minLoc = 0, QPoint *p_maxLoc = 0);
+  void minMaxLoc(double *p_minVal, double *p_maxVal = nullptr,
+                 QPoint *p_minLoc = nullptr, QPoint *p_maxLoc = nullptr);
 
   void meanStdDev(double* p_mean, double *p_stddev);
 

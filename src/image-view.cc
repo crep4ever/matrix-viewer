@@ -37,17 +37,17 @@
 CImageView::CImageView(QWidget *p_parent) :
 QGraphicsView(p_parent)
 , m_parent(qobject_cast<CMainWindow*>(p_parent))
-, m_model(0)
-, m_image(0)
-, m_histogramWidget(0)
+, m_model(nullptr)
+, m_image(nullptr)
+, m_histogramWidget(nullptr)
 , m_histogramNeedsRedraw(true)
 , m_scene(new QGraphicsScene)
 , m_selectionBox(new QGraphicsRectItem(0, 0, 1, 1))
-, m_zoomInAct(0)
-, m_zoomOutAct(0)
-, m_normalSizeAct(0)
-, m_fitToWindowAct(0)
-, m_histogramAct(0)
+, m_zoomInAct(nullptr)
+, m_zoomOutAct(nullptr)
+, m_normalSizeAct(nullptr)
+, m_fitToWindowAct(nullptr)
+, m_histogramAct(nullptr)
 {
   setDragMode(QGraphicsView::ScrollHandDrag);
   setBackgroundRole(QPalette::Dark);
