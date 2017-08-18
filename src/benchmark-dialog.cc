@@ -17,8 +17,6 @@
 //******************************************************************************
 #include "benchmark-dialog.hh"
 
-#include <unistd.h>
-
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileInfo>
