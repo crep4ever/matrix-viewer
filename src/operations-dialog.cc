@@ -16,7 +16,6 @@
 // 02110-1301, USA.
 //******************************************************************************
 #include "operations-dialog.hh"
-#include <unistd.h>
 
 #include <QStackedWidget>
 #include <QListWidget>
