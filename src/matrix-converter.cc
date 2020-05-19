@@ -315,7 +315,7 @@ bool CMatrixConverter::loadFromImage(const QString & filename)
     m_data = cv::imread(filename.toStdString(), -1);
     if (m_data.type() == CV_8UC4)
     {
-      cv::cvtColor(m_data, m_data, CV_BGRA2BGR);  // remove alpha channel
+      cv::cvtColor(m_data, m_data, cv::COLOR_BGRA2BGR);  // remove alpha channel
     }
   }
   catch (cv::Exception & e)
@@ -335,16 +335,14 @@ bool CMatrixConverter::saveToImage(const QString & filename)
     std::vector<int> compression_params;
     if (m_format == Format_Png)
     {
-#if (CV_MAJOR_VERSION >= 2) and (CV_MINOR_VERSION >= 4)
-      compression_params.push_back(CV_IMWRITE_PNG_STRATEGY);
-      compression_params.push_back(CV_IMWRITE_PNG_STRATEGY_DEFAULT);
-      compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+      compression_params.push_back(cv::IMWRITE_PNG_STRATEGY);
+      compression_params.push_back(cv::IMWRITE_PNG_STRATEGY_DEFAULT);
+      compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
       compression_params.push_back(9);
-#endif
     }
     else if (m_format == Format_Jpg)
     {
-      compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
+      compression_params.push_back(cv::IMWRITE_JPEG_QUALITY);
       compression_params.push_back(80);
     }
 

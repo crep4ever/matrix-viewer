@@ -532,11 +532,11 @@ void CMatrixModel::sort(int p_column, Qt::SortOrder p_order)
     return;
   }
 
-  const int cvOrder = (p_order == Qt::AscendingOrder) ? CV_SORT_ASCENDING : CV_SORT_DESCENDING;
-
+  const int cvOrder = (p_order == Qt::AscendingOrder) ? cv::SORT_ASCENDING : cv::SORT_DESCENDING;
+    
   cv::Mat sortedData(m_data.size(), m_data.type());
   cv::Mat sortedColumnIndex;
-  cv::sortIdx(m_data.col(p_column), sortedColumnIndex, CV_SORT_EVERY_COLUMN | cvOrder);
+  cv::sortIdx(m_data.col(p_column), sortedColumnIndex, cv::SORT_EVERY_COLUMN | cvOrder);
   for (int i = 0; i < sortedColumnIndex.rows; ++i)
   {
     cv::Mat tmp = sortedData.row(i);
@@ -905,13 +905,6 @@ void CMatrixModel::multiplyMatrix(const cv::Mat & p_other)
 
 void CMatrixModel::applyColorMap(const int p_colorMap)
 {
-  #if (CV_MAJOR_VERSION == 2) and (CV_MINOR_VERSION <= 3)
-    Q_UNUSED(p_colorMap);
-    qWarning() << tr("cv::applyColorMap requires a more recent version of OpenCV.");
-    qWarning() << tr("Current OpenCV version: %1.%2")
-    .arg(QString::number(CV_MAJOR_VERSION))
-    .arg(QString::number(CV_MINOR_VERSION));
-  #else
     try
     {
       cv::applyColorMap(m_data, m_data, p_colorMap);
@@ -921,7 +914,6 @@ void CMatrixModel::applyColorMap(const int p_colorMap)
     {
       qWarning() << e;
     }
-  #endif
 }
 
 void CMatrixModel::threshold(const double p_threshold, const double p_maxValue, const int p_type)
@@ -980,7 +972,7 @@ QImage* CMatrixModel::toQImage() const
   try
   {
     imgData.convertTo(imgData, CV_8U);
-    cv::cvtColor(imgData, imgData, channels() < 3 ? CV_GRAY2RGB : CV_BGR2RGB);
+    cv::cvtColor(imgData, imgData, channels() < 3 ? cv::COLOR_GRAY2RGB : cv::COLOR_BGR2RGB);
   }
   catch(cv::Exception & e)
   {
