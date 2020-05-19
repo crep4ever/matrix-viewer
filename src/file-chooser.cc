@@ -30,13 +30,13 @@
 
 CFileChooser::CFileChooser(QWidget *p_parent) :
 QWidget(p_parent)
-, m_lineEdit(0)
-, m_button(0)
+, m_lineEdit(nullptr)
+, m_button(nullptr)
 , m_caption(QCoreApplication::applicationName())
 , m_directory(QDir::homePath())
 , m_path("")
 , m_filter("")
-, m_options(0)
+, m_options(nullptr)
 {
   m_lineEdit = new QLineEdit();
   QCompleter *completer = new QCompleter(this);
@@ -67,11 +67,11 @@ void CFileChooser::browse()
   QString selection;
   if (options() & QFileDialog::ShowDirsOnly)
   {
-    selection = QFileDialog::getExistingDirectory(0, caption(), directory());
+    selection = QFileDialog::getExistingDirectory(nullptr, caption(), directory());
   }
   else
   {
-    selection = QFileDialog::getOpenFileName(0, caption(), directory(), filter(), 0, options());
+    selection = QFileDialog::getOpenFileName(nullptr, caption(), directory(), filter(), nullptr, options());
   }
 
   if (!selection.isEmpty())

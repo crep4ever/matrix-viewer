@@ -362,7 +362,7 @@ bool CMatrixConverter::loadFromRaw(const QString & filename)
   {
     unsigned short *buffer = new unsigned short[m_rawWidth * m_rawHeight];
     FILE* fd = fopen(filename.toStdString().c_str(), "rb");
-    if (fd != NULL)
+    if (fd != nullptr)
     {
       size_t readBytes = fread(buffer, sizeof(unsigned short), m_rawWidth * m_rawHeight, fd);
       fclose(fd);

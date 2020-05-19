@@ -35,10 +35,10 @@ class CPosition : public QWidget
 
 public:
   /// Constructor.
-  CPosition(QWidget *p_parent = 0);
+  CPosition(QWidget *p_parent = nullptr);
 
   /// Destructor.
-  ~CPosition();
+  ~CPosition() override;
 
   uint row() const;
   uint col() const;

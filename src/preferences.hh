@@ -47,7 +47,7 @@ class ConfigDialog : public QDialog
 
 public:
   /// Constructor.
-  ConfigDialog(QWidget* p_parent = 0);
+  ConfigDialog(QWidget* p_parent = nullptr);
 
   /*!
     Returns the parent widget (which is the main window of the application).
@@ -64,7 +64,7 @@ protected:
   /*!
     Saves all pages settings before closing.
   */
-  void closeEvent(QCloseEvent *p_event);
+  void closeEvent(QCloseEvent *p_event) override;
 
 private:
   void createIcons();
@@ -80,7 +80,7 @@ class Page : public QScrollArea
   Q_OBJECT
 public:
   /// Constructor.
-  Page(QWidget *p_parent = 0);
+  Page(QWidget *p_parent = nullptr);
 
   /*!
     Returns the parent widget (which is the ConfigDialog object).
@@ -96,7 +96,7 @@ protected:
   /*!
     Saves settings before closing the page.
   */
-  void closeEvent(QCloseEvent *p_event);
+  void closeEvent(QCloseEvent *p_event) override;
 
 private:
   virtual void readSettings();
@@ -117,11 +117,11 @@ class DisplayPage : public Page
 
 public:
   /// Constructor.
-  DisplayPage(QWidget *p_parent = 0);
+  DisplayPage(QWidget *p_parent = nullptr);
 
 private:
-  void readSettings();
-  void writeSettings();
+  void readSettings() override;
+  void writeSettings() override;
 
   QCheckBox *m_statusBarCheckBox;
   QCheckBox *m_toolBarCheckBox;
@@ -137,11 +137,11 @@ class ImagePage : public Page
 
 public:
   /// Constructor.
-  ImagePage(QWidget *p_parent = 0);
+  ImagePage(QWidget *p_parent = nullptr);
 
 private:
-  void readSettings();
-  void writeSettings();
+  void readSettings() override;
+  void writeSettings() override;
 
   QCheckBox *m_stretchDynamic;
 

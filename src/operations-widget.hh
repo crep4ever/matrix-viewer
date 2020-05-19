@@ -50,7 +50,7 @@ public:
 		   CMatrixModel * p_model,
 		   QWidget* p_parent);
 
-  virtual ~COperationWidget();
+  ~COperationWidget() override;
 
   const QString & title() const;
   CMatrixModel * model() const;
@@ -95,10 +95,10 @@ class CFormatWidget : public COperationWidget
   Q_OBJECT
 
 public:
-  CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CFormatWidget();
-  void reset();
-  void apply();
+  CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+  ~CFormatWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QComboBox *m_typeWidget;
@@ -117,10 +117,10 @@ class CScalarWidget : public COperationWidget
   Q_OBJECT
 
 public:
-  CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
-  virtual ~CScalarWidget();
-  void reset();
-  void apply();
+  CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = nullptr);
+  ~CScalarWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QDoubleSpinBox *m_addWidget;
@@ -138,10 +138,10 @@ class CRotationWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CRotationWidget();
-  void reset();
-  void apply();
+  CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+  ~CRotationWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   CPoint2DWidget *m_centerWidget;
@@ -160,10 +160,10 @@ class CNormalizeWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CNormalizeWidget();
-  void reset();
-  void apply();
+  CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+  ~CNormalizeWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QDoubleSpinBox *m_alphaWidget;
@@ -183,10 +183,10 @@ class CTransformationsWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CTransformationsWidget();
-  void reset();
-  void apply();
+  CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+  ~CTransformationsWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QPushButton *m_transposeWidget;
@@ -207,10 +207,10 @@ class CColorMapWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CColorMapWidget();
-  void reset();
-  void apply();
+  CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+  ~CColorMapWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   CPoint2DWidget *m_rangeWidget;
@@ -228,10 +228,10 @@ class CThresholdWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = 0);
-  virtual ~CThresholdWidget();
-  void reset();
-  void apply();
+  CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+  ~CThresholdWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   QDoubleSpinBox *m_thresholdValueWidget;
@@ -251,10 +251,10 @@ class CMatrixWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = 0);
-  virtual ~CMatrixWidget();
-  void reset();
-  void apply();
+  CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = nullptr);
+  ~CMatrixWidget() override;
+  void reset() override;
+  void apply() override;
 
 private slots:
   void absDiff();
@@ -280,10 +280,10 @@ class CChannelsWidget : public COperationWidget
   Q_OBJECT
 
   public:
-  CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = 0);
-  virtual ~CChannelsWidget();
-  void reset();
-  void apply();
+  CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = nullptr);
+  ~CChannelsWidget() override;
+  void reset() override;
+  void apply() override;
 
 private:
   CFileChooser *m_redFileChooserWidget;

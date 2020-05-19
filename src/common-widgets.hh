@@ -29,8 +29,8 @@ class CPoint2DWidget : public QWidget
   Q_OBJECT
 
 public:
-  CPoint2DWidget(QWidget * p_parent = 0);
-  virtual ~CPoint2DWidget();
+  CPoint2DWidget(QWidget * p_parent = nullptr);
+  ~CPoint2DWidget() override;
 
   QPointF point() const;
   void setPoint(const QPointF & p_point);

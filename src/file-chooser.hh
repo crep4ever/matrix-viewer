@@ -44,10 +44,10 @@ class CFileChooser : public QWidget
 
 public:
   /// Constructor.
-  CFileChooser(QWidget *p_parent = 0);
+  CFileChooser(QWidget *p_parent = nullptr);
 
   /// Destructor.
-  ~CFileChooser();
+  ~CFileChooser() override;
 
   /*!
     Returns the options of the QFileDialog .

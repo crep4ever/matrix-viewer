@@ -37,7 +37,7 @@ public:
   CTab();
 
   /// Destructor.
-  virtual ~CTab();
+  ~CTab() override;
 
   virtual void addWidget(QWidget *p_widget);
 

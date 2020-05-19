@@ -72,7 +72,7 @@ public:
   CMatrixConverter(const QString & filename);
 
   /// Destructor.
-  virtual ~CMatrixConverter();
+  ~CMatrixConverter() override;
 
   cv::Mat data() const;
   void setData(const cv::Mat & matrix);

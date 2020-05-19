@@ -29,7 +29,7 @@ class CParser
 {
 public:
     CParser();
-    CParser(const QStringList & p_cliArguments);
+    CParser(QStringList  p_cliArguments);
 
     virtual ~CParser();
 

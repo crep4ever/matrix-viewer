@@ -24,9 +24,10 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QDebug>
+#include <utility>
 
-CHistogram::CHistogram(const QColor & p_color, QWidget *p_parent) : QWidget(p_parent)
-, m_color(p_color)
+CHistogram::CHistogram(QColor  p_color, QWidget *p_parent) : QWidget(p_parent)
+, m_color(std::move(p_color))
 , m_values()
 , m_pixmapLabel(new QLabel(this))
 , m_count(new QLabel(this))
@@ -96,11 +97,11 @@ void CHistogram::drawPixmap()
 {
   // normalize histogram
   qreal max = 0.0;
-  for (int i = 0; i < m_values.size(); ++i)
+  for (unsigned int m_value : m_values)
   {
-    if (m_values[i] > max)
+    if (m_value > max)
     {
-      max = m_values[i];
+      max = m_value;
     }
   }
 

@@ -30,14 +30,14 @@ class NewMatrixDialog : public QDialog
 
 public:
   /// Constructor.
-  NewMatrixDialog(QWidget* p_parent = 0);
+  NewMatrixDialog(QWidget* p_parent = nullptr);
 
 private:
   void readSettings();
   void writeSettings();
 
 protected:
-  virtual void accept();
+  void accept() override;
 
 private slots:
   void channelsChanged(int p_nbChannels);

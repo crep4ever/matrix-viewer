@@ -32,13 +32,13 @@
 
 NewMatrixDialog::NewMatrixDialog(QWidget* p_parent) :
 QDialog(p_parent)
-, m_rows(0)
-, m_cols(0)
-, m_channels(0)
-, m_type(0)
-, m_value1(0)
-, m_value2(0)
-, m_value3(0)
+, m_rows(nullptr)
+, m_cols(nullptr)
+, m_channels(nullptr)
+, m_type(nullptr)
+, m_value1(nullptr)
+, m_value2(nullptr)
+, m_value3(nullptr)
 {
   m_rows = new QSpinBox;
   m_rows->setMaximum(INT_MAX);

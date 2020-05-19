@@ -44,10 +44,10 @@ class CProgressBar : public QWidget
 
 public:
   /// Constructor.
-  CProgressBar(QWidget *p_parent = 0);
+  CProgressBar(QWidget *p_parent = nullptr);
 
   /// Destructor.
-  ~CProgressBar();
+  ~CProgressBar() override;
 
 public:
   /*!

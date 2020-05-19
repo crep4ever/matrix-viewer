@@ -350,7 +350,7 @@ Color map
 
 CColorMapWidget::CColorMapWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent) :
 COperationWidget(p_title, p_model, p_parent)
-, m_rangeWidget(0)
+, m_rangeWidget(nullptr)
 , m_colorMapWidget(new QComboBox)
 {
   if (model()->channels() == 1)
