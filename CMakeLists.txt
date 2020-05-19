@@ -115,6 +115,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
 
 # Installation
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 install(FILES ${PROJECT_NAME}.desktop DESTINATION share/applications)
 install(FILES icons/matrix-viewer/256x256/matrix-viewer.png DESTINATION share/icons)
 install(FILES ${PROJECT_PROFILES} DESTINATION ${PROJECT_DATA_PATH}/profiles)
+
