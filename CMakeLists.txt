@@ -1,8 +1,24 @@
-cmake_minimum_required(VERSION 2.8.11)
-
+cmake_minimum_required(VERSION 3.7)
 project(matrix-viewer)
+set(CMAKE_CXX_STANDARD 11)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# Forbid in-source build
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
+  message(
+    FATAL_ERROR
+      "In-source builds are not permitted. Make a separate folder for building:\n"
+      "mkdir build; cd build; cmake ..\n"
+      "Before that, remove the files already created:\n"
+      "rm -rf CMakeCache.txt CMakeFiles")
+endif()
+
+if(${CMAKE_VERSION} VERSION_GREATER "3.17")
+  cmake_policy(SET CMP0100 NEW) # Let AUTOMOC and AUTOUIC process .hh files
+endif()
+
+# Defines the CMAKE_INSTALL_LIBDIR, CMAKE_INSTALL_BINDIR and many other useful
+# macros. See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
+include(GNUInstallDirs)
 
 # sources
 set(PROJECT_SOURCES
