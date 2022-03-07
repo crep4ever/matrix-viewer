@@ -42,11 +42,11 @@ set(PROJECT_SOURCES
     src/position.cc
     src/histogram.cc
     src/histogram-widget.cc
-    src/mfe.hh
     src/operations-widget.cc
     src/common-widgets.cc
     src/parser.cc
     src/mfe.cc
+    src/edf.cc
     src/double-spinbox.cc
     src/new-matrix-dialog.cc)
 

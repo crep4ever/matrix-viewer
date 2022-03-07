@@ -35,7 +35,7 @@ CMatrixModel::CMatrixModel()
 {
 }
 
-CMatrixModel::CMatrixModel(const CMatrixModel &p_other)
+CMatrixModel::CMatrixModel(const CMatrixModel& p_other)
     : QAbstractTableModel()
     , m_filePath(p_other.filePath())
     , m_data(p_other.data().clone())
@@ -45,7 +45,7 @@ CMatrixModel::CMatrixModel(const CMatrixModel &p_other)
 {
 }
 
-CMatrixModel::CMatrixModel(const QString &p_filePath)
+CMatrixModel::CMatrixModel(const QString& p_filePath)
     : QAbstractTableModel()
     , m_filePath(p_filePath)
     , m_data()
@@ -92,7 +92,7 @@ CMatrixModel::CMatrixModel(const int p_rows, const int p_cols, const int p_type,
 
         m_data = cv::Mat(p_rows, p_cols, p_type, value);
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -100,7 +100,7 @@ CMatrixModel::CMatrixModel(const int p_rows, const int p_cols, const int p_type,
 
 CMatrixModel::~CMatrixModel() { }
 
-const QString &CMatrixModel::filePath() const
+const QString& CMatrixModel::filePath() const
 {
     return m_filePath;
 }
@@ -113,7 +113,7 @@ bool CMatrixModel::isFormatData() const
 bool CMatrixModel::isFormatImage() const
 {
     return (m_format == CMatrixConverter::Format_Bmp || m_format == CMatrixConverter::Format_Jpg || m_format == CMatrixConverter::Format_Png ||
-            m_format == CMatrixConverter::Format_Webp || m_format == CMatrixConverter::Format_Raw);
+            m_format == CMatrixConverter::Format_Webp || m_format == CMatrixConverter::Format_Edf || m_format == CMatrixConverter::Format_Raw);
 }
 
 cv::Mat CMatrixModel::data() const
@@ -121,25 +121,25 @@ cv::Mat CMatrixModel::data() const
     return m_data;
 }
 
-void CMatrixModel::setData(const cv::Mat &p_matrix)
+void CMatrixModel::setData(const cv::Mat& p_matrix)
 {
     m_data = p_matrix;
     emit(dataChanged(QModelIndex(), QModelIndex()));
 }
 
-int CMatrixModel::rowCount(const QModelIndex &p_parent) const
+int CMatrixModel::rowCount(const QModelIndex& p_parent) const
 {
     Q_UNUSED(p_parent);
     return data().rows;
 }
 
-int CMatrixModel::columnCount(const QModelIndex &p_parent) const
+int CMatrixModel::columnCount(const QModelIndex& p_parent) const
 {
     Q_UNUSED(p_parent);
     return data().cols;
 }
 
-QVariant CMatrixModel::data(const QModelIndex &p_index, int p_role) const
+QVariant CMatrixModel::data(const QModelIndex& p_index, int p_role) const
 {
     switch (p_role)
     {
@@ -233,7 +233,7 @@ QVariant CMatrixModel::data(const QModelIndex &p_index, int p_role) const
     return QVariant();
 }
 
-bool CMatrixModel::setData(const QModelIndex &p_index, const QVariant &p_value, int p_role)
+bool CMatrixModel::setData(const QModelIndex& p_index, const QVariant& p_value, int p_role)
 {
     if (p_role != Qt::EditRole)
     {
@@ -344,13 +344,13 @@ QVariant CMatrixModel::headerData(int p_section, Qt::Orientation p_orientation, 
     return QVariant();
 }
 
-Qt::ItemFlags CMatrixModel::flags(const QModelIndex &p_index) const
+Qt::ItemFlags CMatrixModel::flags(const QModelIndex& p_index) const
 {
     Q_UNUSED(p_index);
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 }
 
-bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex &p_parent)
+bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex& p_parent)
 {
     QAbstractTableModel::beginRemoveRows(p_parent, p_row, p_row + p_count - 1);
 
@@ -375,7 +375,7 @@ bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex &p_paren
 
         m_data = dst;
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
         return false;
@@ -386,7 +386,7 @@ bool CMatrixModel::removeRows(int p_row, int p_count, const QModelIndex &p_paren
     return true;
 }
 
-bool CMatrixModel::removeColumns(int p_column, int p_count, const QModelIndex &p_parent)
+bool CMatrixModel::removeColumns(int p_column, int p_count, const QModelIndex& p_parent)
 {
     QAbstractTableModel::beginRemoveColumns(p_parent, p_column, p_column + p_count - 1);
 
@@ -411,7 +411,7 @@ bool CMatrixModel::removeColumns(int p_column, int p_count, const QModelIndex &p
 
         m_data = dst;
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
         return false;
@@ -422,7 +422,7 @@ bool CMatrixModel::removeColumns(int p_column, int p_count, const QModelIndex &p
     return true;
 }
 
-bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex &p_parent)
+bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex& p_parent)
 {
     QAbstractTableModel::beginInsertRows(p_parent, p_row, p_row + p_count - 1);
 
@@ -447,7 +447,7 @@ bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex &p_paren
 
         m_data = dst;
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
         return false;
@@ -458,7 +458,7 @@ bool CMatrixModel::insertRows(int p_row, int p_count, const QModelIndex &p_paren
     return true;
 }
 
-bool CMatrixModel::insertColumns(int p_column, int p_count, const QModelIndex &p_parent)
+bool CMatrixModel::insertColumns(int p_column, int p_count, const QModelIndex& p_parent)
 {
     QAbstractTableModel::beginInsertColumns(p_parent, p_column, p_column + p_count - 1);
 
@@ -483,7 +483,7 @@ bool CMatrixModel::insertColumns(int p_column, int p_count, const QModelIndex &p
 
         m_data = dst;
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
         return false;
@@ -573,7 +573,7 @@ QString CMatrixModel::typeString(const bool p_full) const
     return res;
 }
 
-void CMatrixModel::setProfile(const QString &p_profile)
+void CMatrixModel::setProfile(const QString& p_profile)
 {
     if (p_profile.isEmpty())
     {
@@ -639,7 +639,7 @@ size_t CMatrixModel::total() const
     {
         res = m_data.total();
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -655,7 +655,7 @@ int CMatrixModel::countNonZeros() const
     {
         res = cv::countNonZero(m_data);
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -663,7 +663,7 @@ int CMatrixModel::countNonZeros() const
     return res;
 }
 
-void CMatrixModel::minMaxLoc(double *p_minVal, double *p_maxVal, QPoint *p_minLoc, QPoint *p_maxLoc)
+void CMatrixModel::minMaxLoc(double* p_minVal, double* p_maxVal, QPoint* p_minLoc, QPoint* p_maxLoc)
 {
     try
     {
@@ -681,13 +681,13 @@ void CMatrixModel::minMaxLoc(double *p_minVal, double *p_maxVal, QPoint *p_minLo
             p_maxLoc->setY(maxLoc.y);
         }
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-void CMatrixModel::meanStdDev(double *p_mean, double *p_stddev)
+void CMatrixModel::meanStdDev(double* p_mean, double* p_stddev)
 {
     try
     {
@@ -696,7 +696,7 @@ void CMatrixModel::meanStdDev(double *p_mean, double *p_stddev)
         *p_mean   = mean[0];
         *p_stddev = stddev[0];
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -711,7 +711,7 @@ void CMatrixModel::convertTo(const int p_type, const double p_alpha, const doubl
             m_data.convertTo(m_data, p_type, p_alpha, p_beta);
             emit(dataChanged(QModelIndex(), QModelIndex()));
         }
-        catch (cv::Exception &e)
+        catch (cv::Exception& e)
         {
             qWarning() << e;
         }
@@ -726,7 +726,7 @@ void CMatrixModel::add(const double p_value)
         {
             setData(m_data + p_value);
         }
-        catch (cv::Exception &e)
+        catch (cv::Exception& e)
         {
             qWarning() << e;
         }
@@ -741,7 +741,7 @@ void CMatrixModel::multiply(const double p_value)
         {
             setData(m_data * p_value);
         }
-        catch (cv::Exception &e)
+        catch (cv::Exception& e)
         {
             qWarning() << e;
         }
@@ -756,7 +756,7 @@ void CMatrixModel::transpose()
         emit(dataChanged(QModelIndex(), QModelIndex()));
         emit(layoutChanged());
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -769,7 +769,7 @@ void CMatrixModel::mulTranspose()
         cv::mulTransposed(m_data, m_data, false);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -782,7 +782,7 @@ void CMatrixModel::verticalFlip()
         cv::flip(m_data, m_data, 0);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -795,13 +795,13 @@ void CMatrixModel::horizontalFlip()
         cv::flip(m_data, m_data, 1);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-void CMatrixModel::rotate(const QPointF &p_center, const double p_angle_dg, const double p_scaleFactor)
+void CMatrixModel::rotate(const QPointF& p_center, const double p_angle_dg, const double p_scaleFactor)
 {
     try
     {
@@ -814,7 +814,7 @@ void CMatrixModel::rotate(const QPointF &p_center, const double p_angle_dg, cons
 
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -827,46 +827,46 @@ void CMatrixModel::normalize(const double p_alpha, const double p_beta, const in
         cv::normalize(m_data, m_data, p_alpha, p_beta, p_norm);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-void CMatrixModel::absdiff(const cv::Mat &p_other)
+void CMatrixModel::absdiff(const cv::Mat& p_other)
 {
     try
     {
         cv::absdiff(m_data, p_other, m_data);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-void CMatrixModel::multiplyElements(const cv::Mat &p_other)
+void CMatrixModel::multiplyElements(const cv::Mat& p_other)
 {
     try
     {
         m_data = m_data.mul(p_other);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-void CMatrixModel::multiplyMatrix(const cv::Mat &p_other)
+void CMatrixModel::multiplyMatrix(const cv::Mat& p_other)
 {
     try
     {
         m_data = m_data * p_other;
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -879,7 +879,7 @@ void CMatrixModel::applyColorMap(const int p_colorMap)
         cv::applyColorMap(m_data, m_data, p_colorMap);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
@@ -892,16 +892,16 @@ void CMatrixModel::threshold(const double p_threshold, const double p_maxValue, 
         cv::threshold(m_data, m_data, p_threshold, p_maxValue, p_type);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-void CMatrixModel::merge(const QStringList &p_channels)
+void CMatrixModel::merge(const QStringList& p_channels)
 {
     std::vector<cv::Mat> layers;
-    foreach (const QString &channel, p_channels)
+    foreach (const QString& channel, p_channels)
     {
         layers.push_back(CMatrixConverter(channel).data());
     }
@@ -911,13 +911,13 @@ void CMatrixModel::merge(const QStringList &p_channels)
         cv::merge(layers, m_data);
         emit(dataChanged(QModelIndex(), QModelIndex()));
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << e;
     }
 }
 
-QImage *CMatrixModel::toQImage() const
+QImage* CMatrixModel::toQImage() const
 {
     QSettings settings;
     settings.beginGroup("image");
@@ -943,14 +943,14 @@ QImage *CMatrixModel::toQImage() const
         imgData.convertTo(imgData, CV_8U);
         cv::cvtColor(imgData, imgData, channels() < 3 ? cv::COLOR_GRAY2RGB : cv::COLOR_BGR2RGB);
     }
-    catch (cv::Exception &e)
+    catch (cv::Exception& e)
     {
         qWarning() << tr("Can't convert color space");
         qWarning() << e;
         return new QImage;
     }
 
-    QImage *image = new QImage(imgData.cols, imgData.rows, QImage::Format_RGB888);
+    QImage* image = new QImage(imgData.cols, imgData.rows, QImage::Format_RGB888);
     for (int i = 0; i < imgData.rows; ++i)
     {
         memcpy(image->scanLine(i), imgData.ptr(i), image->bytesPerLine());
@@ -970,12 +970,12 @@ QString CMatrixModel::valueDescription() const
     return tr("Value");
 }
 
-CMatrixModel *CMatrixModel::clone() const
+CMatrixModel* CMatrixModel::clone() const
 {
     return new CMatrixModel(*this);
 }
 
-bool CMatrixModel::compare(CMatrixModel *p_model, CMatrixModel *p_other)
+bool CMatrixModel::compare(CMatrixModel* p_model, CMatrixModel* p_other)
 {
     cv::Mat m1 = p_model->data();
     cv::Mat m2 = p_other->data();

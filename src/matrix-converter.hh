@@ -61,7 +61,8 @@ public:
         Format_Png,
         Format_Raw,
         Format_Mfe,
-        Format_Webp
+        Format_Webp,
+        Format_Edf
     };
 
     /// Constructor.
@@ -102,6 +103,9 @@ private:
 
     bool loadFromMfe(const QString& filename);
     bool saveToMfe(const QString& filename);
+
+    bool loadFromEdf(const QString& filename);
+    bool saveToEdf(const QString& filename);
 
     cv::Mat m_data;
     FileFormat m_format;

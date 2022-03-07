@@ -18,6 +18,7 @@
 #include "matrix-converter.hh"
 
 #include "config.hh"
+#include "edf.hh"
 #include "mfe.hh"
 
 #include <QDebug>
@@ -122,6 +123,12 @@ bool CMatrixConverter::load(const QString& filename)
     {
         m_format = Format_Webp;
         return loadFromImage(filename);
+    }
+
+    if (filename.endsWith(".edf", Qt::CaseInsensitive))
+    {
+        m_format = Format_Edf;
+        return loadFromEdf(filename);
     }
 
     m_format = Format_Unknown;
@@ -425,7 +432,45 @@ bool CMatrixConverter::saveToMfe(const QString& filename)
     }
     catch (cv::Exception& e)
     {
-        qWarning() << "OpenCV error while reading MFE matrix";
+        qWarning() << "OpenCV error while writing MFE matrix";
+        qWarning() << "file: " << filename;
+        qWarning() << "error: " << e.what();
+        return false;
+    }
+
+    return true;
+}
+
+bool CMatrixConverter::loadFromEdf(const QString& filename)
+{
+    try
+    {
+        CEdfFile edf;
+        edf.read(filename);
+        m_data = edf.data();
+    }
+    catch (cv::Exception& e)
+    {
+        qWarning() << "OpenCV error while reading EDF matrix";
+        qWarning() << "file: " << filename;
+        qWarning() << "error: " << e.what();
+        return false;
+    }
+
+    return true;
+}
+
+bool CMatrixConverter::saveToEdf(const QString& filename)
+{
+    try
+    {
+        CEdfFile edf;
+        edf.setData(m_data);
+        edf.write(filename);
+    }
+    catch (cv::Exception& e)
+    {
+        qWarning() << "OpenCV error while writing EDF matrix";
         qWarning() << "file: " << filename;
         qWarning() << "error: " << e.what();
         return false;

@@ -75,7 +75,9 @@ const QStringList CMainWindow::_fileExtensions = QStringList() << "*.mfe"
                                                                << "*.JPG"
                                                                << "*.tif"
                                                                << "*.tiff"
-                                                               << "*.TIFF";
+                                                               << "*.TIFF"
+                                                               << "*.edf"
+                                                               << "*.EDF";
 
 const QStringList CMainWindow::_fileTypeFilters = QStringList() << "All files (*.*);;"
                                                                 << "JPEG (*.jpg *.jpeg *.JPG);;"
@@ -87,10 +89,11 @@ const QStringList CMainWindow::_fileTypeFilters = QStringList() << "All files (*
                                                                 << "TIFF (*.tif *.tiff *.TIFF);;"
                                                                 << "RAW (*.raw *.RAW);;"
                                                                 << "MFE (*.mfe *.MFE);;"
+                                                                << "EDF (*.edf *.EDF);;"
                                                                 << "TXT (*.txt *.TXT);;"
                                                                 << "XML (*.xml *.XML);;";
 
-CMainWindow::CMainWindow(QWidget *p_parent)
+CMainWindow::CMainWindow(QWidget* p_parent)
     : QMainWindow(p_parent)
     , m_mainWidget(new CTabWidget(this))
     , m_mainToolBar(nullptr)
@@ -183,13 +186,10 @@ void CMainWindow::writeSettings()
     settings.endGroup();
 }
 
-bool CMainWindow::isFilenameSupported(const QString &p_filename)
+bool CMainWindow::isFilenameSupported(const QString& p_filename)
 {
-    return (p_filename.endsWith(".xml") || p_filename.endsWith(".txt") || p_filename.endsWith(".bmp") || p_filename.endsWith(".png") ||
-#if CV_MAJOR_VERSION >= 3
-            p_filename.endsWith(".webp") ||
-#endif
-            p_filename.endsWith(".jpg") || p_filename.endsWith(".mfe") || p_filename.endsWith(".raw"));
+    static const QStringList extensions {"xml", "txt", "bmp", "png", "webp", "jpg", "mfe", "raw", "edf"};
+    return extensions.contains(QFileInfo(p_filename).suffix(), Qt::CaseInsensitive);
 }
 
 void CMainWindow::createActions()
@@ -310,18 +310,18 @@ void CMainWindow::newMatrix()
     settings.endGroup();
 
     // Build model from parameters
-    CMatrixModel *model = new CMatrixModel(rows, cols, type + 8 * (channels - 1), value1, value2, value3);
+    CMatrixModel* model = new CMatrixModel(rows, cols, type + 8 * (channels - 1), value1, value2, value3);
     positionWidget()->setValueDescription(model->valueDescription());
 
     // New tab
-    CTab *tab = new CTab();
+    CTab* tab = new CTab();
 
     // Set up the views
-    CMatrixView *matrixView = new CMatrixView(this);
+    CMatrixView* matrixView = new CMatrixView(this);
     matrixView->setModel(model);
     tab->addWidget(matrixView);
 
-    CImageView *imgView = new CImageView(this);
+    CImageView* imgView = new CImageView(this);
     imgView->setModel(model);
     tab->addWidget(imgView);
 
@@ -344,7 +344,7 @@ void CMainWindow::newMatrix()
         toggleImageView(m_imageViewAct->isChecked());
     }
 
-    connect(tab, SIGNAL(labelChanged(const QString &)), m_mainWidget, SLOT(changeTabText(const QString &)));
+    connect(tab, SIGNAL(labelChanged(const QString&)), m_mainWidget, SLOT(changeTabText(const QString&)));
 
     currentWidget()->setModified(true);
 }
@@ -413,7 +413,7 @@ void CMainWindow::toggleDataView(bool value)
     int nbChildren = currentWidget()->count();
     for (int i = 0; i < nbChildren; ++i)
     {
-        CMatrixView *view = qobject_cast<CMatrixView *>(currentWidget()->widget(i));
+        CMatrixView* view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
         if (view != nullptr)
         {
             view->setVisible(value);
@@ -431,7 +431,7 @@ void CMainWindow::toggleImageView(bool value)
     int nbChildren = currentWidget()->count();
     for (int i = 0; i < nbChildren; ++i)
     {
-        CImageView *view = qobject_cast<CImageView *>(currentWidget()->widget(i));
+        CImageView* view = qobject_cast<CImageView*>(currentWidget()->widget(i));
         if (view != nullptr)
         {
             view->setVisible(value);
@@ -439,42 +439,42 @@ void CMainWindow::toggleImageView(bool value)
     }
 }
 
-CTabWidget *CMainWindow::mainWidget() const
+CTabWidget* CMainWindow::mainWidget() const
 {
     return m_mainWidget;
 }
 
-CTab *CMainWindow::currentWidget() const
+CTab* CMainWindow::currentWidget() const
 {
     if (m_mainWidget == nullptr)
     {
         return nullptr;
     }
 
-    return qobject_cast<CTab *>(m_mainWidget->currentWidget());
+    return qobject_cast<CTab*>(m_mainWidget->currentWidget());
 }
 
-CMatrixView *CMainWindow::currentView() const
+CMatrixView* CMainWindow::currentView() const
 {
     if (currentWidget() == nullptr)
     {
         return nullptr;
     }
 
-    return qobject_cast<CMatrixView *>(currentWidget()->widget(0));
+    return qobject_cast<CMatrixView*>(currentWidget()->widget(0));
 }
 
-CMatrixModel *CMainWindow::currentModel() const
+CMatrixModel* CMainWindow::currentModel() const
 {
     if (currentView() == nullptr)
     {
         return nullptr;
     }
 
-    return qobject_cast<CMatrixModel *>(currentView()->model());
+    return qobject_cast<CMatrixModel*>(currentView()->model());
 }
 
-CPosition *CMainWindow::positionWidget() const
+CPosition* CMainWindow::positionWidget() const
 {
     return m_position;
 }
@@ -501,14 +501,14 @@ bool CMainWindow::isStatusBarDisplayed()
     return m_isStatusBarDisplayed;
 }
 
-void CMainWindow::closeEvent(QCloseEvent *p_event)
+void CMainWindow::closeEvent(QCloseEvent* p_event)
 {
     Q_ASSERT(p_event);
     writeSettings();
     p_event->accept();
 }
 
-void CMainWindow::dropEvent(QDropEvent *p_event)
+void CMainWindow::dropEvent(QDropEvent* p_event)
 {
     QList<QUrl> urls = p_event->mimeData()->urls();
     foreach (QUrl url, urls)
@@ -521,7 +521,7 @@ void CMainWindow::dropEvent(QDropEvent *p_event)
     }
 }
 
-void CMainWindow::dragEnterEvent(QDragEnterEvent *p_event)
+void CMainWindow::dragEnterEvent(QDragEnterEvent* p_event)
 {
     Q_ASSERT(p_event);
     p_event->accept();
@@ -531,7 +531,7 @@ void CMainWindow::createMenus()
 {
     menuBar()->setContextMenuPolicy(Qt::PreventContextMenu);
 
-    QMenu *fileMenu = menuBar()->addMenu(tr("&Matrix"));
+    QMenu* fileMenu = menuBar()->addMenu(tr("&Matrix"));
     fileMenu->addAction(m_newAct);
     fileMenu->addAction(m_openAct);
     fileMenu->addAction(m_saveAct);
@@ -545,11 +545,11 @@ void CMainWindow::createMenus()
     fileMenu->addSeparator();
     fileMenu->addAction(m_exitAct);
 
-    QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
+    QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(m_dataViewAct);
     viewMenu->addAction(m_imageViewAct);
 
-    QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
+    QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(m_documentationAct);
     helpMenu->addAction(m_bugsAct);
     helpMenu->addAction(m_aboutAct);
@@ -662,7 +662,7 @@ void CMainWindow::loadProfile()
     }
 }
 
-QString CMainWindow::findProfile(const QString &p_filename) const
+QString CMainWindow::findProfile(const QString& p_filename) const
 {
     QFileInfo fi(p_filename);
     QString profile;
@@ -706,7 +706,7 @@ QString CMainWindow::findProfile(const QString &p_filename) const
     return foundProfile ? profile : QString();
 }
 
-void CMainWindow::open(const QString &p_filename)
+void CMainWindow::open(const QString& p_filename)
 {
     QFileInfo fi(p_filename);
     m_openPath = fi.absolutePath();
@@ -715,19 +715,19 @@ void CMainWindow::open(const QString &p_filename)
     QString profile = findProfile(p_filename);
 
     // Build model from data file
-    CMatrixModel *model = new CMatrixModel(p_filename);
+    CMatrixModel* model = new CMatrixModel(p_filename);
     model->setProfile(profile);
     positionWidget()->setValueDescription(model->valueDescription());
 
     // New tab
-    CTab *tab = new CTab();
+    CTab* tab = new CTab();
 
     // Set up the views
-    CMatrixView *matrixView = new CMatrixView(this);
+    CMatrixView* matrixView = new CMatrixView(this);
     matrixView->setModel(model);
     tab->addWidget(matrixView);
 
-    CImageView *imgView = new CImageView(this);
+    CImageView* imgView = new CImageView(this);
     imgView->setModel(model);
     tab->addWidget(imgView);
 
@@ -748,7 +748,7 @@ void CMainWindow::open(const QString &p_filename)
         toggleImageView(m_imageViewAct->isChecked());
     }
 
-    connect(tab, SIGNAL(labelChanged(const QString &)), m_mainWidget, SLOT(changeTabText(const QString &)));
+    connect(tab, SIGNAL(labelChanged(const QString&)), m_mainWidget, SLOT(changeTabText(const QString&)));
 
     showMessage(p_filename);
     writeSettings(); // updates openPath
@@ -761,7 +761,7 @@ void CMainWindow::open()
     QStringList filenames =
         QFileDialog::getOpenFileNames(nullptr, tr("Open data file"), m_openPath, tr("%1").arg(_fileTypeFilters.join(" ")), &selectedFilter);
 
-    foreach (const QString &filename, filenames)
+    foreach (const QString& filename, filenames)
     {
         if (!filename.isEmpty())
         {
@@ -770,7 +770,7 @@ void CMainWindow::open()
     }
 }
 
-void CMainWindow::save(const QString &p_filename)
+void CMainWindow::save(const QString& p_filename)
 {
     if (currentWidget() == nullptr || p_filename.isEmpty())
     {
@@ -812,14 +812,14 @@ void CMainWindow::saveAs()
     }
 }
 
-CProgressBar *CMainWindow::progressBar() const
+CProgressBar* CMainWindow::progressBar() const
 {
     return m_progressBar;
 }
 
 void CMainWindow::closeTab(int p_index)
 {
-    CTab *tab = qobject_cast<CTab *>(m_mainWidget->widget(p_index));
+    CTab* tab = qobject_cast<CTab*>(m_mainWidget->widget(p_index));
     if (tab != nullptr)
     {
         const int nbChildren = tab->count();
@@ -849,7 +849,7 @@ void CMainWindow::changeTab(int p_index)
     }
 }
 
-void CMainWindow::showMessage(const QString &p_message) const
+void CMainWindow::showMessage(const QString& p_message) const
 {
     statusBar()->showMessage(p_message);
 }
