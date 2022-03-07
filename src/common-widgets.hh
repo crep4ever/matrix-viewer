@@ -18,33 +18,32 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QPointF>
+#include <QWidget>
 
 class QLabel;
 class QDoubleSpinBox;
 
 class CPoint2DWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  CPoint2DWidget(QWidget * p_parent = nullptr);
-  ~CPoint2DWidget() override;
+    CPoint2DWidget(QWidget *p_parent = nullptr);
+    ~CPoint2DWidget() override;
 
-  QPointF point() const;
-  void setPoint(const QPointF & p_point);
-  void setLabels(const QString & p_x,
-		 const QString & p_y);
+    QPointF point() const;
+    void setPoint(const QPointF &p_point);
+    void setLabels(const QString &p_x, const QString &p_y);
 
 public slots:
-  void updateXValue(double p_value);
-  void updateYValue(double p_value);
+    void updateXValue(double p_value);
+    void updateYValue(double p_value);
 
 private:
-  QPointF m_point;
-  QLabel *p_xLabel;
-  QLabel *p_yLabel;
-  QDoubleSpinBox *m_xInput;
-  QDoubleSpinBox *m_yInput;
+    QPointF m_point;
+    QLabel *p_xLabel;
+    QLabel *p_yLabel;
+    QDoubleSpinBox *m_xInput;
+    QDoubleSpinBox *m_yInput;
 };

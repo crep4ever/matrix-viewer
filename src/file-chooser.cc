@@ -19,140 +19,137 @@
 #include "file-chooser.hh"
 
 #include <QApplication>
+#include <QBoxLayout>
+#include <QCompleter>
+#include <QDirModel>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QBoxLayout>
-#include <QCompleter>
-#include <QDirModel>
 #include <QSettings>
 
-CFileChooser::CFileChooser(QWidget *p_parent) :
-QWidget(p_parent)
-, m_lineEdit(nullptr)
-, m_button(nullptr)
-, m_caption(QCoreApplication::applicationName())
-, m_directory(QDir::homePath())
-, m_path("")
-, m_filter("")
-, m_options(nullptr)
+CFileChooser::CFileChooser(QWidget *p_parent)
+    : QWidget(p_parent)
+    , m_lineEdit(nullptr)
+    , m_button(nullptr)
+    , m_caption(QCoreApplication::applicationName())
+    , m_directory(QDir::homePath())
+    , m_path("")
+    , m_filter("")
+    , m_options(nullptr)
 {
-  m_lineEdit = new QLineEdit();
-  QCompleter *completer = new QCompleter(this);
-  completer->setModel(new QDirModel(completer));
-  completer->setCompletionMode(QCompleter::InlineCompletion);
-  m_lineEdit->setCompleter(completer);
+    m_lineEdit            = new QLineEdit();
+    QCompleter *completer = new QCompleter(this);
+    completer->setModel(new QDirModel(completer));
+    completer->setCompletionMode(QCompleter::InlineCompletion);
+    m_lineEdit->setCompleter(completer);
 
-  connect(m_lineEdit, SIGNAL(textChanged(const QString &)),
-  this, SLOT(setPath(const QString &)));
+    connect(m_lineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setPath(const QString &)));
 
-  m_button = new QPushButton(tr("Browse"));
-  connect(m_button, SIGNAL(clicked()), SLOT(browse()));
+    m_button = new QPushButton(tr("Browse"));
+    connect(m_button, SIGNAL(clicked()), SLOT(browse()));
 
-  QLayout *mainLayout = new QHBoxLayout;
-  mainLayout->addWidget(m_lineEdit);
-  mainLayout->addWidget(m_button);
-  // disable layout's margin to have a proper "one widget" appearance
-  mainLayout->setContentsMargins(0, 0, 0, 0);
-  setLayout(mainLayout);
+    QLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(m_lineEdit);
+    mainLayout->addWidget(m_button);
+    // disable layout's margin to have a proper "one widget" appearance
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    setLayout(mainLayout);
 }
 
-CFileChooser::~CFileChooser()
-{
-}
+CFileChooser::~CFileChooser() { }
 
 void CFileChooser::browse()
 {
-  QString selection;
-  if (options() & QFileDialog::ShowDirsOnly)
-  {
-    selection = QFileDialog::getExistingDirectory(nullptr, caption(), directory());
-  }
-  else
-  {
-    selection = QFileDialog::getOpenFileName(nullptr, caption(), directory(), filter(), nullptr, options());
-  }
+    QString selection;
+    if (options() & QFileDialog::ShowDirsOnly)
+    {
+        selection = QFileDialog::getExistingDirectory(nullptr, caption(), directory());
+    }
+    else
+    {
+        selection = QFileDialog::getOpenFileName(nullptr, caption(), directory(), filter(), nullptr, options());
+    }
 
-  if (!selection.isEmpty())
-  {
-    setPath(selection);
-  }
+    if (!selection.isEmpty())
+    {
+        setPath(selection);
+    }
 }
 
-const QFileDialog::Options & CFileChooser::options() const
+const QFileDialog::Options &CFileChooser::options() const
 {
-  return m_options;
+    return m_options;
 }
 
-void CFileChooser::setOptions(const QFileDialog::Options & p_options)
+void CFileChooser::setOptions(const QFileDialog::Options &p_options)
 {
-  m_options = p_options;
+    m_options = p_options;
 }
 
-const QString & CFileChooser::filter() const
+const QString &CFileChooser::filter() const
 {
-  return m_filter;
+    return m_filter;
 }
 
-void CFileChooser::setFilter(const QString & p_filter)
+void CFileChooser::setFilter(const QString &p_filter)
 {
-  m_filter = p_filter;
+    m_filter = p_filter;
 }
 
-const QString & CFileChooser::caption() const
+const QString &CFileChooser::caption() const
 {
-  return m_caption;
+    return m_caption;
 }
 
-void CFileChooser::setCaption(const QString & p_caption)
+void CFileChooser::setCaption(const QString &p_caption)
 {
-  m_caption = p_caption;
+    m_caption = p_caption;
 }
 
-const QString & CFileChooser::directory() const
+const QString &CFileChooser::directory() const
 {
-  return m_directory;
+    return m_directory;
 }
 
-void CFileChooser::setDirectory(const QString & p_directory)
+void CFileChooser::setDirectory(const QString &p_directory)
 {
-  m_directory = p_directory;
+    m_directory = p_directory;
 }
 
-void CFileChooser::setDirectory(const QDir & p_directory)
+void CFileChooser::setDirectory(const QDir &p_directory)
 {
-  m_directory = p_directory.absolutePath();
+    m_directory = p_directory.absolutePath();
 }
 
-const QString & CFileChooser::path() const
+const QString &CFileChooser::path() const
 {
-  return m_path;
+    return m_path;
 }
 
-void CFileChooser::setPath(const QString & p_path)
+void CFileChooser::setPath(const QString &p_path)
 {
-  if (QString::compare(m_path, p_path, Qt::CaseSensitive) == 0)
-  {
-    return;
-  }
+    if (QString::compare(m_path, p_path, Qt::CaseSensitive) == 0)
+    {
+        return;
+    }
 
-  if (m_lineEdit->text() != p_path)
-  {
-    m_lineEdit->setText(p_path);
-  }
+    if (m_lineEdit->text() != p_path)
+    {
+        m_lineEdit->setText(p_path);
+    }
 
-  m_path = p_path;
+    m_path = p_path;
 
-  QFileInfo fileInfo(m_path);
-  if (fileInfo.isDir())
-  {
-    setDirectory(m_path);
-  }
-  else
-  {
-    setDirectory(fileInfo.dir());
-  }
+    QFileInfo fileInfo(m_path);
+    if (fileInfo.isDir())
+    {
+        setDirectory(m_path);
+    }
+    else
+    {
+        setDirectory(fileInfo.dir());
+    }
 
-  emit(pathChanged(m_path));
+    emit(pathChanged(m_path));
 }

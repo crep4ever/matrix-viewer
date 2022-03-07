@@ -18,53 +18,52 @@
 
 #pragma once
 
-#include <QObject>
-#include <QMetaType>
-#include <QString>
 #include <QDebug>
+#include <QMetaType>
+#include <QObject>
+#include <QString>
 
 class BenchmarkResult : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-
-  enum Status
+    enum Status
     {
-      Ignored = 0,
-      Canceled,
-      Error,
-      Success
+        Ignored = 0,
+        Canceled,
+        Error,
+        Success
     };
 
-  BenchmarkResult();
-  BenchmarkResult(QString  p_name);
-  BenchmarkResult(const BenchmarkResult & p_other);
-  ~BenchmarkResult() override;
+    BenchmarkResult();
+    BenchmarkResult(QString p_name);
+    BenchmarkResult(const BenchmarkResult& p_other);
+    ~BenchmarkResult() override;
 
-  const QString & title() const;
-  void setTitle(const QString & p_str);
+    const QString& title() const;
+    void setTitle(const QString& p_str);
 
-  double nsMin() const;
-  void setNsMin(const double p_value);
+    double nsMin() const;
+    void setNsMin(const double p_value);
 
-  double nsMax() const;
-  void setNsMax(const double p_value);
+    double nsMax() const;
+    void setNsMax(const double p_value);
 
-  double nsAvg() const;
-  void setNsAvg(const double p_value);
+    double nsAvg() const;
+    void setNsAvg(const double p_value);
 
-  Status status() const;
-  void setStatus(const Status s);
-  QString statusStr() const;
+    Status status() const;
+    void setStatus(const Status s);
+    QString statusStr() const;
 
-  QString timeStr() const;
+    QString timeStr() const;
 
 private:
-  QString m_title;
-  double m_nsMin;
-  double m_nsMax;
-  double m_nsAvg;
-  Status m_status;
+    QString m_title;
+    double m_nsMin;
+    double m_nsMax;
+    double m_nsAvg;
+    Status m_status;
 };
 
 Q_DECLARE_METATYPE(BenchmarkResult)

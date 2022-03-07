@@ -16,20 +16,18 @@
 // 02110-1301, USA.
 //******************************************************************************
 #include "double-spinbox.hh"
+
 #include <cfloat>
 
-CDoubleSpinBox::CDoubleSpinBox(QWidget *p_parent) :
-QDoubleSpinBox(p_parent)
+CDoubleSpinBox::CDoubleSpinBox(QWidget *p_parent) : QDoubleSpinBox(p_parent)
 {
-  // max is DBL_MAX_10_EXP + DBL_DIG = 323
-  setDecimals(10);
+    // max is DBL_MAX_10_EXP + DBL_DIG = 323
+    setDecimals(10);
 
-  // default range if all double values
-  setRange(-DBL_MAX, DBL_MAX);
+    // default range if all double values
+    setRange(-DBL_MAX, DBL_MAX);
 
-  setMaximumWidth(100);
+    setMaximumWidth(100);
 }
 
-CDoubleSpinBox::~CDoubleSpinBox()
-{
-}
+CDoubleSpinBox::~CDoubleSpinBox() { }

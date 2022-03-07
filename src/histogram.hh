@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <QWidget>
-#include <QVector>
 #include <QColor>
+#include <QVector>
+#include <QWidget>
 
 class QBoxLayout;
 class QLabel;
@@ -35,27 +35,27 @@ class QLabel;
 */
 class CHistogram : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CHistogram(QColor  p_color, QWidget *p_parent = nullptr);
-  ~CHistogram() override;
+public:
+    CHistogram(QColor p_color, QWidget *p_parent = nullptr);
+    ~CHistogram() override;
 
-  void setValues(const QVector<uint> & p_values);
-
-private:
-  void drawPixmap();
-  void computeStats();
-  QBoxLayout * makeAxisBar() const;
+    void setValues(const QVector<uint> &p_values);
 
 private:
-  QColor m_color;
-  QVector<uint> m_values;
+    void drawPixmap();
+    void computeStats();
+    QBoxLayout *makeAxisBar() const;
 
-  QLabel * m_pixmapLabel;
-  QLabel * m_count;
-  QLabel * m_min;
-  QLabel * m_max;
-  QLabel * m_mean;
-  QLabel * m_standardDeviation;
+private:
+    QColor m_color;
+    QVector<uint> m_values;
+
+    QLabel *m_pixmapLabel;
+    QLabel *m_count;
+    QLabel *m_min;
+    QLabel *m_max;
+    QLabel *m_mean;
+    QLabel *m_standardDeviation;
 };

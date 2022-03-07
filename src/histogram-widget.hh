@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QColor>
 #include <QSize>
+#include <QWidget>
 
 class QPaintEvent;
 class CHistogram;
@@ -35,27 +35,27 @@ class CHistogram;
 */
 class CHistogramWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CHistogramWidget(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CHistogramWidget(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CHistogramWidget() override;
+    /// Destructor.
+    ~CHistogramWidget() override;
 
-  void setImage(QImage *p_image);
+    void setImage(QImage *p_image);
 
 protected:
-  QSize sizeHint() const override;
-  void paintEvent(QPaintEvent *p_event) override;
+    QSize sizeHint() const override;
+    void paintEvent(QPaintEvent *p_event) override;
 
 private:
-  CHistogram *m_redHistogram;
-  CHistogram *m_greenHistogram;
-  CHistogram *m_blueHistogram;
+    CHistogram *m_redHistogram;
+    CHistogram *m_greenHistogram;
+    CHistogram *m_blueHistogram;
 
-  static const QColor _red;
-  static const QColor _green;
-  static const QColor _blue;
+    static const QColor _red;
+    static const QColor _green;
+    static const QColor _blue;
 };

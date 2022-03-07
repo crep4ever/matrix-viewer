@@ -18,74 +18,66 @@
 
 #include "common-widgets.hh"
 
-#include <QBoxLayout>
-#include <QLabel>
-#include <QDebug>
-
 #include "double-spinbox.hh"
+
+#include <QBoxLayout>
+#include <QDebug>
+#include <QLabel>
 
 /*
 Point2D widget
 */
 
-CPoint2DWidget::CPoint2DWidget(QWidget * p_parent) :
-QWidget(p_parent)
-, m_point(QPointF(0, 0))
-, p_xLabel(new QLabel("x"))
-, p_yLabel(new QLabel("y"))
+CPoint2DWidget::CPoint2DWidget(QWidget *p_parent) : QWidget(p_parent), m_point(QPointF(0, 0)), p_xLabel(new QLabel("x")), p_yLabel(new QLabel("y"))
 {
-  m_xInput = new CDoubleSpinBox;
-  m_xInput->setDecimals(4);
-  connect(m_xInput, SIGNAL(valueChanged(double)),
-  this, SLOT(updateXValue(double)));
+    m_xInput = new CDoubleSpinBox;
+    m_xInput->setDecimals(4);
+    connect(m_xInput, SIGNAL(valueChanged(double)), this, SLOT(updateXValue(double)));
 
-  m_yInput = new CDoubleSpinBox;
-  m_yInput->setDecimals(4);
-  connect(m_yInput, SIGNAL(valueChanged(double)),
-  this, SLOT(updateYValue(double)));
+    m_yInput = new CDoubleSpinBox;
+    m_yInput->setDecimals(4);
+    connect(m_yInput, SIGNAL(valueChanged(double)), this, SLOT(updateYValue(double)));
 
-  QHBoxLayout *mainLayout = new QHBoxLayout;
-  mainLayout->addStretch();
-  mainLayout->addWidget(p_xLabel);
-  mainLayout->addWidget(m_xInput);
-  mainLayout->addWidget(p_yLabel);
-  mainLayout->addWidget(m_yInput);
-  mainLayout->setContentsMargins(0, 0, 0, 0);
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addStretch();
+    mainLayout->addWidget(p_xLabel);
+    mainLayout->addWidget(m_xInput);
+    mainLayout->addWidget(p_yLabel);
+    mainLayout->addWidget(m_yInput);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
-  setLayout(mainLayout);
+    setLayout(mainLayout);
 }
 
-CPoint2DWidget::~CPoint2DWidget()
-{
-}
+CPoint2DWidget::~CPoint2DWidget() { }
 
 QPointF CPoint2DWidget::point() const
 {
-  return m_point;
+    return m_point;
 }
 
-void CPoint2DWidget::setPoint(const QPointF & p_point)
+void CPoint2DWidget::setPoint(const QPointF &p_point)
 {
-  if (m_point != p_point)
-  {
-    m_point = p_point;
-    m_xInput->setValue(m_point.x());
-    m_yInput->setValue(m_point.y());
-  }
+    if (m_point != p_point)
+    {
+        m_point = p_point;
+        m_xInput->setValue(m_point.x());
+        m_yInput->setValue(m_point.y());
+    }
 }
 
 void CPoint2DWidget::updateXValue(double p_value)
 {
-  m_point.setX(p_value);
+    m_point.setX(p_value);
 }
 
 void CPoint2DWidget::updateYValue(double p_value)
 {
-  m_point.setY(p_value);
+    m_point.setY(p_value);
 }
 
-void CPoint2DWidget::setLabels(const QString & p_x, const QString & p_y)
+void CPoint2DWidget::setLabels(const QString &p_x, const QString &p_y)
 {
-  p_xLabel->setText(p_x);
-  p_yLabel->setText(p_y);
+    p_xLabel->setText(p_x);
+    p_yLabel->setText(p_y);
 }

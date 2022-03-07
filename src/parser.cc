@@ -18,159 +18,146 @@
 
 #include "parser.hh"
 
+#include "matrix-converter.hh"
+
 #include <QApplication>
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QSettings>
-#include <QDebug>
 #include <QString>
 #include <utility>
 
-#include "matrix-converter.hh"
+CParser::CParser() : m_command() { }
 
-CParser::CParser() :
-m_command()
+CParser::CParser(QStringList p_cliArguments) : m_command(std::move(p_cliArguments)) { }
+
+CParser::~CParser() { }
+
+const QStringList& CParser::command() const
 {
+    return m_command;
 }
 
-CParser::CParser(QStringList  p_cliArguments) :
-m_command(std::move(p_cliArguments))
+void CParser::setCommand(const QStringList& p_command)
 {
+    m_command = p_command;
 }
-
-CParser::~CParser()
-{
-}
-
-const QStringList & CParser::command() const
-{
-  return m_command;
-}
-
-void CParser::setCommand(const QStringList & p_command)
-{
-  m_command = p_command;
-}
-
 
 int CParser::execute()
 {
-  QStringList extensions;
-  QString outputPath;
-  bool outputDir = false;
-  
-  if (m_command.contains("--txt"))
-  {
-    extensions << ".txt";
-  }
+    QStringList extensions;
+    QString outputPath;
+    bool outputDir = false;
 
-  if (m_command.contains("--xml"))
-  {
-    extensions << ".xml";
-  }
-
-  if (m_command.contains("--jpg"))
-  {
-    extensions << ".jpg";
-  }
-
-  if (m_command.contains("--bmp"))
-  {
-    extensions << ".bmp";
-  }
-
-  if (m_command.contains("--png"))
-  {
-    extensions << ".png";
-  }
-
-  if (m_command.contains("--bin"))
-  {
-    extensions << ".bin";
-  }
-
-  if (m_command.contains("--raw"))
-  {
-    extensions << ".raw";
-  }
-
-  if (m_command.contains("--mfe"))
-  {
-    extensions << ".mfe";
-  }
-
-  CMatrixConverter converter;
-
-  for (int i = 1; i < m_command.size(); ++i)  // skip first command line argument (executable name)
-  {
-    QString arg(m_command[i]);
-
-    if (arg == "--output-directory" || arg == "-o")
+    if (m_command.contains("--txt"))
     {
-      arg = QString(m_command[++i]); //option value
-
-      if (QDir(arg).exists())
-      {
-        outputPath = arg;
-        outputDir = true;
-      }
-      else
-      {
-        qWarning() << QObject::tr("Invalid output directory [%1]. Run [%2 -h] for usage information.")
-        .arg(outputPath)
-        .arg(QCoreApplication::applicationName());
-      }
+        extensions << ".txt";
     }
-    else if (arg == "--raw-width")
+
+    if (m_command.contains("--xml"))
     {
-      converter.setRawWidth(QString(m_command[++i]).toInt()); //option value
+        extensions << ".xml";
     }
-    else if (arg == "--raw-height")
+
+    if (m_command.contains("--jpg"))
     {
-      converter.setRawHeight(QString(m_command[++i]).toInt()); //option value
+        extensions << ".jpg";
     }
-    else if (QFile(arg).exists())
+
+    if (m_command.contains("--bmp"))
     {
-      // -------------------------------------------
-      // Load input file
-      // -------------------------------------------
+        extensions << ".bmp";
+    }
 
-      QString input = arg;
-      if (!converter.load(input))
-      {
-        qWarning() << QObject::tr("Fail to load input file [%1]").arg(input);
-        return -1;
-      }
+    if (m_command.contains("--png"))
+    {
+        extensions << ".png";
+    }
 
-      // -------------------------------------------
-      // Save output file in all specified formats
-      // -------------------------------------------
+    if (m_command.contains("--bin"))
+    {
+        extensions << ".bin";
+    }
 
-      QFileInfo fi(input);
-      foreach (const QString & extension, extensions)
-      {
-        QString path = outputDir ? outputPath : fi.absolutePath();
-        QString output = path + QDir::separator() + fi.baseName() + extension;
+    if (m_command.contains("--raw"))
+    {
+        extensions << ".raw";
+    }
 
-        if (!converter.save(output))
+    if (m_command.contains("--mfe"))
+    {
+        extensions << ".mfe";
+    }
+
+    CMatrixConverter converter;
+
+    for (int i = 1; i < m_command.size(); ++i) // skip first command line argument (executable name)
+    {
+        QString arg(m_command[i]);
+
+        if (arg == "--output-directory" || arg == "-o")
         {
-          qWarning() << QObject::tr("Fail to save output file [%1]").arg(output);
-          return -1;
+            arg = QString(m_command[++i]); //option value
+
+            if (QDir(arg).exists())
+            {
+                outputPath = arg;
+                outputDir  = true;
+            }
+            else
+            {
+                qWarning() << QObject::tr("Invalid output directory [%1]. Run [%2 -h] for usage information.")
+                                  .arg(outputPath)
+                                  .arg(QCoreApplication::applicationName());
+            }
         }
+        else if (arg == "--raw-width")
+        {
+            converter.setRawWidth(QString(m_command[++i]).toInt()); //option value
+        }
+        else if (arg == "--raw-height")
+        {
+            converter.setRawHeight(QString(m_command[++i]).toInt()); //option value
+        }
+        else if (QFile(arg).exists())
+        {
+            // -------------------------------------------
+            // Load input file
+            // -------------------------------------------
 
-        qDebug() << QObject::tr("Successful conversion from [%1] to [%2]")
-        .arg(input)
-        .arg(output);
-      }
-    }
-    else if (!arg.endsWith(QCoreApplication::applicationName()) && !arg.startsWith("--"))
-    {
-      qWarning() << QObject::tr("Ignoring [%1]. Run [%2 -h] for usage information.")
-      .arg(arg)
-      .arg(QCoreApplication::applicationName());
-    }
-  }
+            QString input = arg;
+            if (!converter.load(input))
+            {
+                qWarning() << QObject::tr("Fail to load input file [%1]").arg(input);
+                return -1;
+            }
 
-  return 0;
+            // -------------------------------------------
+            // Save output file in all specified formats
+            // -------------------------------------------
+
+            QFileInfo fi(input);
+            foreach (const QString& extension, extensions)
+            {
+                QString path   = outputDir ? outputPath : fi.absolutePath();
+                QString output = path + QDir::separator() + fi.baseName() + extension;
+
+                if (!converter.save(output))
+                {
+                    qWarning() << QObject::tr("Fail to save output file [%1]").arg(output);
+                    return -1;
+                }
+
+                qDebug() << QObject::tr("Successful conversion from [%1] to [%2]").arg(input).arg(output);
+            }
+        }
+        else if (!arg.endsWith(QCoreApplication::applicationName()) && !arg.startsWith("--"))
+        {
+            qWarning() << QObject::tr("Ignoring [%1]. Run [%2 -h] for usage information.").arg(arg).arg(QCoreApplication::applicationName());
+        }
+    }
+
+    return 0;
 }

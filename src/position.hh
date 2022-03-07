@@ -31,32 +31,32 @@ class QLabel;
 */
 class CPosition : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CPosition(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CPosition(QWidget* p_parent = nullptr);
 
-  /// Destructor.
-  ~CPosition() override;
+    /// Destructor.
+    ~CPosition() override;
 
-  uint row() const;
-  uint col() const;
+    uint row() const;
+    uint col() const;
 
 public slots:
-  void setRow(const uint p_row);
-  void setCol(const uint p_col);
-  void setValue(const QString & p_value);
-  void setValueDescription(const QString & p_desc);
-  void changeRow(int p_row);
-  void changeCol(int p_col);
+    void setRow(const uint p_row);
+    void setCol(const uint p_col);
+    void setValue(const QString& p_value);
+    void setValueDescription(const QString& p_desc);
+    void changeRow(int p_row);
+    void changeCol(int p_col);
 
 signals:
-  void positionChanged(int p_row, int p_col);
+    void positionChanged(int p_row, int p_col);
 
 private:
-  QSpinBox* m_rowSpinBox;
-  QSpinBox* m_colSpinBox;
-  QLabel*   m_valueLabel;
-  QString   m_valueDescription;
+    QSpinBox* m_rowSpinBox;
+    QSpinBox* m_colSpinBox;
+    QLabel* m_valueLabel;
+    QString m_valueDescription;
 };

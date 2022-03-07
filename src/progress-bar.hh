@@ -40,82 +40,82 @@ class QToolButton;
 
 class CProgressBar : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CProgressBar(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CProgressBar(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CProgressBar() override;
+    /// Destructor.
+    ~CProgressBar() override;
 
 public:
-  /*!
+    /*!
     Sets the range for the progress bar.
     \sa QProgressBar::setRange
   */
-  void setRange(const int p_start, const int p_stop);
+    void setRange(const int p_start, const int p_stop);
 
-  /*!
+    /*!
     Sets the visibility of the text over the progress bar to \a value.
     \sa QProgressBar::setTextVisible
   */
-  void setTextVisible(const bool p_value);
+    void setTextVisible(const bool p_value);
 
-  /*!
+    /*!
     Returns \a true if the action of the progress can be canceled; \a false otherwise.
     \sa setCancelable
   */
-  bool isCancelable() const;
+    bool isCancelable() const;
 
-  /*!
+    /*!
     Sets the cancelable property of the progress bar to \a value.
     \sa isCancelable
   */
-  void setCancelable(const bool p_value);
+    void setCancelable(const bool p_value);
 
 public slots:
-  /*!
+    /*!
     Shows the progress bar.
     The cancel button is shown if the progress bar is cancelable.
     \sa hide
   */
-  void show();
+    void show();
 
-  /*!
+    /*!
     Hides the progress bar.
     \sa show
   */
-  void hide();
+    void hide();
 
-  /*!
+    /*!
     Sets the current progress of the progress bar.
     \sa QProgressBar::setValue
   */
-  void setValue(const int p_value);
+    void setValue(const int p_value);
 
-  void setMinimum(const int p_value);
+    void setMinimum(const int p_value);
 
-  void setMaximum(const int p_value);
+    void setMaximum(const int p_value);
 
-  /*!
+    /*!
     Rewinds the progress of the progress bar.
     \sa QProgressBar::reset
   */
-  void reset();
+    void reset();
 
 signals:
-  /*!
+    /*!
     This signal is emitted when the cancel button is clicked.
     \sa cancelable, setCancelable
   */
-  void canceled();
+    void canceled();
 
 private slots:
-  void cancel();
+    void cancel();
 
 private:
-  QProgressBar *m_progressBar;
-  QToolButton *m_cancelButton;
-  bool m_cancelable;
+    QProgressBar *m_progressBar;
+    QToolButton *m_cancelButton;
+    bool m_cancelable;
 };

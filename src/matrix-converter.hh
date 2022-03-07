@@ -47,68 +47,66 @@
 */
 class CMatrixConverter : public QObject
 {
-  Q_OBJECT
-  Q_ENUMS(FileFormat)
+    Q_OBJECT
+    Q_ENUMS(FileFormat)
 
 public:
+    enum FileFormat
+    {
+        Format_Unknown,
+        Format_Txt,
+        Format_Xml,
+        Format_Bmp,
+        Format_Jpg,
+        Format_Png,
+        Format_Raw,
+        Format_Mfe,
+        Format_Webp
+    };
 
-  enum FileFormat
-  {
-    Format_Unknown,
-    Format_Txt,
-    Format_Xml,
-    Format_Bmp,
-    Format_Jpg,
-    Format_Png,
-    Format_Raw,
-    Format_Mfe,
-    Format_Webp
-  };
+    /// Constructor.
+    CMatrixConverter();
 
-  /// Constructor.
-  CMatrixConverter();
+    /// Constructor from a filename
+    CMatrixConverter(const QString& filename);
 
-  /// Constructor from a filename
-  CMatrixConverter(const QString & filename);
+    /// Destructor.
+    ~CMatrixConverter() override;
 
-  /// Destructor.
-  ~CMatrixConverter() override;
+    cv::Mat data() const;
+    void setData(const cv::Mat& matrix);
 
-  cv::Mat data() const;
-  void setData(const cv::Mat & matrix);
+    bool save(const QString& filename);
+    bool load(const QString& filename);
 
-  bool save(const QString & filename);
-  bool load(const QString & filename);
+    FileFormat format() const;
 
-  FileFormat format() const;
+    void readSettings();
 
-  void readSettings();
-
-  void setRawWidth(const int p_value);
-  void setRawHeight(const int p_value);
-  void setRawType(const int p_value);
-
+    void setRawWidth(const int p_value);
+    void setRawHeight(const int p_value);
+    void setRawType(const int p_value);
 
 private:
-  bool loadFromTxt(const QString & filename);
-  bool saveToTxt(const QString & filename);
+    bool loadFromTxt(const QString& filename);
+    bool saveToTxt(const QString& filename);
 
-  bool loadFromXml(const QString & filename);
-  bool saveToXml(const QString & filename);
+    bool loadFromXml(const QString& filename);
+    bool saveToXml(const QString& filename);
 
-  bool loadFromImage(const QString & filename);
-  bool saveToImage(const QString & filename);
+    bool loadFromImage(const QString& filename);
+    bool saveToImage(const QString& filename);
 
-  bool loadFromRaw(const QString & filename);
-  bool saveToRaw(const QString & filename);
+    bool loadFromRaw(const QString& filename);
+    bool saveToRaw(const QString& filename);
 
-  bool loadFromMfe(const QString & filename);
-  bool saveToMfe(const QString & filename);
+    bool loadFromMfe(const QString& filename);
+    bool saveToMfe(const QString& filename);
 
-  cv::Mat m_data;
-  FileFormat m_format;
+    cv::Mat m_data;
+    FileFormat m_format;
 
-  int m_rawType;
-  int m_rawWidth;
-  int m_rawHeight;
+    int m_rawType;
+    int m_rawWidth;
+    int m_rawHeight;
 };

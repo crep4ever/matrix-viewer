@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <QTableView>
 #include <QColor>
 #include <QPoint>
+#include <QTableView>
 
 class CMainWindow;
 class QAction;
@@ -34,53 +34,53 @@ class QContextMenuEvent;
 
 class CMatrixView : public QTableView
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CMatrixView(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CMatrixView(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CMatrixView() override;
+    /// Destructor.
+    ~CMatrixView() override;
 
-  CMainWindow* parent() const;
+    CMainWindow *parent() const;
 
-  void setModel(QAbstractItemModel * p_model) override;
+    void setModel(QAbstractItemModel *p_model) override;
 
 public slots:
-  void currentChanged(const QModelIndex & p_index, const QModelIndex & p_previous) override;
-  void selectItem(int p_row, int p_col);
+    void currentChanged(const QModelIndex &p_index, const QModelIndex &p_previous) override;
+    void selectItem(int p_row, int p_col);
 
-  void properties();
-  void adjustColumnsToContents();
+    void properties();
+    void adjustColumnsToContents();
 
 protected:
-  /*!
+    /*!
     Provides custom context menu with specific actions that are relevant to the matrix view.
     For example, properties, adjustColumns
   */
-  void contextMenuEvent(QContextMenuEvent *p_event) override;
+    void contextMenuEvent(QContextMenuEvent *p_event) override;
 
-  void keyPressEvent(QKeyEvent *p_event) override;
+    void keyPressEvent(QKeyEvent *p_event) override;
 
 private slots:
-  void verticalHeaderContextMenu(const QPoint & p_pos);
-  void horizontalHeaderContextMenu(const QPoint & p_pos);
+    void verticalHeaderContextMenu(const QPoint &p_pos);
+    void horizontalHeaderContextMenu(const QPoint &p_pos);
 
-  void removeCurrentRow();
-  void removeCurrentColumn();
+    void removeCurrentRow();
+    void removeCurrentColumn();
 
-  void removeOtherRows();
-  void removeOtherColumns();
+    void removeOtherRows();
+    void removeOtherColumns();
 
-  void insertRowBeforeCurrent();
-  void insertColumnBeforeCurrent();
+    void insertRowBeforeCurrent();
+    void insertColumnBeforeCurrent();
 
 private:
-  CMainWindow *m_parent;
+    CMainWindow *m_parent;
 
-  QAction *m_adjustColumnsAct;
-  QAction *m_propertiesAct;
+    QAction *m_adjustColumnsAct;
+    QAction *m_propertiesAct;
 
-  QModelIndex m_currentSelection;
+    QModelIndex m_currentSelection;
 };

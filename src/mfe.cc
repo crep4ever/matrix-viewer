@@ -17,25 +17,21 @@
 //******************************************************************************
 
 #include "mfe.hh"
+
+#include <QDataStream>
 #include <QDebug>
 #include <QFile>
-#include <QDataStream>
 
-MatrixFormatExchange::MatrixFormatExchange()
-: m_header()
-, m_comment("")
-, m_data()
-{}
+MatrixFormatExchange::MatrixFormatExchange() : m_header(), m_comment(""), m_data() { }
 
-MatrixFormatExchange::~MatrixFormatExchange()
-{}
+MatrixFormatExchange::~MatrixFormatExchange() { }
 
 cv::Mat MatrixFormatExchange::data() const
 {
     return m_data;
 }
 
-void MatrixFormatExchange::setData(const cv::Mat & p_mat)
+void MatrixFormatExchange::setData(const cv::Mat& p_mat)
 {
     Q_ASSERT(p_mat.empty() || p_mat.isContinuous());
     m_data = p_mat;
@@ -43,11 +39,11 @@ void MatrixFormatExchange::setData(const cv::Mat & p_mat)
     m_header.format[0] = 'M';
     m_header.format[1] = 'F';
     m_header.format[2] = 'E';
-    m_header.offset = (uint32_t)m_comment.size() + (uint32_t)m_header.size();
-    m_header.type  = p_mat.type();
-    m_header.cols  = p_mat.cols;
-    m_header.rows  = p_mat.rows;
-    m_header.depth = p_mat.channels();
+    m_header.offset    = (uint32_t) m_comment.size() + (uint32_t) m_header.size();
+    m_header.type      = p_mat.type();
+    m_header.cols      = p_mat.cols;
+    m_header.rows      = p_mat.rows;
+    m_header.depth     = p_mat.channels();
 }
 
 std::string MatrixFormatExchange::comment() const
@@ -55,10 +51,10 @@ std::string MatrixFormatExchange::comment() const
     return m_comment;
 }
 
-void MatrixFormatExchange::setComment(const std::string & p_str)
+void MatrixFormatExchange::setComment(const std::string& p_str)
 {
-    m_comment = p_str;
-    m_header.offset = (uint32_t)m_comment.size() + (uint32_t)m_header.size();
+    m_comment       = p_str;
+    m_header.offset = (uint32_t) m_comment.size() + (uint32_t) m_header.size();
 }
 
 std::string MatrixFormatExchange::toString() const
@@ -69,7 +65,7 @@ std::string MatrixFormatExchange::toString() const
     return stream.str();
 }
 
-bool MatrixFormatExchange::write(const QString & p_path)
+bool MatrixFormatExchange::write(const QString& p_path)
 {
     QFile file(p_path);
     if (!file.open(QIODevice::WriteOnly))
@@ -102,7 +98,7 @@ bool MatrixFormatExchange::write(const QString & p_path)
     return true;
 }
 
-bool MatrixFormatExchange::read(const QString & p_path)
+bool MatrixFormatExchange::read(const QString& p_path)
 {
     QFile file(p_path);
     if (!file.open(QIODevice::ReadOnly))
@@ -135,7 +131,7 @@ bool MatrixFormatExchange::read(const QString & p_path)
 
     // data
     m_data.create(m_header.rows, m_header.cols, m_header.type);
-    size = m_header.rows * m_header.cols * (uint32_t)m_data.elemSize();
+    size = m_header.rows * m_header.cols * (uint32_t) m_data.elemSize();
     if (stream.readRawData(reinterpret_cast<char*>(m_data.data), size) == -1)
     {
         qWarning() << "Error decoding MFE data";

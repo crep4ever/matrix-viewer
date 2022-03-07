@@ -18,11 +18,11 @@
 
 #pragma once
 
+#include "matrix-converter.hh"
+
 #include <QAbstractTableModel>
 #include <QStringList>
 #include <opencv2/opencv.hpp>
-
-#include "matrix-converter.hh"
 
 /*!
   \file matrix-model.hh
@@ -34,126 +34,112 @@ class QImage;
 
 class CMatrixModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Default constructor.
-  CMatrixModel();
+    /// Default constructor.
+    CMatrixModel();
 
-  /// Copy constructor.
-  CMatrixModel(const CMatrixModel & p_other);
+    /// Copy constructor.
+    CMatrixModel(const CMatrixModel &p_other);
 
-  /// Loader constructor.
-  CMatrixModel(const QString & p_filePath);
+    /// Loader constructor.
+    CMatrixModel(const QString &p_filePath);
 
-  /// OpenCV wrapper constructor.
-  CMatrixModel(const int p_rows, const int p_cols,
-               const int p_type,
-               const double p_value1, const double p_value2, const double p_value3);
+    /// OpenCV wrapper constructor.
+    CMatrixModel(const int p_rows, const int p_cols, const int p_type, const double p_value1, const double p_value2, const double p_value3);
 
-  /// Destructor.
-  ~CMatrixModel() override;
+    /// Destructor.
+    ~CMatrixModel() override;
 
-  CMatrixModel* clone() const;
+    CMatrixModel *clone() const;
 
-  bool isFormatData() const;
-  bool isFormatImage() const;
+    bool isFormatData() const;
+    bool isFormatImage() const;
 
-  const QString & filePath() const;
+    const QString &filePath() const;
 
-  cv::Mat data() const;
-  void setData(const cv::Mat & p_matrix);
+    cv::Mat data() const;
+    void setData(const cv::Mat &p_matrix);
 
-  int rowCount(const QModelIndex & p_parent = QModelIndex()) const override;
-  int columnCount(const QModelIndex & p_parent = QModelIndex()) const override;
-  QVariant data(const QModelIndex & p_index, int p_role = Qt::DisplayRole) const override;
-  bool setData(const QModelIndex & p_index, const QVariant & p_value, int p_role = Qt::EditRole) override;
-  void sort(int p_column, Qt::SortOrder p_order = Qt::AscendingOrder) override;
-  QVariant headerData(int p_section, Qt::Orientation p_orientation, int p_role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &p_parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &p_parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &p_index, int p_role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &p_index, const QVariant &p_value, int p_role = Qt::EditRole) override;
+    void sort(int p_column, Qt::SortOrder p_order = Qt::AscendingOrder) override;
+    QVariant headerData(int p_section, Qt::Orientation p_orientation, int p_role = Qt::DisplayRole) const override;
 
-  Qt::ItemFlags flags(const QModelIndex & p_index) const override;
+    Qt::ItemFlags flags(const QModelIndex &p_index) const override;
 
-  bool removeRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex()) override;
-  bool removeColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex()) override;
+    bool removeRows(int p_row, int p_count, const QModelIndex &p_parent = QModelIndex()) override;
+    bool removeColumns(int p_column, int p_count, const QModelIndex &p_parent = QModelIndex()) override;
 
-  bool insertRows   (int p_row,    int p_count, const QModelIndex & p_parent = QModelIndex()) override;
-  bool insertColumns(int p_column, int p_count, const QModelIndex & p_parent = QModelIndex()) override;
+    bool insertRows(int p_row, int p_count, const QModelIndex &p_parent = QModelIndex()) override;
+    bool insertColumns(int p_column, int p_count, const QModelIndex &p_parent = QModelIndex()) override;
 
+    void setProfile(const QString &p_profile);
 
-  void setProfile(const QString & p_profile);
+    QImage *toQImage() const;
 
-  QImage* toQImage() const;
+    QString valueDescription() const;
 
-  QString valueDescription() const;
+    static bool compare(CMatrixModel *p_model, CMatrixModel *p_other);
 
-  static bool compare(CMatrixModel *p_model,
-                      CMatrixModel *p_other);
+    // OpenCV wrappers
+    int channels() const;
+    int type() const;
+    QString typeString(const bool p_full = false) const;
 
-  // OpenCV wrappers
-  int channels() const;
-  int type() const;
-  QString typeString(const bool p_full = false) const;
+    size_t total() const;
+    int countNonZeros() const;
+    void minMaxLoc(double *p_minVal, double *p_maxVal = nullptr, QPoint *p_minLoc = nullptr, QPoint *p_maxLoc = nullptr);
 
-  size_t total() const;
-  int countNonZeros() const;
-  void minMaxLoc(double *p_minVal, double *p_maxVal = nullptr,
-                 QPoint *p_minLoc = nullptr, QPoint *p_maxLoc = nullptr);
+    void meanStdDev(double *p_mean, double *p_stddev);
 
-  void meanStdDev(double* p_mean, double *p_stddev);
-
-  QPointF center() const;
+    QPointF center() const;
 
 public slots:
 
-  // format
-  void convertTo(const int p_type,
-                 const double p_alpha,
-                 const double p_beta);
+    // format
+    void convertTo(const int p_type, const double p_alpha, const double p_beta);
 
-  // channels
-  void merge(const QStringList & p_channels);
+    // channels
+    void merge(const QStringList &p_channels);
 
-  // scalar
-  void add(const double p_value);
+    // scalar
+    void add(const double p_value);
 
-  void multiply(const double p_value);
+    void multiply(const double p_value);
 
-  // transform
-  void transpose();
+    // transform
+    void transpose();
 
-  void mulTranspose();
+    void mulTranspose();
 
-  void verticalFlip();
+    void verticalFlip();
 
-  void horizontalFlip();
+    void horizontalFlip();
 
-  void rotate(const QPointF & p_center,
-              const double p_angle_dg,
-              const double p_scaleFactor);
+    void rotate(const QPointF &p_center, const double p_angle_dg, const double p_scaleFactor);
 
-  void normalize(const double p_alpha,
-                 const double p_beta,
-                 const int p_norm);
+    void normalize(const double p_alpha, const double p_beta, const int p_norm);
 
-  // matrix-matrix
-  void absdiff(const cv::Mat & p_other);
+    // matrix-matrix
+    void absdiff(const cv::Mat &p_other);
 
-  void multiplyElements(const cv::Mat & p_other);
+    void multiplyElements(const cv::Mat &p_other);
 
-  void multiplyMatrix(const cv::Mat & p_other);
+    void multiplyMatrix(const cv::Mat &p_other);
 
-  // image
-  void applyColorMap(const int p_colorMap);
+    // image
+    void applyColorMap(const int p_colorMap);
 
-  void threshold(const double p_threshold,
-                 const double p_maxValue,
-                 const int p_type);
+    void threshold(const double p_threshold, const double p_maxValue, const int p_type);
 
 private:
-
-  QString m_filePath;
-  cv::Mat m_data;
-  CMatrixConverter::FileFormat m_format;
-  QStringList m_horizontalHeaderLabels;
-  QStringList m_verticalHeaderLabels;
+    QString m_filePath;
+    cv::Mat m_data;
+    CMatrixConverter::FileFormat m_format;
+    QStringList m_horizontalHeaderLabels;
+    QStringList m_verticalHeaderLabels;
 };

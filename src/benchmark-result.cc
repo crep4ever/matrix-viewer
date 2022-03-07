@@ -21,145 +21,123 @@
 #include <QDebug>
 #include <utility>
 
-BenchmarkResult::BenchmarkResult()
-: QObject()
-, m_title("invalid")
-, m_nsMin(0)
-, m_nsMax(0)
-, m_nsAvg(0)
-, m_status(Ignored)
+BenchmarkResult::BenchmarkResult() : QObject(), m_title("invalid"), m_nsMin(0), m_nsMax(0), m_nsAvg(0), m_status(Ignored) { }
+
+BenchmarkResult::BenchmarkResult(QString p_name) : QObject(), m_title(std::move(p_name)), m_nsMin(0), m_nsMax(0), m_nsAvg(0), m_status(Ignored) { }
+
+BenchmarkResult::BenchmarkResult(const BenchmarkResult& p_other)
+    : QObject()
+    , m_title(p_other.title())
+    , m_nsMin(p_other.nsMin())
+    , m_nsMax(p_other.nsMax())
+    , m_nsAvg(p_other.nsAvg())
+    , m_status(p_other.status())
 {
 }
 
-BenchmarkResult::BenchmarkResult(QString  p_name)
-: QObject()
-, m_title(std::move(p_name))
-, m_nsMin(0)
-, m_nsMax(0)
-, m_nsAvg(0)
-, m_status(Ignored)
+BenchmarkResult::~BenchmarkResult() { }
+
+const QString& BenchmarkResult::title() const
 {
+    return m_title;
 }
 
-BenchmarkResult::BenchmarkResult(const BenchmarkResult & p_other)
-: QObject()
-, m_title(p_other.title())
-, m_nsMin(p_other.nsMin())
-, m_nsMax(p_other.nsMax())
-, m_nsAvg(p_other.nsAvg())
-, m_status(p_other.status())
+void BenchmarkResult::setTitle(const QString& p_str)
 {
-}
-
-BenchmarkResult::~BenchmarkResult()
-{
-}
-
-const QString & BenchmarkResult::title() const
-{
-  return m_title;
-}
-
-void BenchmarkResult::setTitle(const QString & p_str)
-{
-  m_title = p_str;
+    m_title = p_str;
 }
 
 double BenchmarkResult::nsMin() const
 {
-  return m_nsMin;
+    return m_nsMin;
 }
 
 void BenchmarkResult::setNsMin(const double p_value)
 {
-  m_nsMin = p_value;
+    m_nsMin = p_value;
 }
 
 double BenchmarkResult::nsMax() const
 {
-  return m_nsMax;
+    return m_nsMax;
 }
 
 void BenchmarkResult::setNsMax(const double p_value)
 {
-  m_nsMax = p_value;
+    m_nsMax = p_value;
 }
 
 double BenchmarkResult::nsAvg() const
 {
-  return m_nsAvg;
+    return m_nsAvg;
 }
 
 void BenchmarkResult::setNsAvg(const double p_value)
 {
-  m_nsAvg = p_value;
+    m_nsAvg = p_value;
 }
 
 BenchmarkResult::Status BenchmarkResult::status() const
 {
-  return m_status;
+    return m_status;
 }
 
 void BenchmarkResult::setStatus(const Status s)
 {
-  m_status = s;
+    m_status = s;
 }
 
 QString BenchmarkResult::statusStr() const
 {
-  switch (m_status)
-  {
-    case Success:
-    return "success";
+    switch (m_status)
+    {
+        case Success:
+            return "success";
 
-    case Error:
-    return "error";
+        case Error:
+            return "error";
 
-    case Canceled:
-    return "canceled";
+        case Canceled:
+            return "canceled";
 
-    case Ignored:
-    return "ignored";
-  }
+        case Ignored:
+            return "ignored";
+    }
 
-  return QString();
+    return QString();
 }
 
 QString BenchmarkResult::timeStr() const
 {
-  QString unit = "ns";
-  double min = m_nsMin;
-  double max = m_nsMax;
-  double avg = m_nsAvg;
+    QString unit = "ns";
+    double min   = m_nsMin;
+    double max   = m_nsMax;
+    double avg   = m_nsAvg;
 
-  const double us = 1000;
-  const double ms = us * 1000;
-  const double s  = ms * 1000;
-  if (min > s)
-  {
-    min /= s;
-    max /= s;
-    avg /= s;
-    unit = "s";
-  }
-  else if (min > ms)
-  {
-    min /= ms;
-    max /= ms;
-    avg /= ms;
-    unit = "ms";
-  }
-  else if (min > us)
-  {
-    min /= us;
-    max /= us;
-    avg /= us;
-    unit = "µs";
-  }
+    const double us = 1000;
+    const double ms = us * 1000;
+    const double s  = ms * 1000;
+    if (min > s)
+    {
+        min /= s;
+        max /= s;
+        avg /= s;
+        unit = "s";
+    }
+    else if (min > ms)
+    {
+        min /= ms;
+        max /= ms;
+        avg /= ms;
+        unit = "ms";
+    }
+    else if (min > us)
+    {
+        min /= us;
+        max /= us;
+        avg /= us;
+        unit = "µs";
+    }
 
-  return QString("avg: %1 %4\nmin: %2 %4\nmax: %3 %4\n")
-  .arg(avg)
-  .arg(min)
-  .arg(max)
-  .arg(unit);
+    return QString("avg: %1 %4\nmin: %2 %4\nmax: %3 %4\n").arg(avg).arg(min).arg(max).arg(unit);
 }

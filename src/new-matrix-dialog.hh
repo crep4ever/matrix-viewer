@@ -26,28 +26,28 @@ class QDoubleSpinBox;
 
 class NewMatrixDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  NewMatrixDialog(QWidget* p_parent = nullptr);
+    /// Constructor.
+    NewMatrixDialog(QWidget *p_parent = nullptr);
 
 private:
-  void readSettings();
-  void writeSettings();
+    void readSettings();
+    void writeSettings();
 
 protected:
-  void accept() override;
+    void accept() override;
 
 private slots:
-  void channelsChanged(int p_nbChannels);
+    void channelsChanged(int p_nbChannels);
 
 private:
-  QSpinBox *m_rows;
-  QSpinBox *m_cols;
-  QSpinBox *m_channels;
-  QComboBox *m_type;
-  QDoubleSpinBox *m_value1;
-  QDoubleSpinBox *m_value2;
-  QDoubleSpinBox *m_value3;
+    QSpinBox *m_rows;
+    QSpinBox *m_cols;
+    QSpinBox *m_channels;
+    QComboBox *m_type;
+    QDoubleSpinBox *m_value1;
+    QDoubleSpinBox *m_value2;
+    QDoubleSpinBox *m_value3;
 };

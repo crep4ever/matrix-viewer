@@ -18,153 +18,157 @@
 
 #include "histogram.hh"
 
-#include <QtCore/qmath.h>
-#include <QPixmap>
-#include <QPainter>
 #include <QBoxLayout>
-#include <QLabel>
 #include <QDebug>
+#include <QLabel>
+#include <QPainter>
+#include <QPixmap>
+#include <QtCore/qmath.h>
 #include <utility>
 
-CHistogram::CHistogram(QColor  p_color, QWidget *p_parent) : QWidget(p_parent)
-, m_color(std::move(p_color))
-, m_values()
-, m_pixmapLabel(new QLabel(this))
-, m_count(new QLabel(this))
-, m_min(new QLabel(this))
-, m_max(new QLabel(this))
-, m_mean(new QLabel(this))
-, m_standardDeviation(new QLabel(this))
+CHistogram::CHistogram(QColor p_color, QWidget *p_parent)
+    : QWidget(p_parent)
+    , m_color(std::move(p_color))
+    , m_values()
+    , m_pixmapLabel(new QLabel(this))
+    , m_count(new QLabel(this))
+    , m_min(new QLabel(this))
+    , m_max(new QLabel(this))
+    , m_mean(new QLabel(this))
+    , m_standardDeviation(new QLabel(this))
 {
-  QBoxLayout *vlayout1 = new QVBoxLayout;
-  vlayout1->addWidget(m_pixmapLabel);
-  vlayout1->addLayout(makeAxisBar());
-  vlayout1->addStretch();
+    QBoxLayout *vlayout1 = new QVBoxLayout;
+    vlayout1->addWidget(m_pixmapLabel);
+    vlayout1->addLayout(makeAxisBar());
+    vlayout1->addStretch();
 
-  QBoxLayout *vlayout2 = new QVBoxLayout;
-  vlayout2->addWidget(m_min);
-  vlayout2->addWidget(m_max);
-  vlayout2->addWidget(m_mean);
-  vlayout2->addStretch();
+    QBoxLayout *vlayout2 = new QVBoxLayout;
+    vlayout2->addWidget(m_min);
+    vlayout2->addWidget(m_max);
+    vlayout2->addWidget(m_mean);
+    vlayout2->addStretch();
 
-  QBoxLayout *vlayout3 = new QVBoxLayout;
-  vlayout3->addWidget(m_count);
-  vlayout3->addWidget(m_standardDeviation);
-  vlayout3->addStretch();
+    QBoxLayout *vlayout3 = new QVBoxLayout;
+    vlayout3->addWidget(m_count);
+    vlayout3->addWidget(m_standardDeviation);
+    vlayout3->addStretch();
 
-  QBoxLayout *mainLayout = new QHBoxLayout;
-  mainLayout->addLayout(vlayout1);
-  mainLayout->addStretch();
-  mainLayout->addLayout(vlayout2);
-  mainLayout->addLayout(vlayout3);
+    QBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addLayout(vlayout1);
+    mainLayout->addStretch();
+    mainLayout->addLayout(vlayout2);
+    mainLayout->addLayout(vlayout3);
 
-  setLayout(mainLayout);
+    setLayout(mainLayout);
 }
 
-CHistogram::~CHistogram()
+CHistogram::~CHistogram() { }
+
+void CHistogram::setValues(const QVector<uint> &p_values)
 {
+    m_values = p_values;
+
+    drawPixmap();
+    computeStats();
 }
 
-void CHistogram::setValues(const QVector<uint> & p_values)
+QBoxLayout *CHistogram::makeAxisBar() const
 {
-  m_values = p_values;
+    QString css = QString("QLabel{background-color: "
+                          "qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
+                          "stop: 0 black, stop: 1 %1);}")
+                      .arg(m_color.name());
 
-  drawPixmap();
-  computeStats();
-}
+    QLabel *begin = new QLabel("0");
+    QLabel *end   = new QLabel("255");
 
-QBoxLayout * CHistogram::makeAxisBar() const
-{
-  QString css = QString("QLabel{background-color: "
-  "qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
-  "stop: 0 black, stop: 1 %1);}").arg(m_color.name());
+    QLabel *gradient = new QLabel;
+    gradient->setStyleSheet(css);
 
-  QLabel *begin = new QLabel("0");
-  QLabel *end = new QLabel("255");
+    QBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(begin);
+    mainLayout->addWidget(gradient, 1);
+    mainLayout->addWidget(end);
 
-  QLabel *gradient = new QLabel;
-  gradient->setStyleSheet(css);
-
-  QBoxLayout * mainLayout = new QHBoxLayout;
-  mainLayout->addWidget(begin);
-  mainLayout->addWidget(gradient, 1);
-  mainLayout->addWidget(end);
-
-  return mainLayout;
+    return mainLayout;
 }
 
 void CHistogram::drawPixmap()
 {
-  // normalize histogram
-  qreal max = 0.0;
-  for (unsigned int m_value : m_values)
-  {
-    if (m_value > max)
+    // normalize histogram
+    qreal max = 0.0;
+    for (unsigned int m_value : m_values)
     {
-      max = m_value;
+        if (m_value > max)
+        {
+            max = m_value;
+        }
     }
-  }
 
-  QVector<qreal> normalizedValues(m_values.size(), 0);
-  if (max > 0.0)
-  {
-    for (int i = 0; i < 256; ++i)
+    QVector<qreal> normalizedValues(m_values.size(), 0);
+    if (max > 0.0)
     {
-      normalizedValues[i] = m_values[i] / max;
+        for (int i = 0; i < 256; ++i)
+        {
+            normalizedValues[i] = m_values[i] / max;
+        }
     }
-  }
 
-  QPixmap pixmap(300, 50);
-  QPainter painter(&pixmap);
+    QPixmap pixmap(300, 50);
+    QPainter painter(&pixmap);
 
-  const qreal w = pixmap.width();
-  const qreal h = pixmap.height();
-  const qreal barWidth = normalizedValues.empty() ? 0 : w / (qreal)normalizedValues.size();
+    const qreal w        = pixmap.width();
+    const qreal h        = pixmap.height();
+    const qreal barWidth = normalizedValues.empty() ? 0 : w / (qreal) normalizedValues.size();
 
-  for (int i = 0; i < normalizedValues.size(); ++i)
-  {
-    const qreal barHeight = normalizedValues[i] * h;
+    for (int i = 0; i < normalizedValues.size(); ++i)
+    {
+        const qreal barHeight = normalizedValues[i] * h;
 
-    // draw bar
-    painter.fillRect(barWidth * i, h - barHeight, /* origin */
-      barWidth * (i + 1), h, /* size */
-      m_color);
+        // draw bar
+        painter.fillRect(barWidth * i,
+                         h - barHeight, /* origin */
+                         barWidth * (i + 1),
+                         h, /* size */
+                         m_color);
 
-    // fill the rest of the pixmap
-    painter.fillRect(barWidth * i, 0, /* origin */
-      barWidth * (i + 1), h - barHeight, /* size */
-      Qt::white);
-  }
+        // fill the rest of the pixmap
+        painter.fillRect(barWidth * i,
+                         0, /* origin */
+                         barWidth * (i + 1),
+                         h - barHeight, /* size */
+                         Qt::white);
+    }
 
-  m_pixmapLabel->setPixmap(pixmap);
+    m_pixmapLabel->setPixmap(pixmap);
 }
 
 void CHistogram::computeStats()
 {
-  uint squareSum = 0;
-  uint sum = 0;
-  int min = 255;
-  int max = 0;
-  int count = 0;
+    uint squareSum = 0;
+    uint sum       = 0;
+    int min        = 255;
+    int max        = 0;
+    int count      = 0;
 
-  for (int i = 0; i < m_values.size(); ++i)
-  {
-    sum += i * m_values[i];
-    squareSum += i * i * m_values[i];
+    for (int i = 0; i < m_values.size(); ++i)
+    {
+        sum += i * m_values[i];
+        squareSum += i * i * m_values[i];
 
-    min = qMin(min, i);
-    max = qMax(max, i);
-    count += m_values[i];
-  }
+        min = qMin(min, i);
+        max = qMax(max, i);
+        count += m_values[i];
+    }
 
-  const double mean = (count == 0) ? 0.0 : sum / (double) count;
-  const double meanSquare = (count == 0) ? 0.0 : squareSum / (double) count;
-  const double standardDeviation = qSqrt(qAbs(meanSquare - mean * mean));
+    const double mean              = (count == 0) ? 0.0 : sum / (double) count;
+    const double meanSquare        = (count == 0) ? 0.0 : squareSum / (double) count;
+    const double standardDeviation = qSqrt(qAbs(meanSquare - mean * mean));
 
-  // update labels
-  m_count->setText(tr("Count: %1").arg(count));
-  m_min->setText(tr("Min: %1").arg(min));
-  m_max->setText(tr("Max: %1").arg(max));
-  m_mean->setText(tr("Mean: %1").arg(mean));
-  m_standardDeviation->setText(tr("StdDev: %1").arg(standardDeviation));
+    // update labels
+    m_count->setText(tr("Count: %1").arg(count));
+    m_min->setText(tr("Min: %1").arg(min));
+    m_max->setText(tr("Max: %1").arg(max));
+    m_mean->setText(tr("Mean: %1").arg(mean));
+    m_standardDeviation->setText(tr("StdDev: %1").arg(standardDeviation));
 }

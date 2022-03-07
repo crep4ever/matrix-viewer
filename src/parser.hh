@@ -29,12 +29,12 @@ class CParser
 {
 public:
     CParser();
-    CParser(QStringList  p_cliArguments);
+    CParser(QStringList p_cliArguments);
 
     virtual ~CParser();
 
-    const QStringList & command() const;
-    void setCommand(const QStringList & p_command);
+    const QStringList& command() const;
+    void setCommand(const QStringList& p_command);
 
     /**
      * @brief Execute command line
@@ -43,6 +43,5 @@ public:
     int execute();
 
 private:
-
     QStringList m_command;
 };

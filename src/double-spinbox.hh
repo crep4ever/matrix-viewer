@@ -27,13 +27,12 @@
 */
 class CDoubleSpinBox : public QDoubleSpinBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CDoubleSpinBox(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CDoubleSpinBox(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CDoubleSpinBox() override;
-
+    /// Destructor.
+    ~CDoubleSpinBox() override;
 };

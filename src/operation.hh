@@ -25,25 +25,24 @@
 class Operation
 {
 public:
+    Operation();
+    Operation(const Operation& p_other);
+    ~Operation();
 
-  Operation();
-  Operation(const Operation & p_other);
-  ~Operation();
+    const QString& name() const;
+    void setName(const QString& p_name);
 
-  const QString & name() const;
-  void setName(const QString & p_name);
+    const QString& description() const;
+    void setDescription(const QString& p_description);
 
-  const QString & description() const;
-  void setDescription(const QString & p_description);
+    const QUrl& url() const;
+    void setUrl(const QUrl& p_url);
+    void setUrl(const QString& p_url);
 
-  const QUrl & url() const;
-  void setUrl(const QUrl & p_url);
-  void setUrl(const QString & p_url);
-
-  static QList<Operation> list_benchmark();
+    static QList<Operation> list_benchmark();
 
 private:
-  QString m_name;
-  QString m_description;
-  QUrl m_url;
+    QString m_name;
+    QString m_description;
+    QUrl m_url;
 };

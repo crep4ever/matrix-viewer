@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <QTabWidget>
-#include <QTabBar>
 #include <QString>
+#include <QTabBar>
+#include <QTabWidget>
 /*!
   \file tab-widget.hh
   \class CTabWidget
@@ -29,19 +29,19 @@
 
 class CTabWidget : public QTabWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CTabWidget(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CTabWidget(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CTabWidget() override;
+    /// Destructor.
+    ~CTabWidget() override;
 
-  void addTab(QWidget *p_page, const QString & p_label);
+    void addTab(QWidget *p_page, const QString &p_label);
 
 public slots:
-  void changeTabText(const QString& p_str);
+    void changeTabText(const QString &p_str);
 };
 
 /*!
@@ -59,18 +59,18 @@ class QMouseEvent;
 
 class CTabBar : public QTabBar
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CTabBar(QWidget *p_parent = nullptr);
-  /// Destructor.
-  ~CTabBar() override;
+    /// Constructor.
+    CTabBar(QWidget *p_parent = nullptr);
+    /// Destructor.
+    ~CTabBar() override;
 
 protected:
-  /*!
+    /*!
     Reimplements QTabBar::mouseReleaseEvent to close
     tabs when they are middle-clicked.
   */
-  void mouseReleaseEvent(QMouseEvent *p_event) override;
+    void mouseReleaseEvent(QMouseEvent *p_event) override;
 };

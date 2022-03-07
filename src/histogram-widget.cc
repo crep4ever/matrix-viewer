@@ -17,68 +17,67 @@
 //******************************************************************************
 #include "histogram-widget.hh"
 
+#include "histogram.hh"
+
 #include <QBoxLayout>
 #include <QDebug>
 #include <QPainter>
-#include "histogram.hh"
 
 const QColor CHistogramWidget::_red(239, 41, 41);
 const QColor CHistogramWidget::_green(138, 226, 52);
 const QColor CHistogramWidget::_blue(114, 159, 207);
 
-CHistogramWidget::CHistogramWidget(QWidget *p_parent) :
-QWidget(p_parent)
-, m_redHistogram(new CHistogram(_red))
-, m_greenHistogram(new CHistogram(_green))
-, m_blueHistogram(new CHistogram(_blue))
+CHistogramWidget::CHistogramWidget(QWidget *p_parent)
+    : QWidget(p_parent)
+    , m_redHistogram(new CHistogram(_red))
+    , m_greenHistogram(new CHistogram(_green))
+    , m_blueHistogram(new CHistogram(_blue))
 {
-  setStyleSheet("background: transparent;");
-  setAttribute(Qt::WA_TranslucentBackground);
-  setWindowFlags(Qt::FramelessWindowHint);
+    setStyleSheet("background: transparent;");
+    setAttribute(Qt::WA_TranslucentBackground);
+    setWindowFlags(Qt::FramelessWindowHint);
 
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addWidget(m_redHistogram);
-  mainLayout->addWidget(m_greenHistogram);
-  mainLayout->addWidget(m_blueHistogram);
-  setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(m_redHistogram);
+    mainLayout->addWidget(m_greenHistogram);
+    mainLayout->addWidget(m_blueHistogram);
+    setLayout(mainLayout);
 
-  resize(sizeHint());
+    resize(sizeHint());
 }
 
-CHistogramWidget::~CHistogramWidget()
-{
-}
+CHistogramWidget::~CHistogramWidget() { }
 
 void CHistogramWidget::setImage(QImage *p_image)
 {
-  QImage copy = p_image->convertToFormat(QImage::Format_ARGB32);
-  QVector<uint> redValues(256, 0), greenValues(256, 0), blueValues(256, 0);
-  for (int j = 0; j < p_image->height(); ++j)
-  {
-    QRgb *row = reinterpret_cast<QRgb *>(copy.scanLine(j));
-    for (int i = 0; i < p_image->width(); ++i)
+    QImage copy = p_image->convertToFormat(QImage::Format_ARGB32);
+    QVector<uint> redValues(256, 0), greenValues(256, 0), blueValues(256, 0);
+    for (int j = 0; j < p_image->height(); ++j)
     {
-      ++redValues[qRed(row[i])];
-      ++greenValues[qGreen(row[i])];
-      ++blueValues[qBlue(row[i])];
+        QRgb *row = reinterpret_cast<QRgb *>(copy.scanLine(j));
+        for (int i = 0; i < p_image->width(); ++i)
+        {
+            ++redValues[qRed(row[i])];
+            ++greenValues[qGreen(row[i])];
+            ++blueValues[qBlue(row[i])];
+        }
     }
-  }
 
-  m_redHistogram->setValues(redValues);
-  m_greenHistogram->setValues(greenValues);
-  m_blueHistogram->setValues(blueValues);
+    m_redHistogram->setValues(redValues);
+    m_greenHistogram->setValues(greenValues);
+    m_blueHistogram->setValues(blueValues);
 }
 
 QSize CHistogramWidget::sizeHint() const
 {
-  return QSize(500, 300);
+    return QSize(500, 300);
 }
 
 void CHistogramWidget::paintEvent(QPaintEvent *p_event)
 {
-  Q_UNUSED(p_event);
-  QColor backgroundColor = palette().dark().color();
-  backgroundColor.setAlpha(150);
-  QPainter customPainter(this);
-  customPainter.fillRect(rect(), backgroundColor);
+    Q_UNUSED(p_event);
+    QColor backgroundColor = palette().dark().color();
+    backgroundColor.setAlpha(150);
+    QPainter customPainter(this);
+    customPainter.fillRect(rect(), backgroundColor);
 }

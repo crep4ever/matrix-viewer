@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <QtGlobal>
-#include <QObject>
-#include <QElapsedTimer>
 #include <QDebug>
+#include <QElapsedTimer>
+#include <QObject>
+#include <QtGlobal>
 
 /*!
   \file elapsed-timer.hh
@@ -37,19 +37,17 @@
 class CElapsedTimer : public QElapsedTimer
 {
 public:
-
-  qint64 nsecsElapsed() const
-  {
-
-    qint64 ns;
+    qint64 nsecsElapsed() const
+    {
+        qint64 ns;
 
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
-    qWarning() << QObject::tr("Current Qt version does not support sub-millisecond timer precision");
-    ns = QElapsedTimer::elapsed() * 1000 * 1000;
+        qWarning() << QObject::tr("Current Qt version does not support sub-millisecond timer precision");
+        ns = QElapsedTimer::elapsed() * 1000 * 1000;
 #else
-    ns = QElapsedTimer::nsecsElapsed();
+        ns = QElapsedTimer::nsecsElapsed();
 #endif
 
-    return ns;
-  }
+        return ns;
+    }
 };

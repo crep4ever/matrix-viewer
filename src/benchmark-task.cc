@@ -18,177 +18,174 @@
 
 #include "benchmark-task.hh"
 
-#include <QStringList>
-#include <QDebug>
+#include "elapsed-timer.hh"
+#include "matrix-model.hh"
+
 #include <QApplication>
+#include <QDebug>
+#include <QStringList>
 #include <utility>
 
-#include "matrix-model.hh"
-#include "elapsed-timer.hh"
-
-BenchmarkTask::BenchmarkTask(QString  p_operationName,
-                             const int p_nbIterations,
-                             CMatrixModel* p_model) : QObject()
-, m_name(std::move(p_operationName))
-, m_iterations(p_nbIterations)
-, m_model(p_model)
-, m_cancelRequested(false)
+BenchmarkTask::BenchmarkTask(QString p_operationName, const int p_nbIterations, CMatrixModel* p_model)
+    : QObject()
+    , m_name(std::move(p_operationName))
+    , m_iterations(p_nbIterations)
+    , m_model(p_model)
+    , m_cancelRequested(false)
 {
 }
 
-BenchmarkTask::~BenchmarkTask()
-{
-}
+BenchmarkTask::~BenchmarkTask() { }
 
 void BenchmarkTask::execute()
 {
-  if (m_model == nullptr)
-  {
-    return;
-  }
-
-  m_cancelRequested = false;
-
-  CMatrixModel* ref = m_model->clone();
-
-  BenchmarkResult result(m_name);
-
-  CElapsedTimer timer;
-
-  qint64 ns = 0;
-  double min =  DBL_MAX;
-  double max = -DBL_MAX;
-  double sum = 0;
-  for (int i = 0; i < m_iterations; ++i)
-  {
-    // check for cancel signals from benchmark-dialog
-    QApplication::processEvents();
-
-    if (m_cancelRequested)
+    if (m_model == nullptr)
     {
-      result.setStatus(BenchmarkResult::Canceled);
-      emit resultReady(result);
-      return;
+        return;
     }
 
-    CMatrixModel* backup = m_model->clone();
+    m_cancelRequested = false;
 
-    if (m_name == "total")
+    CMatrixModel* ref = m_model->clone();
+
+    BenchmarkResult result(m_name);
+
+    CElapsedTimer timer;
+
+    qint64 ns  = 0;
+    double min = DBL_MAX;
+    double max = -DBL_MAX;
+    double sum = 0;
+    for (int i = 0; i < m_iterations; ++i)
     {
-      timer.start();
-      m_model->total();
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "countNonZeros")
-    {
-      timer.start();
-      Q_UNUSED(m_model->countNonZeros());
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "minMaxLoc")
-    {
-      timer.start();
-      double minVal, maxVal;
-      QPoint  minLoc, maxLoc;
-      m_model->minMaxLoc(&minVal, &maxVal, &minLoc, &maxLoc);
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "meanStdDev")
-    {
-      timer.start();
-      double mean, stdDev;
-      m_model->meanStdDev(&mean, &stdDev);
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "add")
-    {
-      timer.start();
-      m_model->add(1);
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "multiply")
-    {
-      timer.start();
-      m_model->multiply(2);
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "transpose")
-    {
-      timer.start();
-      m_model->transpose();
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "verticalFlip")
-    {
-      timer.start();
-      m_model->verticalFlip();
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "horizontalFlip")
-    {
-      timer.start();
-      m_model->horizontalFlip();
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "rotate")
-    {
-      timer.start();
-      m_model->rotate(m_model->center(), 60, 1);
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "normalize")
-    {
-      timer.start();
-      m_model->normalize(1, 0, cv::NORM_L2);
-      ns = timer.nsecsElapsed();
-    }
-    else if (m_name == "mulTranspose")
-    {
-      timer.start();
-      m_model->mulTranspose();
-      ns = timer.nsecsElapsed();
-    }
-    else
-    {
-      qWarning() << "unsupported operation " << m_name;
-      delete backup;
-      result.setStatus(BenchmarkResult::Ignored);
-      emit resultReady(result);
-      return;
+        // check for cancel signals from benchmark-dialog
+        QApplication::processEvents();
+
+        if (m_cancelRequested)
+        {
+            result.setStatus(BenchmarkResult::Canceled);
+            emit resultReady(result);
+            return;
+        }
+
+        CMatrixModel* backup = m_model->clone();
+
+        if (m_name == "total")
+        {
+            timer.start();
+            m_model->total();
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "countNonZeros")
+        {
+            timer.start();
+            Q_UNUSED(m_model->countNonZeros());
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "minMaxLoc")
+        {
+            timer.start();
+            double minVal, maxVal;
+            QPoint minLoc, maxLoc;
+            m_model->minMaxLoc(&minVal, &maxVal, &minLoc, &maxLoc);
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "meanStdDev")
+        {
+            timer.start();
+            double mean, stdDev;
+            m_model->meanStdDev(&mean, &stdDev);
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "add")
+        {
+            timer.start();
+            m_model->add(1);
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "multiply")
+        {
+            timer.start();
+            m_model->multiply(2);
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "transpose")
+        {
+            timer.start();
+            m_model->transpose();
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "verticalFlip")
+        {
+            timer.start();
+            m_model->verticalFlip();
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "horizontalFlip")
+        {
+            timer.start();
+            m_model->horizontalFlip();
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "rotate")
+        {
+            timer.start();
+            m_model->rotate(m_model->center(), 60, 1);
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "normalize")
+        {
+            timer.start();
+            m_model->normalize(1, 0, cv::NORM_L2);
+            ns = timer.nsecsElapsed();
+        }
+        else if (m_name == "mulTranspose")
+        {
+            timer.start();
+            m_model->mulTranspose();
+            ns = timer.nsecsElapsed();
+        }
+        else
+        {
+            qWarning() << "unsupported operation " << m_name;
+            delete backup;
+            result.setStatus(BenchmarkResult::Ignored);
+            emit resultReady(result);
+            return;
+        }
+
+        m_model->setData(backup->data());
+        delete backup;
+
+        if (ns < min)
+        {
+            min = ns;
+        }
+
+        if (ns > max)
+        {
+            max = ns;
+        }
+        sum += ns;
     }
 
-    m_model->setData(backup->data());
-    delete backup;
-
-    if (ns < min)
+    // Check data integrity
+    if (!CMatrixModel::compare(m_model, ref))
     {
-      min = ns;
+        qWarning() << "Benchmark of operation" << m_name << " has modified original model";
     }
 
-    if (ns > max)
-    {
-      max = ns;
-    }
-    sum += ns;
-  }
+    delete ref;
 
-  // Check data integrity
-  if (!CMatrixModel::compare(m_model, ref))
-  {
-    qWarning() << "Benchmark of operation" << m_name << " has modified original model";
-  }
+    result.setNsMin(min);
+    result.setNsMax(max);
+    result.setNsAvg(sum / (double) m_iterations);
+    result.setStatus(BenchmarkResult::Success);
 
-  delete ref;
-
-  result.setNsMin(min);
-  result.setNsMax(max);
-  result.setNsAvg(sum / (double) m_iterations);
-  result.setStatus(BenchmarkResult::Success);
-
-  emit resultReady(result);
+    emit resultReady(result);
 }
 
 void BenchmarkTask::cancel()
 {
-  m_cancelRequested = true;
+    m_cancelRequested = true;
 }

@@ -17,62 +17,53 @@
 //******************************************************************************
 #include "tab-widget.hh"
 
-#include <QFileInfo>
-#include <QMouseEvent>
-#include <QDebug>
-
 #include "tab.hh"
 
-CTabWidget::CTabWidget(QWidget *p_parent) :
-QTabWidget(p_parent)
+#include <QDebug>
+#include <QFileInfo>
+#include <QMouseEvent>
+
+CTabWidget::CTabWidget(QWidget *p_parent) : QTabWidget(p_parent)
 {
-  setStyleSheet(" QTabWidget::tab-bar {}");
-  setTabBar(new CTabBar(this));
+    setStyleSheet(" QTabWidget::tab-bar {}");
+    setTabBar(new CTabBar(this));
 }
 
-CTabWidget::~CTabWidget()
+CTabWidget::~CTabWidget() { }
+
+void CTabWidget::changeTabText(const QString &p_str)
 {
+    setTabText(currentIndex(), p_str);
 }
 
-void CTabWidget::changeTabText(const QString & p_str)
+void CTabWidget::addTab(QWidget *p_page, const QString &p_label)
 {
-  setTabText(currentIndex(), p_str);
-}
-
-
-void CTabWidget::addTab(QWidget *p_page, const QString & p_label)
-{
-  QFileInfo fi(p_label);
-  CTab *tab = qobject_cast<CTab*>(p_page);
-  if (tab != nullptr)
-  {
-    tab->setFilePath(fi.absoluteFilePath());
-    tab->setWindowTitle(fi.fileName());
-    setToolTip(fi.absoluteFilePath());
-    QTabWidget::addTab(p_page, fi.fileName());
-  }
-  else
-  {
-    QTabWidget::addTab(p_page, p_label);
-  }
+    QFileInfo fi(p_label);
+    CTab *tab = qobject_cast<CTab *>(p_page);
+    if (tab != nullptr)
+    {
+        tab->setFilePath(fi.absoluteFilePath());
+        tab->setWindowTitle(fi.fileName());
+        setToolTip(fi.absoluteFilePath());
+        QTabWidget::addTab(p_page, fi.fileName());
+    }
+    else
+    {
+        QTabWidget::addTab(p_page, p_label);
+    }
 }
 
 //----------------------------------------------------------------------------
 
-CTabBar::CTabBar(QWidget *p_parent) :
-QTabBar(p_parent)
-{
-}
+CTabBar::CTabBar(QWidget *p_parent) : QTabBar(p_parent) { }
 
-CTabBar::~CTabBar()
-{
-}
+CTabBar::~CTabBar() { }
 
 void CTabBar::mouseReleaseEvent(QMouseEvent *p_event)
 {
-  if (p_event->button() == Qt::MidButton)
-  {
-    emit(tabCloseRequested(tabAt(p_event->pos())));
-  }
-  QTabBar::mouseReleaseEvent(p_event);
+    if (p_event->button() == Qt::MidButton)
+    {
+        emit(tabCloseRequested(tabAt(p_event->pos())));
+    }
+    QTabBar::mouseReleaseEvent(p_event);
 }

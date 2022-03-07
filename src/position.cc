@@ -18,88 +18,83 @@
 //******************************************************************************
 #include "position.hh"
 
-#include <QSpinBox>
 #include <QBoxLayout>
 #include <QLabel>
+#include <QSpinBox>
 #include <QString>
-
 #include <limits>
 
-CPosition::CPosition(QWidget *p_parent) :
-QWidget(p_parent)
-, m_rowSpinBox(new QSpinBox)
-, m_colSpinBox(new QSpinBox)
-, m_valueLabel(new QLabel)
-, m_valueDescription(tr("Value"))
+CPosition::CPosition(QWidget *p_parent)
+    : QWidget(p_parent)
+    , m_rowSpinBox(new QSpinBox)
+    , m_colSpinBox(new QSpinBox)
+    , m_valueLabel(new QLabel)
+    , m_valueDescription(tr("Value"))
 {
-  m_valueLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    m_valueLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-  m_rowSpinBox->setMaximum(std::numeric_limits<int>::max());
-  m_colSpinBox->setMaximum(std::numeric_limits<int>::max());
+    m_rowSpinBox->setMaximum(std::numeric_limits<int>::max());
+    m_colSpinBox->setMaximum(std::numeric_limits<int>::max());
 
-  connect(m_rowSpinBox, SIGNAL(valueChanged(int)),
-  this, SLOT(changeRow(int)));
+    connect(m_rowSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeRow(int)));
 
-  connect(m_colSpinBox, SIGNAL(valueChanged(int)),
-  this, SLOT(changeCol(int)));
+    connect(m_colSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeCol(int)));
 
-  QLabel *rowLabel = new QLabel(tr("Row:"));
-  QLabel *colLabel = new QLabel(tr("Col:"));
+    QLabel *rowLabel = new QLabel(tr("Row:"));
+    QLabel *colLabel = new QLabel(tr("Col:"));
 
-  QBoxLayout *mainLayout = new QHBoxLayout;
-  mainLayout->addWidget(rowLabel);
-  mainLayout->addWidget(m_rowSpinBox);
-  mainLayout->addWidget(colLabel);
-  mainLayout->addWidget(m_colSpinBox);
-  mainLayout->addWidget(m_valueLabel);
+    QBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(rowLabel);
+    mainLayout->addWidget(m_rowSpinBox);
+    mainLayout->addWidget(colLabel);
+    mainLayout->addWidget(m_colSpinBox);
+    mainLayout->addWidget(m_valueLabel);
 
-  setLayout(mainLayout);
+    setLayout(mainLayout);
 }
 
-CPosition::~CPosition()
-{
-}
+CPosition::~CPosition() { }
 
 uint CPosition::row() const
 {
-  return m_rowSpinBox->value();
+    return m_rowSpinBox->value();
 }
 
 void CPosition::setRow(const uint p_row)
 {
-  blockSignals(true);
-  m_rowSpinBox->setValue(p_row);
-  blockSignals(false);
+    blockSignals(true);
+    m_rowSpinBox->setValue(p_row);
+    blockSignals(false);
 }
 
 uint CPosition::col() const
 {
-  return m_colSpinBox->value();
+    return m_colSpinBox->value();
 }
 
 void CPosition::setCol(const uint p_col)
 {
-  blockSignals(true);
-  m_colSpinBox->setValue(p_col);
-  blockSignals(false);
+    blockSignals(true);
+    m_colSpinBox->setValue(p_col);
+    blockSignals(false);
 }
 
 void CPosition::changeRow(int p_row)
 {
-  emit(positionChanged(p_row, m_colSpinBox->value()));
+    emit(positionChanged(p_row, m_colSpinBox->value()));
 }
 
 void CPosition::changeCol(int p_col)
 {
-  emit(positionChanged(m_rowSpinBox->value(), p_col));
+    emit(positionChanged(m_rowSpinBox->value(), p_col));
 }
 
-void CPosition::setValue(const QString & p_value)
+void CPosition::setValue(const QString &p_value)
 {
-  m_valueLabel->setText(tr("%1: %2").arg(m_valueDescription).arg(p_value));
+    m_valueLabel->setText(tr("%1: %2").arg(m_valueDescription).arg(p_value));
 }
 
-void CPosition::setValueDescription(const QString & p_desc)
+void CPosition::setValueDescription(const QString &p_desc)
 {
-  m_valueDescription = p_desc;
+    m_valueDescription = p_desc;
 }

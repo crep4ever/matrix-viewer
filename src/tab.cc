@@ -17,91 +17,86 @@
 //******************************************************************************
 #include "tab.hh"
 
-#include <QFileInfo>
-#include <QDebug>
-
-#include "matrix-view.hh"
 #include "image-view.hh"
+#include "matrix-view.hh"
 
-CTab::CTab() :
-QSplitter(Qt::Horizontal)
-, m_isModified(false)
-, m_filePath()
-{
-}
+#include <QDebug>
+#include <QFileInfo>
 
-CTab::~CTab()
-{
-}
+CTab::CTab() : QSplitter(Qt::Horizontal), m_isModified(false), m_filePath() { }
+
+CTab::~CTab() { }
 
 void CTab::addWidget(QWidget *p_widget)
 {
-  QSplitter::addWidget(p_widget);
-  if (CMatrixView *view = qobject_cast<CMatrixView*>(widget(0)))
-  {
-    connect(view->model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-    this, SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
-  }
+    QSplitter::addWidget(p_widget);
+    if (CMatrixView *view = qobject_cast<CMatrixView *>(widget(0)))
+    {
+        connect(view->model(),
+                SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+                this,
+                SLOT(modelDataChanged(const QModelIndex &, const QModelIndex &)));
+    }
 }
 
-void CTab::modelDataChanged(const QModelIndex & p_index, const QModelIndex & p_previous)
+void CTab::modelDataChanged(const QModelIndex &p_index, const QModelIndex &p_previous)
 {
-  Q_UNUSED(p_index);
-  Q_UNUSED(p_previous);
+    Q_UNUSED(p_index);
+    Q_UNUSED(p_previous);
 
-  setModified(true);
-  emit(wasModified());
+    setModified(true);
+    emit(wasModified());
 }
 
 void CTab::selectItem(int p_row, int p_col)
 {
-  for (int i = 0; i < count(); ++i)
-  {
-    CMatrixView *dataView = qobject_cast<CMatrixView*>(widget(i));
-    if (dataView != nullptr)
+    for (int i = 0; i < count(); ++i)
     {
-      dataView->selectItem(p_row, p_col);
-    }
+        CMatrixView *dataView = qobject_cast<CMatrixView *>(widget(i));
+        if (dataView != nullptr)
+        {
+            dataView->selectItem(p_row, p_col);
+        }
 
-    CImageView *imgView = qobject_cast<CImageView*>(widget(i));
-    if (imgView != nullptr)
-    {
-      imgView->selectItem(p_row, p_col);
+        CImageView *imgView = qobject_cast<CImageView *>(widget(i));
+        if (imgView != nullptr)
+        {
+            imgView->selectItem(p_row, p_col);
+        }
     }
-  }
 }
 
 bool CTab::isModified() const
 {
-  return m_isModified;
+    return m_isModified;
 }
 
 void CTab::setModified(const bool p_modified)
 {
-  m_isModified = p_modified;
+    m_isModified = p_modified;
 
-  // update the window title
-  if (p_modified && !windowTitle().contains(" *"))
-  {
-    setWindowTitle(windowTitle() + " *");
-    emit(labelChanged(windowTitle()));
-  }
-  else if (!p_modified && windowTitle().contains(" *"))
-  {
-    setWindowTitle(windowTitle().remove(" *"));
-    emit(labelChanged(windowTitle()));
-  }
+    // update the window title
+    if (p_modified && !windowTitle().contains(" *"))
+    {
+        setWindowTitle(windowTitle() + " *");
+        emit(labelChanged(windowTitle()));
+    }
+    else if (!p_modified && windowTitle().contains(" *"))
+    {
+        setWindowTitle(windowTitle().remove(" *"));
+        emit(labelChanged(windowTitle()));
+    }
 }
 
 QString CTab::filePath() const
 {
-  return m_filePath;
+    return m_filePath;
 }
 
-void CTab::setFilePath(const QString & p_path)
+void CTab::setFilePath(const QString &p_path)
 {
-  m_filePath = p_path;
-  QFileInfo fi (p_path);
-  setWindowTitle(fi.fileName());
-  emit(labelChanged(windowTitle()));
+    m_filePath = p_path;
+    QFileInfo fi(p_path);
+    setWindowTitle(fi.fileName());
+    emit(labelChanged(windowTitle()));
 }

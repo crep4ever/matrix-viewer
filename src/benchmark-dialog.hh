@@ -18,11 +18,11 @@
 
 #pragma once
 
+#include "benchmark-result.hh"
+
+#include <QDebug>
 #include <QDialog>
 #include <QList>
-#include <QDebug>
-
-#include "benchmark-result.hh"
 
 class QTabWidget;
 class QCheckBox;
@@ -41,46 +41,46 @@ class CProgressBar;
 
 class CBenchmarkDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CBenchmarkDialog(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CBenchmarkDialog(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CBenchmarkDialog() override;
+    /// Destructor.
+    ~CBenchmarkDialog() override;
 
-  CMainWindow* parent() const;
-  CMatrixModel* model() const;
+    CMainWindow *parent() const;
+    CMatrixModel *model() const;
 
 public slots:
 
-  void run();
-  void processResult(const BenchmarkResult & p_result);
+    void run();
+    void processResult(const BenchmarkResult &p_result);
 
-  void cancel();
-  void save();
+    void cancel();
+    void save();
 
-  void selectAll();
-  void unselectAll();
+    void selectAll();
+    void unselectAll();
 
 private slots:
-  void updateProgressRange();
+    void updateProgressRange();
 
 private:
-  void readSettings();
-  void writeSettings();
+    void readSettings();
+    void writeSettings();
 
-  void addHeaderInfo();
-  int countOperations() const;
+    void addHeaderInfo();
+    int countOperations() const;
 
-  CMainWindow *m_parent;
-  QTabWidget *m_tabs;
-  CProgressBar *m_progressBar;
-  QList<QCheckBox*> m_operations;
-  QSpinBox *m_iterations;
-  QTextEdit *m_report;
-  QString m_savePath;
-  bool m_cancelRequested;
-  int m_progress;
+    CMainWindow *m_parent;
+    QTabWidget *m_tabs;
+    CProgressBar *m_progressBar;
+    QList<QCheckBox *> m_operations;
+    QSpinBox *m_iterations;
+    QTextEdit *m_report;
+    QString m_savePath;
+    bool m_cancelRequested;
+    int m_progress;
 };

@@ -30,18 +30,17 @@ class CMainWindow;
 
 class CPropertiesDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CPropertiesDialog(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CPropertiesDialog(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CPropertiesDialog() override;
+    /// Destructor.
+    ~CPropertiesDialog() override;
 
-  CMainWindow* parent() const;
+    CMainWindow *parent() const;
 
 private:
-
-  CMainWindow *m_parent;
+    CMainWindow *m_parent;
 };

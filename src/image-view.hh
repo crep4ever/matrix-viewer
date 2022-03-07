@@ -41,65 +41,64 @@ class QGraphicsRectItem;
 
 class CImageView : public QGraphicsView
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CImageView(QWidget *p_parent = nullptr);
+    /// Constructor.
+    CImageView(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~CImageView() override;
+    /// Destructor.
+    ~CImageView() override;
 
-  CMainWindow* parent() const;
+    CMainWindow *parent() const;
 
-  CMatrixModel * model() const;
-  virtual void setModel(CMatrixModel *p_model);
+    CMatrixModel *model() const;
+    virtual void setModel(CMatrixModel *p_model);
 
-  void wheelEvent(QWheelEvent *p_event) override;
-  void mousePressEvent(QMouseEvent *p_event) override;
-  void keyPressEvent(QKeyEvent *p_event) override;
+    void wheelEvent(QWheelEvent *p_event) override;
+    void mousePressEvent(QMouseEvent *p_event) override;
+    void keyPressEvent(QKeyEvent *p_event) override;
 
 public slots:
-  void selectItem(int p_row, int p_col);
+    void selectItem(int p_row, int p_col);
 
-  void zoomIn();
-  void zoomOut();
-  void normalSize();
-  void fitToWindow();
-  void bestSize();
+    void zoomIn();
+    void zoomOut();
+    void normalSize();
+    void fitToWindow();
+    void bestSize();
 
-  void toggleHistogram(bool p_visible);
+    void toggleHistogram(bool p_visible);
 
-  void update(const QModelIndex & p_begin = QModelIndex(),
-	            const QModelIndex & p_end = QModelIndex());
+    void update(const QModelIndex &p_begin = QModelIndex(), const QModelIndex &p_end = QModelIndex());
 
-  void draw();
+    void draw();
 
 protected:
-  /*!
+    /*!
     Provides custom context menu with specific actions that are relevant to the image view.
     For example, zoom actions
   */
-  void contextMenuEvent(QContextMenuEvent *p_event) override;
+    void contextMenuEvent(QContextMenuEvent *p_event) override;
 
 private:
-  void createActions();
+    void createActions();
 
-  CMainWindow *m_parent;
-  CMatrixModel *m_model;
+    CMainWindow *m_parent;
+    CMatrixModel *m_model;
 
-  QImage *m_image;
-  CHistogramWidget *m_histogramWidget;
-  bool m_histogramNeedsRedraw;
+    QImage *m_image;
+    CHistogramWidget *m_histogramWidget;
+    bool m_histogramNeedsRedraw;
 
-  QGraphicsScene *m_scene;
-  QGraphicsRectItem *m_selectionBox;
+    QGraphicsScene *m_scene;
+    QGraphicsRectItem *m_selectionBox;
 
-  // context menu actions
-  QAction *m_zoomInAct;
-  QAction *m_zoomOutAct;
-  QAction *m_normalSizeAct;
-  QAction *m_fitToWindowAct;
+    // context menu actions
+    QAction *m_zoomInAct;
+    QAction *m_zoomOutAct;
+    QAction *m_normalSizeAct;
+    QAction *m_fitToWindowAct;
 
-  QAction *m_histogramAct;
+    QAction *m_histogramAct;
 };

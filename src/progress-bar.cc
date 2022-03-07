@@ -18,91 +18,91 @@
 //******************************************************************************
 #include "progress-bar.hh"
 
+#include <QBoxLayout>
 #include <QProgressBar>
 #include <QToolButton>
-#include <QBoxLayout>
 
-CProgressBar::CProgressBar(QWidget* p_parent) :
-QWidget(p_parent)
-, m_progressBar(new QProgressBar(this))
-, m_cancelButton(new QToolButton(this))
-, m_cancelable(true)
+CProgressBar::CProgressBar(QWidget* p_parent)
+    : QWidget(p_parent)
+    , m_progressBar(new QProgressBar(this))
+    , m_cancelButton(new QToolButton(this))
+    , m_cancelable(true)
 {
-  m_cancelButton->setIcon(QIcon::fromTheme("process-stop", QIcon(":/icons/tango/32x32/actions/process-stop.png")));
+    m_cancelButton->setIcon(QIcon::fromTheme("process-stop", QIcon(":/icons/tango/32x32/actions/process-stop.png")));
 
-  connect(m_cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    connect(m_cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
-  QLayout* mainLayout = new QHBoxLayout;
-  mainLayout->addWidget(m_progressBar);
-  mainLayout->addWidget(m_cancelButton);
-  setLayout(mainLayout);
-  setContentsMargins(0, 0, 0, 0);
+    QLayout* mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(m_progressBar);
+    mainLayout->addWidget(m_cancelButton);
+    setLayout(mainLayout);
+    setContentsMargins(0, 0, 0, 0);
 
-  show();
+    show();
 }
 
 CProgressBar::~CProgressBar()
 {
-  delete m_progressBar;
-  delete m_cancelButton;
+    delete m_progressBar;
+    delete m_cancelButton;
 }
 
 void CProgressBar::cancel()
 {
-  emit(canceled());
+    emit(canceled());
 }
 
 void CProgressBar::hide()
 {
-  m_progressBar->hide();
-  m_cancelButton->hide();
+    m_progressBar->hide();
+    m_cancelButton->hide();
 }
 
 void CProgressBar::show()
 {
-  m_progressBar->show();
-  if (isCancelable())
-  {
-    m_cancelButton->show();
-  }
+    m_progressBar->show();
+    if (isCancelable())
+    {
+        m_cancelButton->show();
+    }
 }
 
 void CProgressBar::setTextVisible(const bool p_value)
 {
-  m_progressBar->setTextVisible(p_value);
+    m_progressBar->setTextVisible(p_value);
 }
 
 void CProgressBar::setRange(const int p_start, const int p_stop)
 {
-  m_progressBar->setRange(p_start, p_stop);
+    m_progressBar->setRange(p_start, p_stop);
 }
 
 void CProgressBar::setMaximum(const int p_value)
 {
-  m_progressBar->setMaximum(p_value);
+    m_progressBar->setMaximum(p_value);
 }
 
 void CProgressBar::setMinimum(const int p_value)
 {
-  m_progressBar->setMinimum(p_value);
+    m_progressBar->setMinimum(p_value);
 }
 
 void CProgressBar::setValue(const int p_value)
 {
-  m_progressBar->setValue(p_value);
+    m_progressBar->setValue(p_value);
 }
 
 void CProgressBar::reset()
 {
-  m_progressBar->reset();
+    m_progressBar->reset();
 }
 
 bool CProgressBar::isCancelable() const
 {
-  return m_cancelable;
+    return m_cancelable;
 }
 
 void CProgressBar::setCancelable(const bool p_value)
 {
-  m_cancelable = p_value;
+    m_cancelable = p_value;
 }

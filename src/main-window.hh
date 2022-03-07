@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <QMainWindow>
 #include <QDir>
+#include <QMainWindow>
 
 class QTabWidget;
 class QToolBar;
@@ -58,150 +58,149 @@ converts a file into OpenCV cv::Mat object
 */
 class CMainWindow : public QMainWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /*!
+    /*!
   Return \a true if \a p_filename ends with a supported extensions,
   \a false otherwise.
   */
-  static bool isFilenameSupported(const QString & p_filename);
+    static bool isFilenameSupported(const QString &p_filename);
 
 public slots:
-  /*!
+    /*!
   Open file from the path \a p_filename
   */
-  void open(const QString & p_filename);
+    void open(const QString &p_filename);
 
 public:
-  /// Constructor
-  CMainWindow(QWidget *p_parent = nullptr);
+    /// Constructor
+    CMainWindow(QWidget *p_parent = nullptr);
 
-  /// Destructor
-  ~CMainWindow() override;
+    /// Destructor
+    ~CMainWindow() override;
 
-  /*!
+    /*!
   Returns the progress bar that is embedded in the status bar
   */
-  CProgressBar * progressBar() const;
+    CProgressBar *progressBar() const;
 
-  /*!
+    /*!
   Getter on the main widget (multi-tabs container)
   */
-  CTabWidget* mainWidget() const;
+    CTabWidget *mainWidget() const;
 
-  /*!
+    /*!
   Getter on the current widget (single tab)
   */
-  CTab* currentWidget() const;
+    CTab *currentWidget() const;
 
-  /*!
+    /*!
   Getter on the model of the current tab
   */
-  CMatrixView* currentView() const;
+    CMatrixView *currentView() const;
 
-  /*!
+    /*!
   Getter on the model of the current tab
   */
-  CMatrixModel* currentModel() const;
+    CMatrixModel *currentModel() const;
 
-  /*!
+    /*!
   Getter on the position widget widget (shared between all tabs)
   */
-  CPosition* positionWidget() const;
+    CPosition *positionWidget() const;
 
-  /*!
+    /*!
   Display \a p_message in the status bar
   */
-  void showMessage(const QString & p_message) const;
+    void showMessage(const QString &p_message) const;
 
 protected:
-  /*!
+    /*!
   Saves settings before closing the application
   */
-  void closeEvent(QCloseEvent *p_event) override;
+    void closeEvent(QCloseEvent *p_event) override;
 
-  void dropEvent(QDropEvent *p_event) override;
+    void dropEvent(QDropEvent *p_event) override;
 
-  void dragEnterEvent(QDragEnterEvent *p_event) override;
+    void dragEnterEvent(QDragEnterEvent *p_event) override;
 
 private slots:
-  void newMatrix();
-  void open();
-  void save();
-  void saveAs();
-  void closeTab(int p_index);
-  void changeTab(int p_index);
-  void operations();
-  void benchmark();
+    void newMatrix();
+    void open();
+    void save();
+    void saveAs();
+    void closeTab(int p_index);
+    void changeTab(int p_index);
+    void operations();
+    void benchmark();
 
-  //application
-  void preferences();
-  void setToolBarDisplayed(bool);
-  void setStatusBarDisplayed(bool);
-  void documentation();
-  void reportBug();
-  void about();
+    //application
+    void preferences();
+    void setToolBarDisplayed(bool);
+    void setStatusBarDisplayed(bool);
+    void documentation();
+    void reportBug();
+    void about();
 
-  void nextFile();
-  void previousFile();
+    void nextFile();
+    void previousFile();
 
+    // views
+    void toggleDataView(bool);
+    void toggleImageView(bool);
 
-  // views
-  void toggleDataView(bool);
-  void toggleImageView(bool);
-
-  void loadProfile();
+    void loadProfile();
 
 private:
-  void readSettings(bool p_firstLaunch = false);
-  void writeSettings();
+    void readSettings(bool p_firstLaunch = false);
+    void writeSettings();
 
-  void createActions();
-  void createMenus();
-  void createToolBar();
+    void createActions();
+    void createMenus();
+    void createToolBar();
 
-  bool isToolBarDisplayed();
-  bool isStatusBarDisplayed();
+    bool isToolBarDisplayed();
+    bool isStatusBarDisplayed();
 
-  void save(const QString & p_filename);
-  QString findProfile(const QString & p_filename) const;
+    void save(const QString &p_filename);
+    QString findProfile(const QString &p_filename) const;
 
-  // Widgets
-  CTabWidget *m_mainWidget;
-  QToolBar *m_mainToolBar;
-  CProgressBar *m_progressBar;
-  CPosition *m_position;
+    // Widgets
+    CTabWidget *m_mainWidget;
+    QToolBar *m_mainToolBar;
+    CProgressBar *m_progressBar;
+    CPosition *m_position;
 
-  // Settings
-  bool m_isToolBarDisplayed;
-  bool m_isStatusBarDisplayed;
+    // Settings
+    bool m_isToolBarDisplayed;
+    bool m_isStatusBarDisplayed;
 
-  // Application actions
-  QAction *m_loadProfileAct;
-  QAction *m_preferencesAct;
-  QAction *m_documentationAct;
-  QAction *m_bugsAct;
-  QAction *m_aboutAct;
-  QAction *m_exitAct;
-  QAction *m_nextFileAct;
-  QAction *m_previousFileAct;
+    // Application actions
+    QAction *m_loadProfileAct;
+    QAction *m_preferencesAct;
+    QAction *m_documentationAct;
+    QAction *m_bugsAct;
+    QAction *m_aboutAct;
+    QAction *m_exitAct;
+    QAction *m_nextFileAct;
+    QAction *m_previousFileAct;
 
-  QAction *m_newAct;
-  QAction *m_openAct;
-  QAction *m_saveAct;
-  QAction *m_saveAsAct;
-  QAction *m_operationsAct;
-  QAction *m_benchmarkAct;
+    QAction *m_newAct;
+    QAction *m_openAct;
+    QAction *m_saveAct;
+    QAction *m_saveAsAct;
+    QAction *m_operationsAct;
+    QAction *m_benchmarkAct;
 
-  QAction *m_dataViewAct;
-  QAction *m_imageViewAct;
+    QAction *m_dataViewAct;
+    QAction *m_imageViewAct;
 
-  // Settings
-  QString m_openPath;
-  QString m_savePath;
+    // Settings
+    QString m_openPath;
+    QString m_savePath;
 
 public:
-  static const QStringList _fileExtensions;
-  static const QStringList _fileTypeFilters;
+    static const QStringList _fileExtensions;
+    static const QStringList _fileTypeFilters;
 };

@@ -22,21 +22,20 @@
 #include <QString>
 #include <opencv2/opencv.hpp>
 
-
-QDebug operator<<(QDebug stream, const cv::Exception & e)
+QDebug operator<<(QDebug stream, const cv::Exception& e)
 {
-  QString info = QString("\nOpenCV Error\n\n"
-			 " CODE: %1\n"
-			 " FUNC: %2\n"
-			 " FILE: %3\n"
-			 " LINE: %4\n"
-			 " INFO: %5\n")
-    .arg(QString::number(e.code))
-    .arg(QString::fromStdString(e.func))
-    .arg(QString::fromStdString(e.file))
-    .arg(QString::number(e.line))
-    .arg(QString::fromStdString(e.err));
+    QString info = QString("\nOpenCV Error\n\n"
+                           " CODE: %1\n"
+                           " FUNC: %2\n"
+                           " FILE: %3\n"
+                           " LINE: %4\n"
+                           " INFO: %5\n")
+                       .arg(QString::number(e.code))
+                       .arg(QString::fromStdString(e.func))
+                       .arg(QString::fromStdString(e.file))
+                       .arg(QString::number(e.line))
+                       .arg(QString::fromStdString(e.err));
 
-  stream << info;
-  return stream;
+    stream << info;
+    return stream;
 }

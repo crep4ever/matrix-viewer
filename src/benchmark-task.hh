@@ -18,33 +18,31 @@
 
 #pragma once
 
-#include <QString>
-
 #include "benchmark-result.hh"
+
+#include <QString>
 
 class CMatrixModel;
 
 class BenchmarkTask : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  BenchmarkTask(QString  p_operationName,
-                const int p_nbIterations,
-                CMatrixModel * p_model);
+    BenchmarkTask(QString p_operationName, const int p_nbIterations, CMatrixModel *p_model);
 
-  ~BenchmarkTask() override;
+    ~BenchmarkTask() override;
 
-  void execute();
+    void execute();
 
 signals:
-  void resultReady(const BenchmarkResult & res);
+    void resultReady(const BenchmarkResult &res);
 
 public slots:
-  void cancel();
+    void cancel();
 
 private:
-  QString m_name;
-  int m_iterations;
-  CMatrixModel *m_model;
-  bool m_cancelRequested;
+    QString m_name;
+    int m_iterations;
+    CMatrixModel *m_model;
+    bool m_cancelRequested;
 };

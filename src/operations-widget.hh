@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QString>
+#include <QWidget>
 
 class QFormLayout;
 class QDoubleSpinBox;
@@ -43,45 +43,43 @@ class CFileChooser;
 */
 class COperationWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  COperationWidget(const QString & p_title,
-		   CMatrixModel * p_model,
-		   QWidget* p_parent);
+    COperationWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent);
 
-  ~COperationWidget() override;
+    ~COperationWidget() override;
 
-  const QString & title() const;
-  CMatrixModel * model() const;
-  int channels() const;
+    const QString &title() const;
+    CMatrixModel *model() const;
+    int channels() const;
 
 public slots:
-  virtual void reset();
-  virtual void apply() = 0;
+    virtual void reset();
+    virtual void apply() = 0;
 
 protected:
-  virtual void addParameter(const QString & p_label, QWidget * p_widget);
-  virtual void readSettings();
-  virtual void writeSettings();
+    virtual void addParameter(const QString &p_label, QWidget *p_widget);
+    virtual void readSettings();
+    virtual void writeSettings();
 
-  void setModified(bool p_modified);
+    void setModified(bool p_modified);
 
 private:
-  CMainWindow *m_parent;
-  bool m_wasModified;
+    CMainWindow *m_parent;
+    bool m_wasModified;
 
 protected:
-  CMatrixModel *m_backup;
-  QPushButton *m_applyButton;
+    CMatrixModel *m_backup;
+    QPushButton *m_applyButton;
 
-  QString m_openPath;
-  QString m_savePath;
+    QString m_openPath;
+    QString m_savePath;
 
 private:
-  QString m_title;
-  CMatrixModel * m_model;
-  QFormLayout *m_parametersLayout;
+    QString m_title;
+    CMatrixModel *m_model;
+    QFormLayout *m_parametersLayout;
 };
 
 /*!
@@ -92,18 +90,18 @@ private:
 */
 class CFormatWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  CFormatWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
-  ~CFormatWidget() override;
-  void reset() override;
-  void apply() override;
+    CFormatWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CFormatWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  QComboBox *m_typeWidget;
-  QDoubleSpinBox *m_alphaWidget;
-  QDoubleSpinBox *m_betaWidget;
+    QComboBox *m_typeWidget;
+    QDoubleSpinBox *m_alphaWidget;
+    QDoubleSpinBox *m_betaWidget;
 };
 
 /*!
@@ -114,17 +112,17 @@ private:
 */
 class CScalarWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  CScalarWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = nullptr);
-  ~CScalarWidget() override;
-  void reset() override;
-  void apply() override;
+    CScalarWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CScalarWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  QDoubleSpinBox *m_addWidget;
-  QDoubleSpinBox *m_multiplyWidget;
+    QDoubleSpinBox *m_addWidget;
+    QDoubleSpinBox *m_multiplyWidget;
 };
 
 /*!
@@ -135,18 +133,18 @@ private:
 */
 class CRotationWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CRotationWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
-  ~CRotationWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CRotationWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CRotationWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  CPoint2DWidget *m_centerWidget;
-  QDoubleSpinBox *m_angleWidget;
-  QDoubleSpinBox *m_scaleWidget;
+    CPoint2DWidget *m_centerWidget;
+    QDoubleSpinBox *m_angleWidget;
+    QDoubleSpinBox *m_scaleWidget;
 };
 
 /*!
@@ -157,20 +155,19 @@ private:
 */
 class CNormalizeWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CNormalizeWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
-  ~CNormalizeWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CNormalizeWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CNormalizeWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  QDoubleSpinBox *m_alphaWidget;
-  QDoubleSpinBox *m_betaWidget;
-  QComboBox *m_normWidget;
+    QDoubleSpinBox *m_alphaWidget;
+    QDoubleSpinBox *m_betaWidget;
+    QComboBox *m_normWidget;
 };
-
 
 /*!
   \class CTransformationsWidget
@@ -180,19 +177,19 @@ private:
 */
 class CTransformationsWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CTransformationsWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
-  ~CTransformationsWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CTransformationsWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CTransformationsWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  QPushButton *m_transposeWidget;
-  QPushButton *m_verticalFlipWidget;
-  QPushButton *m_horizontalFlipWidget;
-  QPushButton *m_mulTransposeWidget;
+    QPushButton *m_transposeWidget;
+    QPushButton *m_verticalFlipWidget;
+    QPushButton *m_horizontalFlipWidget;
+    QPushButton *m_mulTransposeWidget;
 };
 
 /*!
@@ -204,17 +201,17 @@ private:
 */
 class CColorMapWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CColorMapWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
-  ~CColorMapWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CColorMapWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CColorMapWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  CPoint2DWidget *m_rangeWidget;
-  QComboBox *m_colorMapWidget;
+    CPoint2DWidget *m_rangeWidget;
+    QComboBox *m_colorMapWidget;
 };
 
 /*!
@@ -225,19 +222,19 @@ private:
 */
 class CThresholdWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CThresholdWidget(const QString & p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
-  ~CThresholdWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CThresholdWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CThresholdWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  QDoubleSpinBox *m_thresholdValueWidget;
-  QDoubleSpinBox *m_maxValueWidget;
-  QComboBox *m_typeWidget;
-  QCheckBox *m_otsuWidget;
+    QDoubleSpinBox *m_thresholdValueWidget;
+    QDoubleSpinBox *m_maxValueWidget;
+    QComboBox *m_typeWidget;
+    QCheckBox *m_otsuWidget;
 };
 
 /*!
@@ -248,24 +245,24 @@ private:
 */
 class CMatrixWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CMatrixWidget(const QString & p_title, CMatrixModel *p_model,	QWidget *p_parent = nullptr);
-  ~CMatrixWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CMatrixWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CMatrixWidget() override;
+    void reset() override;
+    void apply() override;
 
 private slots:
-  void absDiff();
-  void multiplyElements();
-  void multiplyMatrix();
+    void absDiff();
+    void multiplyElements();
+    void multiplyMatrix();
 
 private:
-  CFileChooser *m_fileChooserWidget;
-  QPushButton *m_absDiffWidget;
-  QPushButton *m_multiplyElementsWidget;
-  QPushButton *m_multiplyMatrixWidget;
+    CFileChooser *m_fileChooserWidget;
+    QPushButton *m_absDiffWidget;
+    QPushButton *m_multiplyElementsWidget;
+    QPushButton *m_multiplyMatrixWidget;
 };
 
 /*!
@@ -277,19 +274,19 @@ private:
 */
 class CChannelsWidget : public COperationWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-  CChannelsWidget(const QString & p_title, CMatrixModel * p_model, QWidget* p_parent = nullptr);
-  ~CChannelsWidget() override;
-  void reset() override;
-  void apply() override;
+public:
+    CChannelsWidget(const QString &p_title, CMatrixModel *p_model, QWidget *p_parent = nullptr);
+    ~CChannelsWidget() override;
+    void reset() override;
+    void apply() override;
 
 private:
-  CFileChooser *m_redFileChooserWidget;
-  CFileChooser *m_greenFileChooserWidget;
-  CFileChooser *m_blueFileChooserWidget;
-  QString m_redOpenPath;
-  QString m_greenOpenPath;
-  QString m_blueOpenPath;
+    CFileChooser *m_redFileChooserWidget;
+    CFileChooser *m_greenFileChooserWidget;
+    CFileChooser *m_blueFileChooserWidget;
+    QString m_redOpenPath;
+    QString m_greenOpenPath;
+    QString m_blueOpenPath;
 };

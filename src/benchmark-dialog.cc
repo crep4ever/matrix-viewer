@@ -17,357 +17,344 @@
 //******************************************************************************
 #include "benchmark-dialog.hh"
 
-#include <QDialogButtonBox>
-#include <QFileDialog>
-#include <QFileInfo>
-#include <QAction>
-#include <QSpinBox>
-#include <QCheckBox>
-#include <QScrollArea>
-#include <QSettings>
-#include <QBoxLayout>
-#include <QFormLayout>
-#include <QPushButton>
-#include <QTabWidget>
-#include <QTextEdit>
-#include <QDebug>
-
+#include "benchmark-task.hh"
 #include "main-window.hh"
-#include "tab.hh"
 #include "matrix-model.hh"
 #include "operation.hh"
 #include "progress-bar.hh"
-#include "benchmark-task.hh"
+#include "tab.hh"
 
-CBenchmarkDialog::CBenchmarkDialog(QWidget *p_parent) : QDialog(p_parent)
-, m_parent(qobject_cast<CMainWindow*>(p_parent))
-, m_tabs(new QTabWidget)
-, m_progressBar(new CProgressBar)
-, m_operations()
-, m_iterations(new QSpinBox)
-, m_report(new QTextEdit)
-, m_savePath(QDir::homePath())
-, m_cancelRequested(false)
-, m_progress(0)
+#include <QAction>
+#include <QBoxLayout>
+#include <QCheckBox>
+#include <QDebug>
+#include <QDialogButtonBox>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QFormLayout>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSettings>
+#include <QSpinBox>
+#include <QTabWidget>
+#include <QTextEdit>
+
+CBenchmarkDialog::CBenchmarkDialog(QWidget *p_parent)
+    : QDialog(p_parent)
+    , m_parent(qobject_cast<CMainWindow *>(p_parent))
+    , m_tabs(new QTabWidget)
+    , m_progressBar(new CProgressBar)
+    , m_operations()
+    , m_iterations(new QSpinBox)
+    , m_report(new QTextEdit)
+    , m_savePath(QDir::homePath())
+    , m_cancelRequested(false)
+    , m_progress(0)
 {
-  setWindowTitle(tr("Benchmark"));
-  readSettings();
+    setWindowTitle(tr("Benchmark"));
+    readSettings();
 
-  // -----------------------------------------
-  // Operations tab
-  // -----------------------------------------
+    // -----------------------------------------
+    // Operations tab
+    // -----------------------------------------
 
-  // Options
-  m_iterations->setValue(10);
-  m_iterations->setMinimum(1);
-  m_iterations->setMaximum(1000);
+    // Options
+    m_iterations->setValue(10);
+    m_iterations->setMinimum(1);
+    m_iterations->setMaximum(1000);
 
-  QFormLayout *parametersLayout = new QFormLayout;
-  parametersLayout->addRow(tr("Iterations:"), m_iterations);
+    QFormLayout *parametersLayout = new QFormLayout;
+    parametersLayout->addRow(tr("Iterations:"), m_iterations);
 
-  // Checkbox list of operations
-  const QList<Operation> & benchmarkOperations = Operation::list_benchmark();
+    // Checkbox list of operations
+    const QList<Operation> &benchmarkOperations = Operation::list_benchmark();
 
-  QVBoxLayout *namesLayout = new QVBoxLayout;
-  foreach(const Operation & o, benchmarkOperations)
-  {
-    QCheckBox *item = new QCheckBox(o.name());
-    item->setToolTip(o.description());
-    item->setChecked(true);
-    connect(item, SIGNAL(clicked()), this, SLOT(updateProgressRange()));
-    m_operations.append(item);
-    namesLayout->addWidget(item);
-  }
+    QVBoxLayout *namesLayout = new QVBoxLayout;
+    foreach (const Operation &o, benchmarkOperations)
+    {
+        QCheckBox *item = new QCheckBox(o.name());
+        item->setToolTip(o.description());
+        item->setChecked(true);
+        connect(item, SIGNAL(clicked()), this, SLOT(updateProgressRange()));
+        m_operations.append(item);
+        namesLayout->addWidget(item);
+    }
 
-  QWidget *checkboxContainer = new QWidget(this);
-  checkboxContainer->setLayout(namesLayout);
+    QWidget *checkboxContainer = new QWidget(this);
+    checkboxContainer->setLayout(namesLayout);
 
-  QScrollArea *scrollArea = new QScrollArea(this);
-  scrollArea->setWidgetResizable(true);
-  scrollArea->setWidget(checkboxContainer);
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(checkboxContainer);
 
-  // Progress bar
-  updateProgressRange();
-  connect(m_progressBar, SIGNAL(canceled()), this, SLOT(cancel()));
+    // Progress bar
+    updateProgressRange();
+    connect(m_progressBar, SIGNAL(canceled()), this, SLOT(cancel()));
 
-  // Context menu actions
-  scrollArea->setContextMenuPolicy(Qt::ActionsContextMenu);
+    // Context menu actions
+    scrollArea->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-  QAction* action = new QAction(tr("Select all"), this);
-  connect(action, SIGNAL(triggered()), this, SLOT(selectAll()));
-  scrollArea->addAction(action);
+    QAction *action = new QAction(tr("Select all"), this);
+    connect(action, SIGNAL(triggered()), this, SLOT(selectAll()));
+    scrollArea->addAction(action);
 
-  action = new QAction(tr("Unselect all"), this);
-  connect(action, SIGNAL(triggered()), this, SLOT(unselectAll()));
-  scrollArea->addAction(action);
+    action = new QAction(tr("Unselect all"), this);
+    connect(action, SIGNAL(triggered()), this, SLOT(unselectAll()));
+    scrollArea->addAction(action);
 
-  // Actions
-  QPushButton *runButton = new QPushButton(tr("&Run"));
-  runButton->setDefault(true);
-  connect(runButton, SIGNAL(clicked()), this, SLOT(run()));
+    // Actions
+    QPushButton *runButton = new QPushButton(tr("&Run"));
+    runButton->setDefault(true);
+    connect(runButton, SIGNAL(clicked()), this, SLOT(run()));
 
-  QPushButton *exportButton = new QPushButton(tr("&Export"));
-  connect(exportButton, SIGNAL(clicked()), this, SLOT(save()));
+    QPushButton *exportButton = new QPushButton(tr("&Export"));
+    connect(exportButton, SIGNAL(clicked()), this, SLOT(save()));
 
-  QDialogButtonBox *buttons = new QDialogButtonBox;
-  buttons->addButton(exportButton, QDialogButtonBox::ActionRole);
-  buttons->addButton(runButton, QDialogButtonBox::ApplyRole);
+    QDialogButtonBox *buttons = new QDialogButtonBox;
+    buttons->addButton(exportButton, QDialogButtonBox::ActionRole);
+    buttons->addButton(runButton, QDialogButtonBox::ApplyRole);
 
-  QBoxLayout *operationsLayout = new QVBoxLayout;
-  operationsLayout->addLayout(parametersLayout);
-  operationsLayout->addWidget(scrollArea);
+    QBoxLayout *operationsLayout = new QVBoxLayout;
+    operationsLayout->addLayout(parametersLayout);
+    operationsLayout->addWidget(scrollArea);
 
-  QWidget *operationsTab = new QWidget;
-  operationsTab->setLayout(operationsLayout);
+    QWidget *operationsTab = new QWidget;
+    operationsTab->setLayout(operationsLayout);
 
-  // -----------------------------------------
-  // Report tab
-  // -----------------------------------------
+    // -----------------------------------------
+    // Report tab
+    // -----------------------------------------
 
-  m_report->setReadOnly(true);
+    m_report->setReadOnly(true);
 
-  QBoxLayout *reportLayout = new QVBoxLayout;
-  reportLayout->addWidget(m_report);
+    QBoxLayout *reportLayout = new QVBoxLayout;
+    reportLayout->addWidget(m_report);
 
-  QWidget *reportTab = new QWidget;
-  reportTab->setLayout(reportLayout);
+    QWidget *reportTab = new QWidget;
+    reportTab->setLayout(reportLayout);
 
+    // -----------------------------------------
+    // Dialog
+    // -----------------------------------------
 
-  // -----------------------------------------
-  // Dialog
-  // -----------------------------------------
+    m_tabs->addTab(operationsTab, tr("Operations"));
+    m_tabs->addTab(reportTab, tr("Report"));
 
-  m_tabs->addTab(operationsTab, tr("Operations"));
-  m_tabs->addTab(reportTab, tr("Report"));
+    QBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(m_tabs);
+    mainLayout->addWidget(m_progressBar);
+    mainLayout->addWidget(buttons);
 
-  QBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addWidget(m_tabs);
-  mainLayout->addWidget(m_progressBar);
-  mainLayout->addWidget(buttons);
-
-  setLayout(mainLayout);
-  resize(600, 500);
+    setLayout(mainLayout);
+    resize(600, 500);
 }
 
 CBenchmarkDialog::~CBenchmarkDialog()
 {
-  foreach (QCheckBox *checkBox, m_operations)
-  {
-    delete checkBox;
-  }
+    foreach (QCheckBox *checkBox, m_operations)
+    {
+        delete checkBox;
+    }
 
-  delete m_iterations;
-  delete m_report;
+    delete m_iterations;
+    delete m_report;
 
-  delete m_progressBar;
-  delete m_tabs;
+    delete m_progressBar;
+    delete m_tabs;
 }
 
 void CBenchmarkDialog::readSettings()
 {
-  QSettings settings;
-  settings.beginGroup("general");
-  m_savePath = settings.value("savePath", QDir::homePath()).toString();
-  settings.endGroup();
+    QSettings settings;
+    settings.beginGroup("general");
+    m_savePath = settings.value("savePath", QDir::homePath()).toString();
+    settings.endGroup();
 }
 
 void CBenchmarkDialog::writeSettings()
 {
-  QSettings settings;
-  settings.beginGroup( "general" );
-  settings.setValue( "savePath", m_savePath );
-  settings.endGroup();
+    QSettings settings;
+    settings.beginGroup("general");
+    settings.setValue("savePath", m_savePath);
+    settings.endGroup();
 }
 
-
-CMainWindow* CBenchmarkDialog::parent() const
+CMainWindow *CBenchmarkDialog::parent() const
 {
-  if (m_parent == nullptr)
-  {
-    qWarning() << "CBenchmarkDialog::parent invalid parent";
-  }
+    if (m_parent == nullptr)
+    {
+        qWarning() << "CBenchmarkDialog::parent invalid parent";
+    }
 
-  return m_parent;
+    return m_parent;
 }
 
-CMatrixModel* CBenchmarkDialog::model() const
+CMatrixModel *CBenchmarkDialog::model() const
 {
-  return parent()->currentModel();
+    return parent()->currentModel();
 }
 
 void CBenchmarkDialog::run()
 {
-  m_cancelRequested = false;
+    m_cancelRequested = false;
 
-  m_tabs->setCurrentIndex(1);
+    m_tabs->setCurrentIndex(1);
 
-  m_progressBar->reset();
+    m_progressBar->reset();
 
-  m_report->clear();
-  addHeaderInfo();
+    m_report->clear();
+    addHeaderInfo();
 
-  m_progress = 0;
+    m_progress = 0;
 
-  // Ensure that dataChanged is not emitted
-  // as it would update matrix and image views
-  model()->blockSignals(true);
+    // Ensure that dataChanged is not emitted
+    // as it would update matrix and image views
+    model()->blockSignals(true);
 
-  foreach (QCheckBox *checkBox, m_operations)
-  {
-    if (!m_cancelRequested && checkBox->isChecked())
+    foreach (QCheckBox *checkBox, m_operations)
     {
-      BenchmarkTask task(checkBox->text(),
-                         m_iterations->value(),
-                         model());
+        if (!m_cancelRequested && checkBox->isChecked())
+        {
+            BenchmarkTask task(checkBox->text(), m_iterations->value(), model());
 
-      connect(&task, SIGNAL(resultReady(const BenchmarkResult &)),
-              this, SLOT(processResult(const BenchmarkResult &)));
+            connect(&task, SIGNAL(resultReady(const BenchmarkResult &)), this, SLOT(processResult(const BenchmarkResult &)));
 
-      connect(m_progressBar, SIGNAL(canceled()),
-              &task, SLOT(cancel()));
+            connect(m_progressBar, SIGNAL(canceled()), &task, SLOT(cancel()));
 
-      task.execute();
+            task.execute();
+        }
     }
-  }
 
-  // Restore normal signal use
-  model()->blockSignals(false);
-  parent()->currentWidget()->setModified(false);
+    // Restore normal signal use
+    model()->blockSignals(false);
+    parent()->currentWidget()->setModified(false);
 }
 
-
-void CBenchmarkDialog::processResult(const BenchmarkResult & p_result)
+void CBenchmarkDialog::processResult(const BenchmarkResult &p_result)
 {
-  m_progressBar->setValue(++m_progress);
+    m_progressBar->setValue(++m_progress);
 
-  if (p_result.status() == BenchmarkResult::Success)
-  {
-    m_report->append(QString("<b>%1</b>")
-    .arg(p_result.title()));
-  }
-  else
-  {
-    m_report->append(QString("<b>%1 (%2)</b>")
-    .arg(p_result.title())
-    .arg(p_result.statusStr()));
-  }
+    if (p_result.status() == BenchmarkResult::Success)
+    {
+        m_report->append(QString("<b>%1</b>").arg(p_result.title()));
+    }
+    else
+    {
+        m_report->append(QString("<b>%1 (%2)</b>").arg(p_result.title()).arg(p_result.statusStr()));
+    }
 
-  m_report->append(p_result.timeStr());
+    m_report->append(p_result.timeStr());
 }
 
 void CBenchmarkDialog::cancel()
 {
-  m_cancelRequested = true;
+    m_cancelRequested = true;
 }
 
 void CBenchmarkDialog::selectAll()
 {
-  foreach (QCheckBox *checkBox, m_operations)
-  {
-    checkBox->setChecked(true);
-  }
+    foreach (QCheckBox *checkBox, m_operations)
+    {
+        checkBox->setChecked(true);
+    }
 
-  updateProgressRange();
+    updateProgressRange();
 }
 
 void CBenchmarkDialog::unselectAll()
 {
-  foreach (QCheckBox *checkBox, m_operations)
-  {
-    checkBox->setChecked(false);
-  }
+    foreach (QCheckBox *checkBox, m_operations)
+    {
+        checkBox->setChecked(false);
+    }
 
-  updateProgressRange();
+    updateProgressRange();
 }
 
 int CBenchmarkDialog::countOperations() const
 {
-  int count = 0;
-  foreach (QCheckBox *checkBox, m_operations)
-  {
-    if (checkBox->isChecked())
+    int count = 0;
+    foreach (QCheckBox *checkBox, m_operations)
     {
-      ++count;
+        if (checkBox->isChecked())
+        {
+            ++count;
+        }
     }
-  }
 
-  return count;
+    return count;
 }
 
 void CBenchmarkDialog::updateProgressRange()
 {
-  const int count = countOperations();
+    const int count = countOperations();
 
-  m_progressBar->reset();
-  if (count == 0) // avoid k2000
-  {
-    m_progressBar->setMinimum(1);
-    m_progressBar->setMaximum(1);
-  }
-  else
-  {
-    m_progressBar->setMinimum(0);
-    m_progressBar->setMaximum(count);
-  }
+    m_progressBar->reset();
+    if (count == 0) // avoid k2000
+    {
+        m_progressBar->setMinimum(1);
+        m_progressBar->setMaximum(1);
+    }
+    else
+    {
+        m_progressBar->setMinimum(0);
+        m_progressBar->setMaximum(count);
+    }
 }
 
 void CBenchmarkDialog::addHeaderInfo()
 {
-  QString rule = QString("-----------------------------------------------------------");
+    QString rule = QString("-----------------------------------------------------------");
 
-  m_report->append(rule);
+    m_report->append(rule);
 
-  QString cvInfo = tr("OpenCV: %1.%2.%3")
-  .arg(QString::number(CV_MAJOR_VERSION))
-  .arg(QString::number(CV_MINOR_VERSION))
-  .arg(QString::number(CV_SUBMINOR_VERSION));;
+    QString cvInfo = tr("OpenCV: %1.%2.%3")
+                         .arg(QString::number(CV_MAJOR_VERSION))
+                         .arg(QString::number(CV_MINOR_VERSION))
+                         .arg(QString::number(CV_SUBMINOR_VERSION));
+    ;
 
-  m_report->append(cvInfo);
+    m_report->append(cvInfo);
 
-  QString modelInfo = tr("Matrix: %1 x %2 %3C%4")
-  .arg(QString::number(model()->rowCount()))
-  .arg(QString::number(model()->columnCount()))
-  .arg(model()->typeString())
-  .arg(QString::number(model()->channels()));
+    QString modelInfo = tr("Matrix: %1 x %2 %3C%4")
+                            .arg(QString::number(model()->rowCount()))
+                            .arg(QString::number(model()->columnCount()))
+                            .arg(model()->typeString())
+                            .arg(QString::number(model()->channels()));
 
-  m_report->append(modelInfo);
+    m_report->append(modelInfo);
 
-  QString benchmarkInfo = tr("Benchmark: %1 operations (%2 iterations)")
-  .arg(QString::number(countOperations()))
-  .arg(QString::number(m_iterations->value()));
+    QString benchmarkInfo =
+        tr("Benchmark: %1 operations (%2 iterations)").arg(QString::number(countOperations())).arg(QString::number(m_iterations->value()));
 
-  m_report->append(benchmarkInfo);
+    m_report->append(benchmarkInfo);
 
-  m_report->append(rule);
+    m_report->append(rule);
 }
-
 
 void CBenchmarkDialog::save()
 {
-  QString filename = QFileDialog::getSaveFileName(nullptr,
-    tr("Save benchmark report"),
-    m_savePath,
-    tr("Data files (*.txt *.html)"));
+    QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save benchmark report"), m_savePath, tr("Data files (*.txt *.html)"));
     QFileInfo fi(filename);
     if (filename.isEmpty())
     {
-      return;
+        return;
     }
 
     m_savePath = fi.absolutePath();
     QFile file(filename);
     if (file.open(QFile::WriteOnly | QFile::Truncate))
     {
-      QTextStream out(&file);
-      if (fi.completeSuffix() == "html")
-      {
-        out << m_report->toHtml();
-      }
-      else
-      {
-        out << m_report->toPlainText();
-      }
+        QTextStream out(&file);
+        if (fi.completeSuffix() == "html")
+        {
+            out << m_report->toHtml();
+        }
+        else
+        {
+            out << m_report->toPlainText();
+        }
     }
 
     writeSettings(); //update savePath
-  }
+}

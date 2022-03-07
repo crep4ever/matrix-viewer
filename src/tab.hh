@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <QSplitter>
 #include <QModelIndex>
+#include <QSplitter>
 #include <QString>
 
 /*!
@@ -30,32 +30,32 @@
 
 class CTab : public QSplitter
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  CTab();
+    /// Constructor.
+    CTab();
 
-  /// Destructor.
-  ~CTab() override;
+    /// Destructor.
+    ~CTab() override;
 
-  virtual void addWidget(QWidget *p_widget);
+    virtual void addWidget(QWidget *p_widget);
 
-  bool isModified() const;
-  void setModified(const bool p_modified);
+    bool isModified() const;
+    void setModified(const bool p_modified);
 
-  QString filePath() const;
-  void setFilePath(const QString & p_path);
+    QString filePath() const;
+    void setFilePath(const QString &p_path);
 
 signals:
-  void labelChanged(const QString &);
-  void wasModified();
+    void labelChanged(const QString &);
+    void wasModified();
 
 public slots:
-  void modelDataChanged(const QModelIndex &, const QModelIndex &);
-  void selectItem(int, int);
+    void modelDataChanged(const QModelIndex &, const QModelIndex &);
+    void selectItem(int, int);
 
 private:
-  bool m_isModified;
-  QString m_filePath;
+    bool m_isModified;
+    QString m_filePath;
 };

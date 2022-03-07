@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include <QDialog>
-#include <QWidget>
-#include <QScrollArea>
-#include <QPushButton>
-
 #include "config.hh"
+
+#include <QDialog>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QWidget>
 
 class QListWidget;
 class QListWidgetItem;
@@ -43,66 +43,66 @@ class QtGroupBoxPropertyBrowser;
  */
 class ConfigDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  ConfigDialog(QWidget* p_parent = nullptr);
+    /// Constructor.
+    ConfigDialog(QWidget *p_parent = nullptr);
 
-  /*!
+    /*!
     Returns the parent widget (which is the main window of the application).
   */
-  CMainWindow* parent() const;
+    CMainWindow *parent() const;
 
 public slots:
-  /*!
+    /*!
     Changes the configuration page from \a previous to \a current.
   */
-  void changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous);
+    void changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous);
 
 protected:
-  /*!
+    /*!
     Saves all pages settings before closing.
   */
-  void closeEvent(QCloseEvent *p_event) override;
+    void closeEvent(QCloseEvent *p_event) override;
 
 private:
-  void createIcons();
+    void createIcons();
 
-  QListWidget *m_contentsWidget;
-  QStackedWidget *m_pagesWidget;
+    QListWidget *m_contentsWidget;
+    QStackedWidget *m_pagesWidget;
 };
 
 /** \brief Page is the base class for config page
  */
 class Page : public QScrollArea
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /// Constructor.
-  Page(QWidget *p_parent = nullptr);
+    /// Constructor.
+    Page(QWidget *p_parent = nullptr);
 
-  /*!
+    /*!
     Returns the parent widget (which is the ConfigDialog object).
   */
-  ConfigDialog * parent() const;
+    ConfigDialog *parent() const;
 
-  /*!
+    /*!
     Applies the layout \a layout to the current page.
   */
-  void setLayout(QLayout *p_layout);
+    void setLayout(QLayout *p_layout);
 
 protected:
-  /*!
+    /*!
     Saves settings before closing the page.
   */
-  void closeEvent(QCloseEvent *p_event) override;
+    void closeEvent(QCloseEvent *p_event) override;
 
 private:
-  virtual void readSettings();
-  virtual void writeSettings();
+    virtual void readSettings();
+    virtual void writeSettings();
 
-  QWidget *m_content;
+    QWidget *m_content;
 };
 
 /**
@@ -113,18 +113,18 @@ private:
  */
 class DisplayPage : public Page
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  DisplayPage(QWidget *p_parent = nullptr);
+    /// Constructor.
+    DisplayPage(QWidget *p_parent = nullptr);
 
 private:
-  void readSettings() override;
-  void writeSettings() override;
+    void readSettings() override;
+    void writeSettings() override;
 
-  QCheckBox *m_statusBarCheckBox;
-  QCheckBox *m_toolBarCheckBox;
+    QCheckBox *m_statusBarCheckBox;
+    QCheckBox *m_toolBarCheckBox;
 };
 
 /**
@@ -133,20 +133,20 @@ private:
  */
 class ImagePage : public Page
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  ImagePage(QWidget *p_parent = nullptr);
+    /// Constructor.
+    ImagePage(QWidget *p_parent = nullptr);
 
 private:
-  void readSettings() override;
-  void writeSettings() override;
+    void readSettings() override;
+    void writeSettings() override;
 
-  QCheckBox *m_stretchDynamic;
+    QCheckBox *m_stretchDynamic;
 
-  QComboBox *m_rawType;
-  QSpinBox *m_rawWidth;
-  QSpinBox *m_rawHeight;
-  QCheckBox *m_rawLittleEndianByteOrder;
+    QComboBox *m_rawType;
+    QSpinBox *m_rawWidth;
+    QSpinBox *m_rawHeight;
+    QCheckBox *m_rawLittleEndianByteOrder;
 };

@@ -17,10 +17,14 @@
 //******************************************************************************
 #include "preferences.hh"
 
+#include "file-chooser.hh"
+#include "main-window.hh"
+
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QDebug>
 #include <QDialogButtonBox>
 #include <QFontDialog>
 #include <QFormLayout>
@@ -33,244 +37,227 @@
 #include <QSpinBox>
 #include <QStackedWidget>
 
-#include "main-window.hh"
-#include "file-chooser.hh"
-
-#include <QDebug>
-
 // Config Dialog
 
-ConfigDialog::ConfigDialog(QWidget* p_parent) :
-QDialog(p_parent)
-, m_contentsWidget(nullptr)
-, m_pagesWidget(nullptr)
+ConfigDialog::ConfigDialog(QWidget *p_parent) : QDialog(p_parent), m_contentsWidget(nullptr), m_pagesWidget(nullptr)
 {
-  m_contentsWidget = new QListWidget(this);
-  m_contentsWidget->setViewMode(QListView::IconMode);
-  m_contentsWidget->setIconSize(QSize(62, 62));
-  m_contentsWidget->setMovement(QListView::Static);
-  m_contentsWidget->setSpacing(12);
-  m_contentsWidget->setFixedWidth(110);
+    m_contentsWidget = new QListWidget(this);
+    m_contentsWidget->setViewMode(QListView::IconMode);
+    m_contentsWidget->setIconSize(QSize(62, 62));
+    m_contentsWidget->setMovement(QListView::Static);
+    m_contentsWidget->setSpacing(12);
+    m_contentsWidget->setFixedWidth(110);
 
-  m_pagesWidget = new QStackedWidget(this);
-  m_pagesWidget->addWidget(new DisplayPage(this));
-  m_pagesWidget->addWidget(new ImagePage(this));
+    m_pagesWidget = new QStackedWidget(this);
+    m_pagesWidget->addWidget(new DisplayPage(this));
+    m_pagesWidget->addWidget(new ImagePage(this));
 
-  QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Close);
-  connect(buttons, SIGNAL(rejected()), this, SLOT(close()));
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Close);
+    connect(buttons, SIGNAL(rejected()), this, SLOT(close()));
 
-  createIcons();
-  m_contentsWidget->setCurrentRow(0);
+    createIcons();
+    m_contentsWidget->setCurrentRow(0);
 
-  QBoxLayout *horizontalLayout = new QHBoxLayout;
-  horizontalLayout->addWidget(m_contentsWidget);
-  horizontalLayout->addWidget(m_pagesWidget, 1);
+    QBoxLayout *horizontalLayout = new QHBoxLayout;
+    horizontalLayout->addWidget(m_contentsWidget);
+    horizontalLayout->addWidget(m_pagesWidget, 1);
 
-  QBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addLayout(horizontalLayout);
-  mainLayout->addSpacing(12);
-  mainLayout->addWidget(buttons);
+    QBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(horizontalLayout);
+    mainLayout->addSpacing(12);
+    mainLayout->addWidget(buttons);
 
-  setLayout(mainLayout);
-  setWindowTitle(tr("Preferences"));
-  resize(600,600);
+    setLayout(mainLayout);
+    setWindowTitle(tr("Preferences"));
+    resize(600, 600);
 }
 
-CMainWindow* ConfigDialog::parent() const
+CMainWindow *ConfigDialog::parent() const
 {
-  CMainWindow *p = qobject_cast<CMainWindow*>(QDialog::parent());
-  if (p == nullptr)
-  {
-    qWarning() << tr("ConfigDialog::parent() invalid parent");
-  }
+    CMainWindow *p = qobject_cast<CMainWindow *>(QDialog::parent());
+    if (p == nullptr)
+    {
+        qWarning() << tr("ConfigDialog::parent() invalid parent");
+    }
 
-  return p;
+    return p;
 }
 
 void ConfigDialog::createIcons()
 {
-  QListWidgetItem *displayButton = new QListWidgetItem(m_contentsWidget);
-  displayButton->setIcon(QIcon::fromTheme("preferences-desktop", QIcon(":/icons/tango/48x48/categories/preferences-desktop.png")));
-  displayButton->setText(tr("Display"));
-  displayButton->setTextAlignment(Qt::AlignHCenter);
-  displayButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    QListWidgetItem *displayButton = new QListWidgetItem(m_contentsWidget);
+    displayButton->setIcon(QIcon::fromTheme("preferences-desktop", QIcon(":/icons/tango/48x48/categories/preferences-desktop.png")));
+    displayButton->setText(tr("Display"));
+    displayButton->setTextAlignment(Qt::AlignHCenter);
+    displayButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-  QListWidgetItem *imageButton = new QListWidgetItem(m_contentsWidget);
-  imageButton->setIcon(QIcon::fromTheme("image-x-generic"));
-  imageButton->setText(tr("Image"));
-  imageButton->setTextAlignment(Qt::AlignHCenter);
-  imageButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    QListWidgetItem *imageButton = new QListWidgetItem(m_contentsWidget);
+    imageButton->setIcon(QIcon::fromTheme("image-x-generic"));
+    imageButton->setText(tr("Image"));
+    imageButton->setTextAlignment(Qt::AlignHCenter);
+    imageButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-  connect(m_contentsWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-  this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
+    connect(m_contentsWidget,
+            SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+            this,
+            SLOT(changePage(QListWidgetItem *, QListWidgetItem *)));
 }
 
 void ConfigDialog::changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous)
 {
-  if (p_current == nullptr)
-  {
-    p_current = p_previous;
-  }
+    if (p_current == nullptr)
+    {
+        p_current = p_previous;
+    }
 
-  m_pagesWidget->setCurrentIndex(m_contentsWidget->row(p_current));
+    m_pagesWidget->setCurrentIndex(m_contentsWidget->row(p_current));
 }
 
 void ConfigDialog::closeEvent(QCloseEvent *p_event)
 {
-  Q_UNUSED(p_event);
-  for (int i = 0; i < m_pagesWidget->count(); ++i)
-  {
-    m_pagesWidget->widget(i)->close();
-  }
+    Q_UNUSED(p_event);
+    for (int i = 0; i < m_pagesWidget->count(); ++i)
+    {
+        m_pagesWidget->widget(i)->close();
+    }
 }
 
 // Page
 
-Page::Page(QWidget *p_parent) :
-QScrollArea(p_parent)
-, m_content(new QWidget)
-{
-}
+Page::Page(QWidget *p_parent) : QScrollArea(p_parent), m_content(new QWidget) { }
 
-ConfigDialog * Page::parent() const
+ConfigDialog *Page::parent() const
 {
-  ConfigDialog *p = qobject_cast<ConfigDialog*>(QScrollArea::parent());
-  if (p == nullptr)
-  {
-    qWarning() << tr("Page::parent() invalid parent");
-  }
-  return p;
+    ConfigDialog *p = qobject_cast<ConfigDialog *>(QScrollArea::parent());
+    if (p == nullptr)
+    {
+        qWarning() << tr("Page::parent() invalid parent");
+    }
+    return p;
 }
 
 void Page::closeEvent(QCloseEvent *p_event)
 {
-  writeSettings();
-  p_event->accept();
+    writeSettings();
+    p_event->accept();
 }
 
-void Page::readSettings()
-{
-}
+void Page::readSettings() { }
 
-void Page::writeSettings()
-{
-}
+void Page::writeSettings() { }
 
 void Page::setLayout(QLayout *p_layout)
 {
-  m_content->setLayout(p_layout);
-  setWidget(m_content);
+    m_content->setLayout(p_layout);
+    setWidget(m_content);
 }
 
 // Display Page
 
-DisplayPage::DisplayPage(QWidget *p_parent) :
-Page(p_parent)
-, m_statusBarCheckBox(nullptr)
-, m_toolBarCheckBox(nullptr)
+DisplayPage::DisplayPage(QWidget *p_parent) : Page(p_parent), m_statusBarCheckBox(nullptr), m_toolBarCheckBox(nullptr)
 {
-  QGroupBox *displayApplicationGroupBox = new QGroupBox(tr("Application"));
-  m_statusBarCheckBox = new QCheckBox(tr("Status bar"));
-  m_toolBarCheckBox = new QCheckBox(tr("Tool bar"));
+    QGroupBox *displayApplicationGroupBox = new QGroupBox(tr("Application"));
+    m_statusBarCheckBox                   = new QCheckBox(tr("Status bar"));
+    m_toolBarCheckBox                     = new QCheckBox(tr("Tool bar"));
 
-  QVBoxLayout *displayApplicationLayout = new QVBoxLayout;
-  displayApplicationLayout->addWidget(m_statusBarCheckBox);
-  displayApplicationLayout->addWidget(m_toolBarCheckBox);
-  displayApplicationGroupBox->setLayout(displayApplicationLayout);
+    QVBoxLayout *displayApplicationLayout = new QVBoxLayout;
+    displayApplicationLayout->addWidget(m_statusBarCheckBox);
+    displayApplicationLayout->addWidget(m_toolBarCheckBox);
+    displayApplicationGroupBox->setLayout(displayApplicationLayout);
 
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addWidget(displayApplicationGroupBox);
-  mainLayout->addStretch(1);
-  setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(displayApplicationGroupBox);
+    mainLayout->addStretch(1);
+    setLayout(mainLayout);
 
-  readSettings();
+    readSettings();
 }
 
 void DisplayPage::readSettings()
 {
-  QSettings settings;
-  settings.beginGroup("display");
-  m_statusBarCheckBox->setChecked(settings.value("statusBar", true).toBool());
-  m_toolBarCheckBox->setChecked(settings.value("toolBar", true).toBool());
-  settings.endGroup();
+    QSettings settings;
+    settings.beginGroup("display");
+    m_statusBarCheckBox->setChecked(settings.value("statusBar", true).toBool());
+    m_toolBarCheckBox->setChecked(settings.value("toolBar", true).toBool());
+    settings.endGroup();
 }
 
 void DisplayPage::writeSettings()
 {
-  QSettings settings;
-  settings.beginGroup("display");
-  settings.setValue("statusBar", m_statusBarCheckBox->isChecked());
-  settings.setValue("toolBar", m_toolBarCheckBox->isChecked());
-  settings.endGroup();
+    QSettings settings;
+    settings.beginGroup("display");
+    settings.setValue("statusBar", m_statusBarCheckBox->isChecked());
+    settings.setValue("toolBar", m_toolBarCheckBox->isChecked());
+    settings.endGroup();
 }
 
 // Image Page
 
-ImagePage::ImagePage(QWidget *p_parent) :
-Page(p_parent)
-, m_stretchDynamic(nullptr)
-, m_rawType(nullptr)
-, m_rawWidth(nullptr)
-, m_rawHeight(nullptr)
-, m_rawLittleEndianByteOrder(nullptr)
+ImagePage::ImagePage(QWidget *p_parent)
+    : Page(p_parent)
+    , m_stretchDynamic(nullptr)
+    , m_rawType(nullptr)
+    , m_rawWidth(nullptr)
+    , m_rawHeight(nullptr)
+    , m_rawLittleEndianByteOrder(nullptr)
 {
-  QGroupBox *displayGroupBox = new QGroupBox(tr("Display options"));
-  m_stretchDynamic = new QCheckBox;
-  m_stretchDynamic->setEnabled(true);
+    QGroupBox *displayGroupBox = new QGroupBox(tr("Display options"));
+    m_stretchDynamic           = new QCheckBox;
+    m_stretchDynamic->setEnabled(true);
 
-  QFormLayout *displayLayout = new QFormLayout;
-  displayLayout->addRow(tr("Stretch dynamic"), m_stretchDynamic);
-  displayGroupBox->setLayout(displayLayout);
+    QFormLayout *displayLayout = new QFormLayout;
+    displayLayout->addRow(tr("Stretch dynamic"), m_stretchDynamic);
+    displayGroupBox->setLayout(displayLayout);
 
-  QGroupBox *rawGroupBox = new QGroupBox(tr("Raw images"));
-  m_rawType = new QComboBox;
-  m_rawType->addItem(tr("16-bit unsigned"));
+    QGroupBox *rawGroupBox = new QGroupBox(tr("Raw images"));
+    m_rawType              = new QComboBox;
+    m_rawType->addItem(tr("16-bit unsigned"));
 
-  m_rawWidth = new QSpinBox;
-  m_rawWidth->setMaximum(20000);
+    m_rawWidth = new QSpinBox;
+    m_rawWidth->setMaximum(20000);
 
-  m_rawHeight = new QSpinBox;
-  m_rawHeight->setMaximum(20000);
+    m_rawHeight = new QSpinBox;
+    m_rawHeight->setMaximum(20000);
 
-  m_rawLittleEndianByteOrder = new QCheckBox;
-  m_rawLittleEndianByteOrder->setEnabled(false);
+    m_rawLittleEndianByteOrder = new QCheckBox;
+    m_rawLittleEndianByteOrder->setEnabled(false);
 
-  QFormLayout *rawLayout = new QFormLayout;
-  rawLayout->addRow(tr("Type"), m_rawType);
-  rawLayout->addRow(tr("Width"), m_rawWidth);
-  rawLayout->addRow(tr("Height"), m_rawHeight);
-  rawLayout->addRow(tr("Little-endian byte order"), m_rawLittleEndianByteOrder);
-  rawGroupBox->setLayout(rawLayout);
+    QFormLayout *rawLayout = new QFormLayout;
+    rawLayout->addRow(tr("Type"), m_rawType);
+    rawLayout->addRow(tr("Width"), m_rawWidth);
+    rawLayout->addRow(tr("Height"), m_rawHeight);
+    rawLayout->addRow(tr("Little-endian byte order"), m_rawLittleEndianByteOrder);
+    rawGroupBox->setLayout(rawLayout);
 
-  QBoxLayout *mainLayout = new QVBoxLayout;
-  mainLayout->addWidget(rawGroupBox);
-  mainLayout->addWidget(displayGroupBox);
+    QBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(rawGroupBox);
+    mainLayout->addWidget(displayGroupBox);
 
-  setLayout(mainLayout);
+    setLayout(mainLayout);
 
-  readSettings();
+    readSettings();
 }
 
 void ImagePage::readSettings()
 {
-  QSettings settings;
-  settings.beginGroup("image");
-  m_stretchDynamic->setChecked(settings.value("stretch-dynamic", true).toBool());
-  m_rawType->setCurrentIndex(settings.value("raw-type", 0).toInt());
-  m_rawWidth->setValue(settings.value("raw-width", 2160).toInt());
-  m_rawHeight->setValue(settings.value("raw-height", 1944).toInt());
-  m_rawLittleEndianByteOrder->setChecked(settings.value("raw-little-endian", true).toBool());
-  settings.endGroup();
+    QSettings settings;
+    settings.beginGroup("image");
+    m_stretchDynamic->setChecked(settings.value("stretch-dynamic", true).toBool());
+    m_rawType->setCurrentIndex(settings.value("raw-type", 0).toInt());
+    m_rawWidth->setValue(settings.value("raw-width", 2160).toInt());
+    m_rawHeight->setValue(settings.value("raw-height", 1944).toInt());
+    m_rawLittleEndianByteOrder->setChecked(settings.value("raw-little-endian", true).toBool());
+    settings.endGroup();
 }
 
 void ImagePage::writeSettings()
 {
-  QSettings settings;
-  settings.beginGroup("image");
-  settings.setValue("stretch-dynamic", m_stretchDynamic->isChecked());
-  settings.setValue("raw-type", m_rawType->currentIndex());
-  settings.setValue("raw-width", m_rawWidth->value());
-  settings.setValue("raw-height", m_rawHeight->value());
-  settings.setValue("raw-little-endian", m_rawLittleEndianByteOrder->isChecked());
-  settings.endGroup();
+    QSettings settings;
+    settings.beginGroup("image");
+    settings.setValue("stretch-dynamic", m_stretchDynamic->isChecked());
+    settings.setValue("raw-type", m_rawType->currentIndex());
+    settings.setValue("raw-width", m_rawWidth->value());
+    settings.setValue("raw-height", m_rawHeight->value());
+    settings.setValue("raw-little-endian", m_rawLittleEndianByteOrder->isChecked());
+    settings.endGroup();
 }

@@ -42,39 +42,38 @@ class QListWidgetItem;
 */
 class COperationsDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /// Constructor.
-  COperationsDialog(QWidget *p_parent = nullptr);
+    /// Constructor.
+    COperationsDialog(QWidget *p_parent = nullptr);
 
-  /// Destructor.
-  ~COperationsDialog() override;
+    /// Destructor.
+    ~COperationsDialog() override;
 
-  CMainWindow* parent() const;
-  CMatrixModel* model() const;
+    CMainWindow *parent() const;
+    CMatrixModel *model() const;
 
 public slots:
 
-  /*!
+    /*!
     Reset operation parameters and restore original data
   */
-  void reset();
+    void reset();
 
-  /*!
+    /*!
     Changes the configuration page from \a previous to \a current.
   */
-  void changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous);
+    void changePage(QListWidgetItem *p_current, QListWidgetItem *p_previous);
 
 private:
+    void createActions();
+    void createIcons();
 
-  void createActions();
-  void createIcons();
+    CMainWindow *m_parent;
+    CMatrixModel *m_backup;
 
-  CMainWindow *m_parent;
-  CMatrixModel *m_backup;
-
-  // Operations widgets
-  QListWidget *m_categoriesWidget;
-  QStackedWidget *m_operationsWidget;
+    // Operations widgets
+    QListWidget *m_categoriesWidget;
+    QStackedWidget *m_operationsWidget;
 };

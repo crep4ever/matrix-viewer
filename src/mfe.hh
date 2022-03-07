@@ -18,17 +18,15 @@
 
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <opencv2/opencv.hpp>
-#include <cstring>
-#include <sstream>
-
-#include <QString>
 #include <QDataStream>
 #include <QDebug>
-
+#include <QString>
+#include <cstring>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <sstream>
 
 /**
  * @class MatrixFormatExchange
@@ -75,13 +73,7 @@ class MatrixFormatExchange
 private:
     struct MFEHeader
     {
-        MFEHeader():
-            format(std::vector<char>(3)),
-            offset(0),
-            type(0),
-            cols(0),
-            rows(0),
-            depth(0)
+        MFEHeader() : format(std::vector<char>(3)), offset(0), type(0), cols(0), rows(0), depth(0)
         {
             format[0] = 'n';
             format[1] = '/';
@@ -95,12 +87,12 @@ private:
         std::string toString() const
         {
             std::stringstream stream;
-            stream << "format: "  << format[0] << format[1] << format[2] << std::endl;
-            stream << "offset: "  << offset << std::endl;
-            stream << "type: "    << type << std::endl;
-            stream << "cols: "    << cols << std::endl;
-            stream << "rows: "    << rows << std::endl;
-            stream << "depth: "   << depth << std::endl;
+            stream << "format: " << format[0] << format[1] << format[2] << std::endl;
+            stream << "offset: " << offset << std::endl;
+            stream << "type: " << type << std::endl;
+            stream << "cols: " << cols << std::endl;
+            stream << "rows: " << rows << std::endl;
+            stream << "depth: " << depth << std::endl;
             return stream.str();
         }
 
@@ -120,18 +112,13 @@ private:
          *
          * however, this pragma entail portability issues on windows with MVSCC
          */
-         int size() const
-         {
-             const int s = (int)format.size() +
-             sizeof(offset) +
-             sizeof(type) +
-             sizeof(cols) +
-             sizeof(rows) +
-             sizeof(depth);
+        int size() const
+        {
+            const int s = (int) format.size() + sizeof(offset) + sizeof(type) + sizeof(cols) + sizeof(rows) + sizeof(depth);
 
-             Q_ASSERT(s == 23);
-             return s;
-         }
+            Q_ASSERT(s == 23);
+            return s;
+        }
 
         bool read(QDataStream& p_stream)
         {
@@ -175,7 +162,7 @@ private:
         }
         bool write(QDataStream& p_stream)
         {
-            if (p_stream.writeRawData(&format[0],3) == -1)
+            if (p_stream.writeRawData(&format[0], 3) == -1)
             {
                 qWarning() << "Can't write MFE header format";
                 return false;
@@ -223,24 +210,23 @@ private:
     };
 
 public:
-
     MatrixFormatExchange();
 
     ~MatrixFormatExchange();
 
     cv::Mat data() const;
 
-    void setData(const cv::Mat & p_mat);
+    void setData(const cv::Mat& p_mat);
 
     std::string comment() const;
 
-    void setComment(const std::string & p_str);
+    void setComment(const std::string& p_str);
 
     std::string toString() const;
 
-    bool write(const QString & p_path);
+    bool write(const QString& p_path);
 
-    bool read(const QString & p_path);
+    bool read(const QString& p_path);
 
 private:
     MFEHeader m_header;
