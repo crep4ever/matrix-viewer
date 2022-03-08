@@ -21,6 +21,7 @@
 #include <QDialog>
 
 class CMainWindow;
+class QTableWidget;
 
 /*!
   \file properties-dialog.hh
@@ -40,6 +41,9 @@ public:
     ~CPropertiesDialog() override;
 
     CMainWindow *parent() const;
+
+private:
+    QTableWidget *createPropertyTable(const int p_rows, const int p_columns);
 
 private:
     CMainWindow *m_parent;

@@ -31,8 +31,9 @@ CMatrixConverter::CMatrixConverter() : QObject(), m_data(), m_format(Format_Unkn
 
 CMatrixConverter::CMatrixConverter(const QString& filename)
     : QObject()
-    , m_data()
     , m_format(Format_Unknown)
+    , m_data()
+    , m_metadata()
     , m_rawType(0)
     , m_rawWidth(0)
     , m_rawHeight(0)
@@ -197,6 +198,11 @@ cv::Mat CMatrixConverter::data() const
 void CMatrixConverter::setData(const cv::Mat& matrix)
 {
     m_data = matrix;
+}
+
+const CMetadata& CMatrixConverter::metadata()
+{
+    return m_metadata;
 }
 
 bool CMatrixConverter::loadFromTxt(const QString& filename)
@@ -409,6 +415,7 @@ bool CMatrixConverter::loadFromMfe(const QString& filename)
         MatrixFormatExchange mfe;
         mfe.read(filename);
         m_data = mfe.data();
+        m_metadata.addProperty(CProperty("Comment", QString::fromStdString(mfe.comment())));
     }
     catch (cv::Exception& e)
     {
@@ -447,7 +454,8 @@ bool CMatrixConverter::loadFromEdf(const QString& filename)
     {
         CEdfFile edf;
         edf.read(filename);
-        m_data = edf.data();
+        m_data     = edf.data();
+        m_metadata = edf.metadata();
     }
     catch (cv::Exception& e)
     {
@@ -466,6 +474,7 @@ bool CMatrixConverter::saveToEdf(const QString& filename)
     {
         CEdfFile edf;
         edf.setData(m_data);
+        edf.setMetadata(m_metadata);
         edf.write(filename);
     }
     catch (cv::Exception& e)

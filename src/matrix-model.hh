@@ -19,6 +19,7 @@
 #pragma once
 
 #include "matrix-converter.hh"
+#include "metadata.hh"
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -61,6 +62,9 @@ public:
 
     cv::Mat data() const;
     void setData(const cv::Mat &p_matrix);
+
+    const CMetadata &metadata() const;
+    void setMetadata(const CMetadata &p_md);
 
     int rowCount(const QModelIndex &p_parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &p_parent = QModelIndex()) const override;
@@ -138,8 +142,9 @@ public slots:
 
 private:
     QString m_filePath;
-    cv::Mat m_data;
     CMatrixConverter::FileFormat m_format;
+    cv::Mat m_data;
+    CMetadata m_metadata;
     QStringList m_horizontalHeaderLabels;
     QStringList m_verticalHeaderLabels;
 };

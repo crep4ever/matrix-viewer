@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "metadata.hh"
+
 #include <QObject>
 #include <opencv2/opencv.hpp>
 
@@ -77,6 +79,8 @@ public:
     cv::Mat data() const;
     void setData(const cv::Mat& matrix);
 
+    const CMetadata& metadata();
+
     bool save(const QString& filename);
     bool load(const QString& filename);
 
@@ -107,8 +111,9 @@ private:
     bool loadFromEdf(const QString& filename);
     bool saveToEdf(const QString& filename);
 
-    cv::Mat m_data;
     FileFormat m_format;
+    cv::Mat m_data;
+    CMetadata m_metadata;
 
     int m_rawType;
     int m_rawWidth;

@@ -18,86 +18,13 @@
 
 #pragma once
 
-#include <QFileInfo>
+#include "metadata.hh"
+
 #include <QString>
 #include <opencv2/opencv.hpp>
 
 class QFile;
 class QTextStream;
-
-class CProperty
-{
-public:
-    const QString& key() const
-    {
-        return m_key;
-    }
-
-    void setKey(const QString& p_key)
-    {
-        m_key = p_key;
-    }
-
-    const QString& value() const
-    {
-        return m_value;
-    }
-
-    void setValue(const QString& p_value)
-    {
-        m_value = p_value;
-    }
-
-private:
-    QString m_key;
-    QString m_value;
-};
-
-class CMetadata : public QFileInfo
-{
-public:
-    const QVector<CProperty>& properties() const
-    {
-        return m_properties;
-    }
-
-    void addProperty(const CProperty& p_property)
-    {
-        m_properties << p_property;
-    }
-
-    void updateProperty(const QString& p_key, const QString& p_value)
-    {
-        for (CProperty& property : m_properties)
-        {
-            if (p_key == property.key())
-            {
-                property.setValue(p_value);
-                break;
-            }
-        }
-    }
-
-    QString value(const QString& p_key) const
-    {
-        for (const CProperty& property : properties())
-        {
-            if (p_key == property.key())
-            {
-                return property.value();
-            }
-        }
-        return QString();
-    }
-
-    void clear()
-    {
-        m_properties.clear();
-    }
-
-private:
-    QVector<CProperty> m_properties;
-};
 
 /**
  * @class CEdfFile
@@ -113,8 +40,10 @@ public:
     ~CEdfFile();
 
     cv::Mat data() const;
-
     void setData(const cv::Mat& p_mat);
+
+    const CMetadata& metadata() const;
+    void setMetadata(const CMetadata& p_md);
 
     bool write(const QString& p_path);
 
@@ -162,15 +91,13 @@ private:
 
     bool isStreamInitialized() const;
 
-    const CMetadata& info() const;
-
 private:
+    cv::Mat m_data;
+    CMetadata m_metadata;
+
     qint64 m_headerStart;
     qint64 m_headerStop;
 
-    cv::Mat m_data;
-
-    CMetadata m_info;
     QFile* m_file;
     QTextStream* m_stream;
 };

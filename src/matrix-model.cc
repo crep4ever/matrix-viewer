@@ -28,8 +28,9 @@
 CMatrixModel::CMatrixModel()
     : QAbstractTableModel()
     , m_filePath()
-    , m_data()
     , m_format(CMatrixConverter::Format_Unknown)
+    , m_data()
+    , m_metadata()
     , m_horizontalHeaderLabels()
     , m_verticalHeaderLabels()
 {
@@ -55,6 +56,7 @@ CMatrixModel::CMatrixModel(const QString& p_filePath)
 {
     CMatrixConverter converter(p_filePath);
     setData(converter.data());
+    setMetadata(converter.metadata());
     m_format = converter.format();
 }
 
@@ -125,6 +127,16 @@ void CMatrixModel::setData(const cv::Mat& p_matrix)
 {
     m_data = p_matrix;
     emit(dataChanged(QModelIndex(), QModelIndex()));
+}
+
+const CMetadata& CMatrixModel::metadata() const
+{
+    return m_metadata;
+}
+
+void CMatrixModel::setMetadata(const CMetadata& p_md)
+{
+    m_metadata = p_md;
 }
 
 int CMatrixModel::rowCount(const QModelIndex& p_parent) const

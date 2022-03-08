@@ -24,7 +24,7 @@
 #include <QFileInfo>
 #include <QTextStream>
 
-CEdfFile::CEdfFile(const QString& p_filePath) : m_headerStart(-1), m_headerStop(-1), m_data(), m_info(), m_file(nullptr), m_stream(nullptr)
+CEdfFile::CEdfFile(const QString& p_filePath) : m_data(), m_metadata(), m_headerStart(-1), m_headerStop(-1), m_file(nullptr), m_stream(nullptr)
 {
     read(p_filePath);
 }
@@ -43,7 +43,7 @@ void CEdfFile::setData(const cv::Mat& p_mat)
 
 bool CEdfFile::write(const QString& p_path)
 {
-    m_info.setFile(p_path);
+    m_metadata.setFile(p_path);
     return saveMatrix();
 }
 
@@ -55,7 +55,7 @@ bool CEdfFile::read(const QString& p_path)
     }
 
     clear();
-    m_info.setFile(p_path);
+    m_metadata.setFile(p_path);
     return loadData();
 }
 
@@ -132,7 +132,7 @@ bool CEdfFile::loadData()
 
         if (isHeaderLine(line))
         {
-            m_info.addProperty(parseHeaderLine(line));
+            m_metadata.addProperty(parseHeaderLine(line));
             //qDebug() << "Add property from header line" << line;
             continue;
         }
@@ -171,7 +171,7 @@ bool CEdfFile::loadData()
     const int bytes = in.readRawData(reinterpret_cast<char*>(matrix.data), binarySize);
     if (bytes < 0)
     {
-        qWarning() << "Can't read raw binary data from edf image file" << info().fileName();
+        qWarning() << "Can't read raw binary data from edf image file" << metadata().fileName();
         return false;
     }
 
@@ -201,7 +201,7 @@ bool CEdfFile::loadHeader()
 
         if (isHeaderLine(line))
         {
-            m_info.addProperty(parseHeaderLine(line));
+            m_metadata.addProperty(parseHeaderLine(line));
             //qDebug() << "Add property from header line" << line;
             continue;
         }
@@ -244,7 +244,7 @@ bool CEdfFile::checkRequiredHeaderProperties()
     for (const QString& key : required)
     {
         bool found = false;
-        for (const CProperty& property : info().properties())
+        for (const CProperty& property : metadata().properties())
         {
             if (property.key() == key)
             {
@@ -263,7 +263,7 @@ bool CEdfFile::checkRequiredHeaderProperties()
 unsigned int CEdfFile::numericValue(const QString& p_property) const
 {
     bool ok                  = false;
-    const unsigned int value = info().value(p_property).toUInt(&ok);
+    const unsigned int value = metadata().value(p_property).toUInt(&ok);
     if (!ok)
     {
         qWarning() << "Invalid numeric value for header property:" << p_property;
@@ -319,7 +319,7 @@ int CEdfFile::readDataType() const
     // There notably exist some images with "DataType = UnsignedInteger"
     // that should be decoded as float images
 
-    const QString& type = info().value("DataType").simplified();
+    const QString& type = metadata().value("DataType").simplified();
     return types.contains(type) ? types.value(type) : CV_32FC1;
 }
 
@@ -328,17 +328,17 @@ void CEdfFile::clear()
     m_headerStart = -1;
     m_headerStop  = -1;
     m_data.release();
-    m_info.clear();
+    m_metadata.clear();
     closeStream();
 }
 
 bool CEdfFile::save(bool p_createFile)
 {
-    if (p_createFile && !info().exists())
+    if (p_createFile && !metadata().exists())
     {
-        if (!QFile(info().absoluteFilePath()).open(QIODevice::ReadWrite))
+        if (!QFile(metadata().absoluteFilePath()).open(QIODevice::ReadWrite))
         {
-            qWarning() << "Failed to create file " << info().absoluteFilePath();
+            qWarning() << "Failed to create file " << metadata().absoluteFilePath();
         }
     }
     updateHeader();
@@ -349,7 +349,7 @@ bool CEdfFile::save(bool p_createFile)
 
 bool CEdfFile::saveHeader()
 {
-    if (info().properties().isEmpty())
+    if (metadata().properties().isEmpty())
     {
         qDebug() << "No header properties to save for edf file:" << path();
         return false;
@@ -365,7 +365,7 @@ bool CEdfFile::saveHeader()
 
     QTextStream stream(&file);
     stream << Qt::endl << "{" << Qt::endl;
-    const auto& properties = info().properties();
+    const auto& properties = metadata().properties();
     for (const auto& property : properties)
     {
         stream << property.key() << " = " << property.value() << " ; " << Qt::endl;
@@ -383,7 +383,7 @@ bool CEdfFile::saveMatrix()
         return false;
     }
 
-    QFile file(info().absoluteFilePath());
+    QFile file(metadata().absoluteFilePath());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Append))
     {
         qWarning() << "Can't write edf image data in file:" << path();
@@ -403,10 +403,10 @@ bool CEdfFile::saveMatrix()
 
 void CEdfFile::updateHeader()
 {
-    m_info.updateProperty("DataType", matrixTypeToDataType(m_data.type()));
-    m_info.updateProperty("Dim_1", QString::number(m_data.cols));
-    m_info.updateProperty("Dim_2", QString::number(m_data.rows));
-    m_info.updateProperty("ByteOrder", "LowByteFirst");
+    m_metadata.updateProperty("DataType", matrixTypeToDataType(m_data.type()));
+    m_metadata.updateProperty("Dim_1", QString::number(m_data.cols));
+    m_metadata.updateProperty("Dim_2", QString::number(m_data.rows));
+    m_metadata.updateProperty("ByteOrder", "LowByteFirst");
 }
 
 QString CEdfFile::matrixTypeToDataType(const int p_type) const
@@ -430,15 +430,15 @@ bool CEdfFile::initStream()
 {
     if (m_file || m_stream)
     {
-        qWarning() << "Skip stream initialization for file" << info().fileName();
+        qWarning() << "Skip stream initialization for file" << metadata().fileName();
         return false;
     }
 
-    QString path = info().absoluteFilePath();
-    m_file       = new QFile(info().absoluteFilePath());
+    QString path = metadata().absoluteFilePath();
+    m_file       = new QFile(metadata().absoluteFilePath());
     if (!m_file->open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << "Can't read from file:" << info().fileName();
+        qWarning() << "Can't read from file:" << metadata().fileName();
         return false;
     }
 
@@ -465,14 +465,19 @@ bool CEdfFile::isStreamInitialized() const
     return m_stream != nullptr;
 }
 
-const CMetadata& CEdfFile::info() const
+const CMetadata& CEdfFile::metadata() const
 {
-    return m_info;
+    return m_metadata;
+}
+
+void CEdfFile::setMetadata(const CMetadata& p_md)
+{
+    m_metadata = p_md;
 }
 
 QString CEdfFile::path() const
 {
-    return info().absoluteFilePath();
+    return metadata().absoluteFilePath();
 }
 
 CProperty CEdfFile::parseHeaderLine(const QString& p_line, const QString& p_startMarker, const QString& p_endMarker) const
