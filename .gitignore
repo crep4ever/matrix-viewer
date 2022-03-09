@@ -6,3 +6,5 @@ matrix-viewer
 doc/html
 doc/man
 doc/latex
+debug
+release
