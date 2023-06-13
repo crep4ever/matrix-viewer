@@ -106,8 +106,7 @@ int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
 
-    QApplication::setOrganizationName("ViTechnology");
-    QApplication::setOrganizationDomain("vitechnology.com");
+    QApplication::setOrganizationDomain("rgoffe.org");
     QApplication::setApplicationName(PROJECT_APPLICATION_NAME);
     QApplication::setApplicationVersion(PROJECT_VERSION);
 
