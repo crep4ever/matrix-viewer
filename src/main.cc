@@ -159,7 +159,10 @@ int main(int argc, char *argv[])
     }
 
     QTranslator translator;
-    translator.load(translationFilename, directory);
+    if (!translator.load(translationFilename, directory))
+    {
+        qDebug() << "Can't load translation" << translationFilename << "from directory" << directory;
+    }
     application.installTranslator(&translator);
 
     if (helpFlag)
