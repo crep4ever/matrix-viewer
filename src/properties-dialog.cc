@@ -25,8 +25,10 @@
 #include <QBoxLayout>
 #include <QDebug>
 #include <QDialogButtonBox>
+#include <QGroupBox>
 #include <QHeaderView>
 #include <QLabel>
+#include <QSplitter>
 #include <QTableWidget>
 #include <QTableWidgetItem>
 
@@ -148,23 +150,34 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent), m_p
         row = 0;
         for (const CProperty &property : properties)
         {
-            ++row;
             item = new QTableWidgetItem(property.key());
             headerInfo->setItem(row, 0, item);
 
             item = new QTableWidgetItem(property.value());
             headerInfo->setItem(row, 1, item);
+
+            ++row;
         }
 
-        QBoxLayout *mainLayout = new QVBoxLayout;
-        mainLayout->addWidget(new QLabel(tr("Statistics")));
-        mainLayout->addWidget(matrixInfo, 1);
+        QSplitter *splitter = new QSplitter;
+
+        QGroupBox *statisticsBox     = new QGroupBox(tr("Statistics"));
+        QBoxLayout *statisticsLayout = new QVBoxLayout;
+        statisticsLayout->addWidget(matrixInfo);
+        statisticsBox->setLayout(statisticsLayout);
+        splitter->addWidget(statisticsBox);
 
         if (!properties.isEmpty())
         {
-            mainLayout->addWidget(new QLabel(tr("Header")));
-            mainLayout->addWidget(headerInfo, 1);
+            QGroupBox *headerBox     = new QGroupBox(tr("Header"));
+            QBoxLayout *headerLayout = new QVBoxLayout;
+            headerLayout->addWidget(headerInfo);
+            headerBox->setLayout(headerLayout);
+            splitter->addWidget(headerBox);
         }
+
+        QBoxLayout *mainLayout = new QVBoxLayout;
+        mainLayout->addWidget(splitter);
 
         mainLayout->addWidget(buttons);
         setLayout(mainLayout);
