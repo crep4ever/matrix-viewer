@@ -61,7 +61,7 @@ CTabBar::~CTabBar() { }
 
 void CTabBar::mouseReleaseEvent(QMouseEvent *p_event)
 {
-    if (p_event->button() == Qt::MidButton)
+    if (p_event->button() == Qt::MiddleButton)
     {
         emit(tabCloseRequested(tabAt(p_event->pos())));
     }

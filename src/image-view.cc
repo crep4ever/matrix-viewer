@@ -128,7 +128,7 @@ CMainWindow *CImageView::parent() const
 
 void CImageView::wheelEvent(QWheelEvent *p_event)
 {
-    if (p_event->delta() > 0)
+    if (p_event->pixelDelta().y() > 0)
     {
         zoomIn();
     }
@@ -137,7 +137,8 @@ void CImageView::wheelEvent(QWheelEvent *p_event)
         zoomOut();
     }
 
-    centerOn(mapToScene(p_event->pos()));
+    const QPointF &pos = p_event->position();
+    centerOn(mapToScene(pos.x(), pos.y()));
 
     QGraphicsView::wheelEvent(p_event);
 }

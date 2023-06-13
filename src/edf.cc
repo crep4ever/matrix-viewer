@@ -538,7 +538,7 @@ CProperty CEdfFile::parseHeaderLine(const QString& p_line, const QString& p_star
 
             if (value.endsWith(p_endMarker))
             {
-                value.chop(p_endMarker.count());
+                value.chop(p_endMarker.length());
             }
 
             result.setKey(key);

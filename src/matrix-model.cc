@@ -611,7 +611,7 @@ void CMatrixModel::setProfile(const QString& p_profile)
     {
         if (xml.readNext())
         {
-            if (xml.name() == "column")
+            if (xml.name() == QStringLiteral("column"))
             {
                 QString label = xml.attributes().value("label").toString().simplified();
                 if (!label.isEmpty())
@@ -619,7 +619,7 @@ void CMatrixModel::setProfile(const QString& p_profile)
                     m_horizontalHeaderLabels << label;
                 }
             }
-            else if (xml.name() == "row")
+            else if (xml.name() == QStringLiteral("row"))
             {
                 QString label = xml.attributes().value("label").toString().simplified();
                 if (!label.isEmpty())
@@ -638,8 +638,8 @@ void CMatrixModel::setProfile(const QString& p_profile)
 
     file.close();
 
-    emit(headerDataChanged(Qt::Horizontal, 0, m_horizontalHeaderLabels.size()));
-    emit(headerDataChanged(Qt::Vertical, 0, m_verticalHeaderLabels.size()));
+    emit headerDataChanged(Qt::Horizontal, 0, m_horizontalHeaderLabels.size());
+    emit headerDataChanged(Qt::Vertical, 0, m_verticalHeaderLabels.size());
 }
 
 /*

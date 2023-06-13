@@ -42,63 +42,63 @@
 void printUsage()
 {
     QTextStream out(stdout);
-    out << endl;
+    out << Qt::endl;
 
-    out << "********************************************************" << endl;
-    out << "Description: Display and edit matrix data such as images" << endl;
-    out << endl;
+    out << "********************************************************" << Qt::endl;
+    out << "Description: Display and edit matrix data such as images" << Qt::endl;
+    out << Qt::endl;
 
-    out << "--------------------------------------------------------" << endl;
-    out << "GUI mode" << endl;
-    out << "Usage: " << QCoreApplication::applicationName() << " FILES " << endl;
-    out << endl;
+    out << "--------------------------------------------------------" << Qt::endl;
+    out << "GUI mode" << Qt::endl;
+    out << "Usage: " << QCoreApplication::applicationName() << " FILES " << Qt::endl;
+    out << Qt::endl;
 
-    out << "FILES: list of compatible matrix data files" << endl;
-    out << endl;
+    out << "FILES: list of compatible matrix data files" << Qt::endl;
+    out << Qt::endl;
 
-    out << "--------------------------------------------------------" << endl;
-    out << "CLI mode" << endl;
-    out << "Usage: " << QCoreApplication::applicationName() << " --convert [OPTIONS] FILES FORMATS" << endl;
-    out << endl;
+    out << "--------------------------------------------------------" << Qt::endl;
+    out << "CLI mode" << Qt::endl;
+    out << "Usage: " << QCoreApplication::applicationName() << " --convert [OPTIONS] FILES FORMATS" << Qt::endl;
+    out << Qt::endl;
 
-    out << "FILES: list of 2D images" << endl;
-    out << endl;
+    out << "FILES: list of 2D images" << Qt::endl;
+    out << Qt::endl;
 
-    out << "FORMATS: output formats from the following list:" << endl;
+    out << "FORMATS: output formats from the following list:" << Qt::endl;
     out << "\t--txt \t"
-        << "Text format: first row = [nbcolumns nbrows]; second row = [data]." << endl;
+        << "Text format: first row = [nbcolumns nbrows]; second row = [data]." << Qt::endl;
     out << "\t--xml \t"
-        << "OpenCV serialization in xml format." << endl;
+        << "OpenCV serialization in xml format." << Qt::endl;
     out << "\t--jpg \t"
-        << "JPEG format." << endl;
+        << "JPEG format." << Qt::endl;
     out << "\t--bmp \t"
-        << "BMP format." << endl;
+        << "BMP format." << Qt::endl;
     out << "\t--png \t"
-        << "PNG format." << endl;
+        << "PNG format." << Qt::endl;
     out << "\t--webp\t"
-        << "WEBP format (requires OpenCV 3.X)." << endl;
+        << "WEBP format (requires OpenCV 3.X)." << Qt::endl;
     out << "\t--raw \t"
-        << "Raw images (16bits unsigned, little-endian byte order)." << endl;
+        << "Raw images (16bits unsigned, little-endian byte order)." << Qt::endl;
     out << "\t--mfe \t"
-        << "Matrix Format Exchange." << endl;
-    out << endl;
+        << "Matrix Format Exchange." << Qt::endl;
+    out << Qt::endl;
 
-    out << "OPTIONS:" << endl;
+    out << "OPTIONS:" << Qt::endl;
     out << "\t-o, --output-directory <DIRECTORY>\t"
-        << "Specify an existing DIRECTORY where converted images should be saved." << endl;
+        << "Specify an existing DIRECTORY where converted images should be saved." << Qt::endl;
     out << "\t--raw-width  <VALUE>\t\t\t"
-        << "Specify an integer VALUE for width of raw images (default is 2160)." << endl;
+        << "Specify an integer VALUE for width of raw images (default is 2160)." << Qt::endl;
     out << "\t--raw-height <VALUE>\t\t\t"
-        << "Specify an integer VALUE for height of raw images (default is 1944)." << endl;
-    out << endl;
-    out << "********************************************************" << endl;
-    out << endl;
+        << "Specify an integer VALUE for height of raw images (default is 1944)." << Qt::endl;
+    out << Qt::endl;
+    out << "********************************************************" << Qt::endl;
+    out << Qt::endl;
 }
 
 void printVersion()
 {
     QTextStream out(stdout);
-    out << QCoreApplication::applicationName() << " " << QCoreApplication::applicationVersion() << endl;
+    out << QCoreApplication::applicationName() << " " << QCoreApplication::applicationVersion() << Qt::endl;
 }
 
 /// Main routine of the application
