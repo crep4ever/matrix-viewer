@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
     src/main-window.cc
     src/preferences.cc
     src/progress-bar.cc
+    src/empty-icon-provider.cc
     src/file-chooser.cc
     src/matrix-model.cc
     src/matrix-view.cc

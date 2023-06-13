@@ -26,6 +26,8 @@
 
 class QLineEdit;
 class QPushButton;
+class QFileSystemModel;
+class QCompleter;
 
 /*!
   \file file-chooser.hh
@@ -134,4 +136,6 @@ private:
     QString m_path;
     QString m_filter;
     QFileDialog::Options m_options;
+    QFileSystemModel* m_completerModel;
+    QCompleter* m_completer;
 };

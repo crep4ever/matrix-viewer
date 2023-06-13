@@ -18,41 +18,53 @@
 //******************************************************************************
 #include "file-chooser.hh"
 
+#include "empty-icon-provider.hh"
+
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCompleter>
-#include <QDirModel>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFileSystemModel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QSettings>
 
 CFileChooser::CFileChooser(QWidget *p_parent)
     : QWidget(p_parent)
-    , m_lineEdit(nullptr)
-    , m_button(nullptr)
+    , m_lineEdit(new QLineEdit)
+    , m_button(new QPushButton)
     , m_caption(QCoreApplication::applicationName())
     , m_directory(QDir::homePath())
     , m_path("")
     , m_filter("")
-    , m_options(nullptr)
+    , m_options()
+    , m_completerModel(new QFileSystemModel(this))
+    , m_completer(new QCompleter(this))
 {
-    m_lineEdit            = new QLineEdit();
-    QCompleter *completer = new QCompleter(this);
-    completer->setModel(new QDirModel(completer));
-    completer->setCompletionMode(QCompleter::InlineCompletion);
-    m_lineEdit->setCompleter(completer);
-
-    connect(m_lineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setPath(const QString &)));
-
-    m_button = new QPushButton(tr("Browse"));
+    const int size = 22;
+    m_button->setFixedSize(QSize(size, size)); // never allow a 'vertical' rectangle
+    m_button->setText(tr("Browse"));
+    m_button->setIcon(QIcon::fromTheme("folder-open"));
+    m_button->setIconSize(QSize(22, 22));
+    m_button->setStyleSheet(QString("QPushButton:hover {border:none; border-radius: 2px; background-color: lightgrey;} "));
+    m_button->setFlat(true);
     connect(m_button, SIGNAL(clicked()), SLOT(browse()));
+
+    m_completerModel->setRootPath(QString());
+    m_completerModel->setIconProvider(new CEmptyIconProvider);
+    m_completerModel->setNameFilterDisables(false);
+
+    m_completer->setModel(m_completerModel);
+    m_completer->setCompletionMode(QCompleter::InlineCompletion);
+    m_completer->setCaseSensitivity(Qt::CaseInsensitive);
+
+    m_lineEdit->setCompleter(m_completer);
+    connect(m_lineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(setPath(const QString &)));
 
     QLayout *mainLayout = new QHBoxLayout;
     mainLayout->addWidget(m_lineEdit);
     mainLayout->addWidget(m_button);
-    // disable layout's margin to have a proper "one widget" appearance
     mainLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(mainLayout);
 }
