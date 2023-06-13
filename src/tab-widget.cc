@@ -17,16 +17,21 @@
 //******************************************************************************
 #include "tab-widget.hh"
 
+#include "main-window.hh"
 #include "tab.hh"
 
 #include <QDebug>
 #include <QFileInfo>
+#include <QMimeData>
 #include <QMouseEvent>
+#include <QPainter>
 
-CTabWidget::CTabWidget(QWidget *p_parent) : QTabWidget(p_parent)
+CTabWidget::CTabWidget(QWidget *p_parent) : QTabWidget(p_parent), m_dragActiveState(false)
 {
     setStyleSheet(" QTabWidget::tab-bar {}");
     setTabBar(new CTabBar(this));
+    setMinimumSize(QSize(450, 380));
+    setAcceptDrops(true);
 }
 
 CTabWidget::~CTabWidget() { }
@@ -50,6 +55,114 @@ void CTabWidget::addTab(QWidget *p_page, const QString &p_label)
     else
     {
         QTabWidget::addTab(p_page, p_label);
+    }
+}
+
+void CTabWidget::paintEvent(QPaintEvent *p_event)
+{
+    QWidget::paintEvent(p_event);
+
+    if (count() <= 0)
+    {
+        QPainter painter(this);
+        QFont customFont = painter.font();
+        customFont.setPointSizeF(customFont.pointSizeF() * 2);
+        painter.setFont(customFont);
+
+        const int padding  = 8;
+        QRect externalRect = rect().adjusted(padding, padding, -padding, -padding);
+
+        const QColor borderColor = m_dragActiveState ? QColor(138, 226, 52) : Qt::gray;
+        painter.setPen(QPen(borderColor, 2, Qt::DotLine));
+        painter.setBrush(Qt::white);
+        painter.drawRoundedRect(externalRect, 2, 2);
+
+        QString message = tr("Open or drag and drop image file here\n");
+
+        QRect topRect = QRect(QPoint(externalRect.left(), 40), QPoint(externalRect.right(), 100));
+        painter.setPen(Qt::gray);
+        painter.drawText(topRect, Qt::AlignCenter | Qt::TextWordWrap, message);
+
+        QVector<Format> formats;
+        formats.append(Format("BMP", "Windows bitmap", "*.bmp"));
+        formats.append(Format("JPEG", "JPEG images", "*.jpeg, *.jpg, *.jpe"));
+        formats.append(Format("TIFF", "TIFF files", "*.tiff, *tif"));
+        formats.append(Format("PNG", "Portable network graphics", "*.png"));
+        formats.append(Format("WEBP", "WEB images", "*.webp"));
+        formats.append(Format("MFE", "Matrix Format Exchange", "*.mfe"));
+        formats.append(Format("EDF", "European Data Format", "*.edf"));
+        formats.append(Format("XML", "OpenCV file storage", "*.xml"));
+
+        QString availableFormats = tr("Supported file formats:\n");
+        for (auto format : formats)
+        {
+            availableFormats.append(QString("\n - %1 (%2)  ●  %3").arg(format.name, format.description, format.extension));
+        }
+
+        const QPoint detailsPadding(40, 40);
+        const QRect detailsRect = QRect(topRect.bottomLeft() + detailsPadding, externalRect.bottomRight() - detailsPadding);
+        painter.setPen(Qt::gray);
+
+        customFont.setPointSizeF(customFont.pointSizeF() * 0.7);
+        painter.setFont(customFont);
+        painter.drawText(detailsRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap, availableFormats);
+    }
+}
+
+void CTabWidget::dragEnterEvent(QDragEnterEvent *p_event)
+{
+    const auto &urls            = p_event->mimeData()->urls();
+    const QStringList supported = QStringList() << "bmp"
+                                                << "jpeg"
+                                                << "jpg"
+                                                << "jpe"
+                                                << "tiff"
+                                                << "tif"
+                                                << "png"
+                                                << "webp"
+                                                << "mfe"
+                                                << "edf"
+                                                << "xml"
+                                                << "txt";
+
+    bool accepted = false;
+    for (const QUrl &url : urls)
+    {
+        const QFileInfo fi(url.toLocalFile());
+        if (supported.contains(fi.suffix().toLower()))
+        {
+            accepted = true;
+            break;
+        }
+    }
+
+    m_dragActiveState = accepted;
+
+    if (accepted)
+    {
+        p_event->acceptProposedAction();
+    }
+    else
+    {
+        p_event->setDropAction(Qt::IgnoreAction);
+        p_event->ignore();
+    }
+    update();
+}
+
+void CTabWidget::dragLeaveEvent(QDragLeaveEvent *p_event)
+{
+    QTabWidget::dragLeaveEvent(p_event);
+    m_dragActiveState = false;
+    update();
+}
+
+void CTabWidget::dropEvent(QDropEvent *p_event)
+{
+    CMainWindow *mainWindow = qobject_cast<CMainWindow *>(parentWidget());
+    if (mainWindow)
+    {
+        mainWindow->dropEvent(p_event);
     }
 }
 

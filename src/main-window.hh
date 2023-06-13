@@ -121,9 +121,10 @@ protected:
   */
     void closeEvent(QCloseEvent *p_event) override;
 
-    void dropEvent(QDropEvent *p_event) override;
-
     void dragEnterEvent(QDragEnterEvent *p_event) override;
+
+public:
+    void dropEvent(QDropEvent *p_event) override;
 
 private slots:
     void newMatrix();

@@ -21,15 +21,30 @@
 #include <QString>
 #include <QTabBar>
 #include <QTabWidget>
+#include <QMimeData>
+
 /*!
   \file tab-widget.hh
   \class CTabWidget
   \brief CTabWidget is the widget that manages tabs
 */
 
+class QPaintEvent;
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDropEvent;
+
 class CTabWidget : public QTabWidget
 {
     Q_OBJECT
+
+    struct Format
+    {
+        Format(const QString &p_name, const QString &p_description, const QString & p_extension) : name(p_name), description(p_description), extension(p_extension) {}
+        QString name;
+        QString description;
+        QString extension;
+    };
 
 public:
     /// Constructor.
@@ -40,8 +55,17 @@ public:
 
     void addTab(QWidget *p_page, const QString &p_label);
 
+protected:
+    void paintEvent(QPaintEvent *p_event);
+    void dragEnterEvent(QDragEnterEvent *p_event);
+    void dragLeaveEvent(QDragLeaveEvent *p_event);
+    void dropEvent(QDropEvent *p_event);
+
 public slots:
     void changeTabText(const QString &p_str);
+
+private:
+    bool m_dragActiveState;
 };
 
 /*!
