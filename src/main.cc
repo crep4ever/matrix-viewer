@@ -81,6 +81,8 @@ void printUsage()
         << "Raw images (16bits unsigned, little-endian byte order)." << Qt::endl;
     out << "\t--mfe \t"
         << "Matrix Format Exchange." << Qt::endl;
+    out << "\t--edf \t"
+        << "European Data Format." << Qt::endl;
     out << Qt::endl;
 
     out << "OPTIONS:" << Qt::endl;
