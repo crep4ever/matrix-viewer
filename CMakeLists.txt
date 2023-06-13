@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.16)
 project(matrix-viewer)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 # Forbid in-source build
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
@@ -102,9 +102,12 @@ set(CMAKE_AUTORCC ON)
 
 # Find external dependencies
 find_package(OpenCV REQUIRED)
-find_package(Qt5Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets)
+if (NOT Qt6_FOUND)
+    find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets)
+endif()
 
-list(APPEND LIBRARIES Qt5::Widgets)
+list(APPEND LIBRARIES Qt::Core Qt::Widgets)
 list(APPEND LIBRARIES ${OpenCV_LIBS})
 
 # Compiler flags
@@ -113,7 +116,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
-  set(FLAGS -Ofast -march=native -DNDEBUG)
+  set(FLAGS -O3 -march=native -DNDEBUG)
 elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
   set(FLAGS
       -g
