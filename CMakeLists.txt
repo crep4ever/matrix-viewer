@@ -103,8 +103,8 @@ set(CMAKE_AUTORCC ON)
 # Find external dependencies
 find_package(OpenCV REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets)
-if (NOT Qt6_FOUND)
-    find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets)
+if(NOT Qt6_FOUND)
+  find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets)
 endif()
 
 list(APPEND LIBRARIES Qt::Core Qt::Widgets)
@@ -133,7 +133,7 @@ message(STATUS "Compile in ${CMAKE_BUILD_TYPE} configuration")
 message(STATUS "Compile options: ${FLAGS}")
 
 # Build the main executable
-add_executable(${PROJECT_NAME} WIN32 ${PROJECT_SOURCES} ${PROJECT_RCS})
+add_executable(${PROJECT_NAME} WIN32 ${PROJECT_RCS} ${PROJECT_SOURCES})
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
 

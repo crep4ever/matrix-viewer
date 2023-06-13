@@ -18,18 +18,14 @@
 
 #pragma once
 
+#include <QFileInfo>
 #include <QString>
 #include <QVector>
-#include <QFileInfo>
 
 class CProperty
 {
 public:
-
-    CProperty(const QString & p_key = QString(),
-              const QString & p_value = QString())
-        : m_key(p_key), m_value(p_value)
-    {}
+    CProperty(const QString& p_key = QString(), const QString& p_value = QString()) : m_key(p_key), m_value(p_value) { }
 
     const QString& key() const
     {
