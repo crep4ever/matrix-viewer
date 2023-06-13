@@ -27,7 +27,7 @@
 #include <QStringList>
 #include <QTextStream>
 
-CMatrixConverter::CMatrixConverter() : QObject(), m_data(), m_format(Format_Unknown), m_rawType(0), m_rawWidth(0), m_rawHeight(0) { }
+CMatrixConverter::CMatrixConverter() : QObject(), m_format(Format_Unknown), m_data(), m_metadata(), m_rawType(0), m_rawWidth(0), m_rawHeight(0) { }
 
 CMatrixConverter::CMatrixConverter(const QString& filename)
     : QObject()
