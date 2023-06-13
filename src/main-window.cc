@@ -831,6 +831,7 @@ void CMainWindow::closeTab(int p_index)
     }
 
     delete m_mainWidget->widget(p_index);
+    showMessage(QString());
 }
 
 void CMainWindow::changeTab(int p_index)
