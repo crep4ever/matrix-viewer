@@ -60,13 +60,6 @@ class CMainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    /*!
-  Return \a true if \a p_filename ends with a supported extensions,
-  \a false otherwise.
-  */
-    static bool isFilenameSupported(const QString &p_filename);
-
 public slots:
     /*!
   Open file from the path \a p_filename

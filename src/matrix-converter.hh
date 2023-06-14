@@ -57,13 +57,10 @@ public:
     {
         Format_Unknown,
         Format_Txt,
-        Format_Xml,
-        Format_Bmp,
-        Format_Jpg,
-        Format_Png,
+        Format_FileStorage,
+        Format_Image,
         Format_Raw,
         Format_Mfe,
-        Format_Webp,
         Format_Edf
     };
 
@@ -92,12 +89,16 @@ public:
     void setRawHeight(const int p_value);
     void setRawType(const int p_value);
 
-private:
-    bool loadFromTxt(const QString& filename);
-    bool saveToTxt(const QString& filename);
+    /*!
+  Return \a true if \a p_filename ends with a supported extensions,
+  \a false otherwise.
+  */
+    static bool isFilenameSupported(const QString& p_filename);
 
-    bool loadFromXml(const QString& filename);
-    bool saveToXml(const QString& filename);
+private:
+
+    bool loadFromFileStorage(const QString& filename);
+    bool saveToFileStorage(const QString& filename);
 
     bool loadFromImage(const QString& filename);
     bool saveToImage(const QString& filename);
@@ -111,6 +112,9 @@ private:
     bool loadFromEdf(const QString& filename);
     bool saveToEdf(const QString& filename);
 
+    bool loadFromTxt(const QString& filename);
+    bool saveToTxt(const QString& filename);
+
     FileFormat m_format;
     cv::Mat m_data;
     CMetadata m_metadata;
@@ -118,4 +122,8 @@ private:
     int m_rawType;
     int m_rawWidth;
     int m_rawHeight;
+
+public:
+    static const QStringList s_fileStorageExtensions;
+    static const QStringList s_imageExtensions;
 };

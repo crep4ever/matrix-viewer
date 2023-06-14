@@ -112,13 +112,12 @@ const QString& CMatrixModel::filePath() const
 
 bool CMatrixModel::isFormatData() const
 {
-    return (m_format == CMatrixConverter::Format_Xml || m_format == CMatrixConverter::Format_Txt || m_format == CMatrixConverter::Format_Mfe);
+    return (m_format == CMatrixConverter::Format_FileStorage || m_format == CMatrixConverter::Format_Txt || m_format == CMatrixConverter::Format_Mfe);
 }
 
 bool CMatrixModel::isFormatImage() const
 {
-    return (m_format == CMatrixConverter::Format_Bmp || m_format == CMatrixConverter::Format_Jpg || m_format == CMatrixConverter::Format_Png ||
-            m_format == CMatrixConverter::Format_Webp || m_format == CMatrixConverter::Format_Edf || m_format == CMatrixConverter::Format_Raw);
+    return (m_format == CMatrixConverter::Format_Image || m_format == CMatrixConverter::Format_Edf || m_format == CMatrixConverter::Format_Raw);
 }
 
 cv::Mat CMatrixModel::data() const

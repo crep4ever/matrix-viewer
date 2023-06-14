@@ -187,12 +187,6 @@ void CMainWindow::writeSettings()
     settings.endGroup();
 }
 
-bool CMainWindow::isFilenameSupported(const QString& p_filename)
-{
-    static const QStringList extensions {"xml", "txt", "bmp", "png", "webp", "jpg", "mfe", "raw", "edf"};
-    return extensions.contains(QFileInfo(p_filename).suffix(), Qt::CaseInsensitive);
-}
-
 void CMainWindow::createActions()
 {
     m_newAct = new QAction(tr("&New..."), this);
@@ -515,7 +509,7 @@ void CMainWindow::dropEvent(QDropEvent* p_event)
     foreach (QUrl url, urls)
     {
         const QString path = url.toLocalFile();
-        if (QFile(path).exists() && isFilenameSupported(path))
+        if (QFile(path).exists() && CMatrixConverter::isFilenameSupported(path))
         {
             open(path);
         }

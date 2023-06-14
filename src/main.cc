@@ -28,6 +28,7 @@
 #include "benchmark-result.hh"
 #include "config.hh"
 #include "main-window.hh"
+#include "matrix-converter.hh"
 #include "parser.hh"
 
 #include <QApplication>
@@ -190,7 +191,7 @@ int main(int argc, char *argv[])
 
     foreach (const QString &arg, arguments)
     {
-        if (QFile(arg).exists() && CMainWindow::isFilenameSupported(arg))
+        if (QFile(arg).exists() && CMatrixConverter::isFilenameSupported(arg))
         {
             mainWindow.open(arg);
         }
