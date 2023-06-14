@@ -117,7 +117,11 @@ protected:
     void dragEnterEvent(QDragEnterEvent *p_event) override;
 
 public:
+    // dropEvent is made public to allow usage from CTabWidget
     void dropEvent(QDropEvent *p_event) override;
+
+private:
+    QWidget* createToggleWidget(QAction* p_action) const;
 
 private slots:
     void newMatrix();

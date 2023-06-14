@@ -30,6 +30,7 @@
 #include "progress-bar.hh"
 #include "tab-widget.hh"
 #include "tab.hh"
+#include "toggle-button.hh"
 
 #include <QAction>
 #include <QApplication>
@@ -561,8 +562,8 @@ void CMainWindow::createToolBar()
     m_mainToolBar->addAction(m_saveAsAct);
     m_mainToolBar->addSeparator();
 
-    m_mainToolBar->addAction(m_dataViewAct);
-    m_mainToolBar->addAction(m_imageViewAct);
+    m_mainToolBar->addWidget(createToggleWidget(m_dataViewAct));
+    m_mainToolBar->addWidget(createToggleWidget(m_imageViewAct));
     m_mainToolBar->addSeparator();
 
     m_mainToolBar->addAction(m_previousFileAct);
@@ -849,4 +850,31 @@ void CMainWindow::changeTab(int p_index)
 void CMainWindow::showMessage(const QString& p_message) const
 {
     statusBar()->showMessage(p_message);
+}
+
+QWidget* CMainWindow::createToggleWidget(QAction* p_action) const
+{
+    QLabel* icon = new QLabel;
+    icon->setPixmap(p_action->icon().pixmap(m_mainToolBar->iconSize()));
+
+    QString text  = p_action->text();
+    text          = text.remove('&');
+    QLabel* label = new QLabel(text);
+
+    CToggleButton* button = new CToggleButton;
+
+    // Synchronize action and toggle button
+    button->setChecked(p_action->isChecked());
+    connect(p_action, SIGNAL(toggled(bool)), button, SLOT(setChecked(bool)));
+    connect(button, SIGNAL(toggled(bool)), p_action, SLOT(setChecked(bool)));
+
+    QBoxLayout* mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(icon);
+    mainLayout->addWidget(label);
+    mainLayout->addWidget(button);
+
+    QFrame* frame = new QFrame;
+    frame->setLayout(mainLayout);
+
+    return frame;
 }
