@@ -18,6 +18,7 @@
 #include "tab-widget.hh"
 
 #include "main-window.hh"
+#include "matrix-converter.hh"
 #include "tab.hh"
 
 #include <QDebug>
@@ -77,26 +78,22 @@ void CTabWidget::paintEvent(QPaintEvent *p_event)
         painter.setBrush(Qt::white);
         painter.drawRoundedRect(externalRect, 2, 2);
 
-        QString message = tr("Open or drag and drop image file here\n");
+        QString message = tr("Open or drag and drop image files here\n");
 
         QRect topRect = QRect(QPoint(externalRect.left(), 40), QPoint(externalRect.right(), 100));
         painter.setPen(Qt::gray);
         painter.drawText(topRect, Qt::AlignCenter | Qt::TextWordWrap, message);
 
         QVector<Format> formats;
-        formats.append(Format("BMP", "Windows bitmap", "*.bmp"));
-        formats.append(Format("JPEG", "JPEG images", "*.jpeg, *.jpg, *.jpe"));
-        formats.append(Format("TIFF", "TIFF files", "*.tiff, *tif"));
-        formats.append(Format("PNG", "Portable network graphics", "*.png"));
-        formats.append(Format("WEBP", "WEB images", "*.webp"));
-        formats.append(Format("MFE", "Matrix Format Exchange", "*.mfe"));
-        formats.append(Format("EDF", "European Data Format", "*.edf"));
-        formats.append(Format("XML", "OpenCV file storage", "*.xml"));
+        formats.append(Format("Standard images", "*tif, *.png, *.jpg, *.webp, *.bmp ..."));
+        formats.append(Format("OpenCV file storage", "*.xml, *.yaml, *.json"));
+        formats.append(Format("Matrix Format Exchange", "*.mfe"));
+        formats.append(Format("European Data Format", "*.edf"));
 
         QString availableFormats = tr("Supported file formats:\n");
         for (auto format : formats)
         {
-            availableFormats.append(QString("\n - %1 (%2)  ●  %3").arg(format.name, format.description, format.extension));
+            availableFormats.append(QString("\n ● %1 (%2)").arg(format.name, format.extensions));
         }
 
         const QPoint detailsPadding(40, 40);
@@ -111,25 +108,12 @@ void CTabWidget::paintEvent(QPaintEvent *p_event)
 
 void CTabWidget::dragEnterEvent(QDragEnterEvent *p_event)
 {
-    const auto &urls            = p_event->mimeData()->urls();
-    const QStringList supported = QStringList() << "bmp"
-                                                << "jpeg"
-                                                << "jpg"
-                                                << "jpe"
-                                                << "tiff"
-                                                << "tif"
-                                                << "png"
-                                                << "webp"
-                                                << "mfe"
-                                                << "edf"
-                                                << "xml"
-                                                << "txt";
+    const auto &urls = p_event->mimeData()->urls();
 
     bool accepted = false;
     for (const QUrl &url : urls)
     {
-        const QFileInfo fi(url.toLocalFile());
-        if (supported.contains(fi.suffix().toLower()))
+        if (CMatrixConverter::isFilenameSupported(url.toLocalFile()))
         {
             accepted = true;
             break;

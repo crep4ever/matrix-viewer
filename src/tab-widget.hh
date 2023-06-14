@@ -18,10 +18,10 @@
 
 #pragma once
 
+#include <QMimeData>
 #include <QString>
 #include <QTabBar>
 #include <QTabWidget>
-#include <QMimeData>
 
 /*!
   \file tab-widget.hh
@@ -40,10 +40,9 @@ class CTabWidget : public QTabWidget
 
     struct Format
     {
-        Format(const QString &p_name, const QString &p_description, const QString & p_extension) : name(p_name), description(p_description), extension(p_extension) {}
+        Format(const QString &p_name, const QString &p_extension) : name(p_name), extensions(p_extension) { }
         QString name;
-        QString description;
-        QString extension;
+        QString extensions;
     };
 
 public:
