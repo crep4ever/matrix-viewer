@@ -63,6 +63,9 @@ protected:
 public slots:
     void changeTabText(const QString &p_str);
 
+private slots:
+    void updateAfterClosedTab(int p_tabIndex);
+
 private:
     bool m_dragActiveState;
 };

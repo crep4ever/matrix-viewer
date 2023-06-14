@@ -33,6 +33,8 @@ CTabWidget::CTabWidget(QWidget *p_parent) : QTabWidget(p_parent), m_dragActiveSt
     setTabBar(new CTabBar(this));
     setMinimumSize(QSize(450, 380));
     setAcceptDrops(true);
+
+    connect(this, SIGNAL(tabCloseRequested(int)), SLOT(updateAfterClosedTab(int)));
 }
 
 CTabWidget::~CTabWidget() { }
@@ -148,6 +150,13 @@ void CTabWidget::dropEvent(QDropEvent *p_event)
     {
         mainWindow->dropEvent(p_event);
     }
+}
+
+void CTabWidget::updateAfterClosedTab(int p_tabIndex)
+{
+    Q_UNUSED(p_tabIndex);
+    m_dragActiveState = false;
+    update();
 }
 
 //----------------------------------------------------------------------------
