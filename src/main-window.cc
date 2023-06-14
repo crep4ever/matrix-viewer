@@ -272,13 +272,13 @@ void CMainWindow::createActions()
     m_previousFileAct = new QAction(tr("&Previous"), this);
     m_previousFileAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left));
     m_previousFileAct->setIcon(QIcon::fromTheme("go-previous", QIcon(":/icons/tango/48x48/go-previous.png")));
-    m_previousFileAct->setStatusTip(tr("Load previous data file in current folder"));
+    m_previousFileAct->setStatusTip(tr("Load previous compatible file in current folder"));
     connect(m_previousFileAct, SIGNAL(triggered()), SLOT(previousFile()));
 
     m_nextFileAct = new QAction(tr("&Next"), this);
     m_nextFileAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right));
     m_nextFileAct->setIcon(QIcon::fromTheme("go-next", QIcon(":/icons/tango/48x48/go-next.png")));
-    m_nextFileAct->setStatusTip(tr("Load next data file in current folder"));
+    m_nextFileAct->setStatusTip(tr("Load next compatible file in current folder"));
     connect(m_nextFileAct, SIGNAL(triggered()), SLOT(nextFile()));
 }
 
@@ -561,15 +561,16 @@ void CMainWindow::createToolBar()
     m_mainToolBar->addAction(m_saveAsAct);
     m_mainToolBar->addSeparator();
 
+    m_mainToolBar->addAction(m_dataViewAct);
+    m_mainToolBar->addAction(m_imageViewAct);
+    m_mainToolBar->addSeparator();
+
     m_mainToolBar->addAction(m_previousFileAct);
     m_mainToolBar->addAction(m_nextFileAct);
     m_mainToolBar->addSeparator();
 
     m_mainToolBar->addAction(m_operationsAct);
-    m_mainToolBar->addSeparator();
 
-    m_mainToolBar->addAction(m_dataViewAct);
-    m_mainToolBar->addAction(m_imageViewAct);
     addToolBar(m_mainToolBar);
 
     setUnifiedTitleAndToolBarOnMac(true);
