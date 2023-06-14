@@ -61,6 +61,16 @@ int CParser::execute()
         extensions << ".xml";
     }
 
+    if (m_command.contains("--yaml"))
+    {
+        extensions << ".yaml";
+    }
+
+    if (m_command.contains("--json"))
+    {
+        extensions << ".json";
+    }
+
     if (m_command.contains("--jpg"))
     {
         extensions << ".jpg";
@@ -76,9 +86,9 @@ int CParser::execute()
         extensions << ".png";
     }
 
-    if (m_command.contains("--bin"))
+    if (m_command.contains("--tif"))
     {
-        extensions << ".bin";
+        extensions << ".tif";
     }
 
     if (m_command.contains("--raw"))
@@ -89,6 +99,11 @@ int CParser::execute()
     if (m_command.contains("--mfe"))
     {
         extensions << ".mfe";
+    }
+
+    if (m_command.contains("--edf"))
+    {
+        extensions << ".edf";
     }
 
     CMatrixConverter converter;

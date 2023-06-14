@@ -66,18 +66,12 @@ void printUsage()
     out << Qt::endl;
 
     out << "FORMATS: output formats from the following list:" << Qt::endl;
+    out << "\t--xml|--yaml|--json \t"
+        << "OpenCV file storage in xml|yaml|json format." << Qt::endl;
+    out << "\t--jpg|--png|--tif|--webp|--bmp \t"
+        << "Standard image formats." << Qt::endl;
     out << "\t--txt \t"
         << "Text format: first row = [nbcolumns nbrows]; second row = [data]." << Qt::endl;
-    out << "\t--xml \t"
-        << "OpenCV serialization in xml format." << Qt::endl;
-    out << "\t--jpg \t"
-        << "JPEG format." << Qt::endl;
-    out << "\t--bmp \t"
-        << "BMP format." << Qt::endl;
-    out << "\t--png \t"
-        << "PNG format." << Qt::endl;
-    out << "\t--webp\t"
-        << "WEBP format (requires OpenCV 3.X)." << Qt::endl;
     out << "\t--raw \t"
         << "Raw images (16bits unsigned, little-endian byte order)." << Qt::endl;
     out << "\t--mfe \t"
