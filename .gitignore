@@ -2,7 +2,6 @@
 src/config.h
 build
 buildpackage.sh
-matrix-viewer
 doc/html
 doc/man
 doc/latex
