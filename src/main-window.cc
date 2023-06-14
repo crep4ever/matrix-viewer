@@ -253,13 +253,13 @@ void CMainWindow::createActions()
     connect(m_preferencesAct, SIGNAL(triggered()), SLOT(preferences()));
 
     m_dataViewAct = new QAction(tr("&Data"), this);
-    m_dataViewAct->setIcon(QIcon(":/icons/matrix-viewer/48x48/matrix-viewer.png"));
+    m_dataViewAct->setIcon(QIcon(":/icons/matrix-viewer/src/view-data.svg"));
     m_dataViewAct->setStatusTip(tr("Display the matrix in a table layout"));
     m_dataViewAct->setCheckable(true);
     connect(m_dataViewAct, SIGNAL(toggled(bool)), SLOT(toggleDataView(bool)));
 
     m_imageViewAct = new QAction(tr("&Image"), this);
-    m_imageViewAct->setIcon(QIcon::fromTheme("image-x-generic", QIcon(":/icons/tango/48x48/image-x-generic.png")));
+    m_imageViewAct->setIcon(QIcon(":/icons/matrix-viewer/src/view-image.svg"));
     m_imageViewAct->setStatusTip(tr("Display the matrix as an image"));
     m_imageViewAct->setCheckable(true);
     connect(m_imageViewAct, SIGNAL(toggled(bool)), SLOT(toggleImageView(bool)));

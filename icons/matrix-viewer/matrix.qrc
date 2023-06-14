@@ -17,5 +17,7 @@
     <file>src/matrix-viewer.svg</file>
     <file>src/operations.svg</file>
     <file>src/benchmarks.svg</file>
+    <file>src/view-data.svg</file>
+    <file>src/view-image.svg</file>
  </qresource>
 </RCC>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
+
+<svg
+   height="399"
+   id="svg1"
+   version="1.0"
+   width="399"
+   x="0"
+   y="0"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="view-data.svg"
+   inkscape:export-filename="/home/crep/git/matrix-viewer/icons/matrix-viewer/22x22/matrix-viewer.png"
+   inkscape:export-xdpi="4.96"
+   inkscape:export-ydpi="4.96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     id="namedview29"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.5257344"
+     inkscape:cx="116.66513"
+     inkscape:cy="272.98329"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1"
+     inkscape:pagecheckerboard="0" />
+  <defs
+     id="defs3" />
+  <metadata
+     id="metadata27">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Open Clip Art Library</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>math matrix</dc:title>
+        <dc:date>2011-01-21T16:59:07</dc:date>
+        <dc:description>Originally uploaded by Jose Hevia for OCAL 0.18</dc:description>
+        <dc:source>http://openclipart.org/detail/108619/math-matrix-by-anonymous</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Anonymous</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>fix</rdf:li>
+            <rdf:li>keyword</rdf:li>
+            <rdf:li>librarians</rdf:li>
+            <rdf:li>tag</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     ry="5"
+     rx="5"
+     y="7.5"
+     x="7.5"
+     height="100"
+     width="100"
+     id="rect3774"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="7.5"
+     x="149.5"
+     height="100"
+     width="100"
+     id="rect3774-0"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="7.5"
+     x="291.5"
+     height="100"
+     width="100"
+     id="rect3774-1"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="149.5"
+     x="7.5"
+     height="100"
+     width="100"
+     id="rect3774-9"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="149.5"
+     x="149.5"
+     height="100"
+     width="100"
+     id="rect3774-03"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="149.5"
+     x="291.5"
+     height="100"
+     width="100"
+     id="rect3774-8"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="291.5"
+     x="7.5"
+     height="100"
+     width="100"
+     id="rect3774-2"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="291.5"
+     x="149.5"
+     height="100"
+     width="100"
+     id="rect3774-90"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <rect
+     ry="5"
+     rx="5"
+     y="291.5"
+     x="291.5"
+     height="100"
+     width="100"
+     id="rect3774-6"
+     style="fill:#ffffff;fill-opacity:1;stroke:#4e9a06;stroke-width:15;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+</svg>
