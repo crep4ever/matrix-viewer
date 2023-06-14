@@ -49,7 +49,8 @@ set(PROJECT_SOURCES
     src/mfe.cc
     src/edf.cc
     src/double-spinbox.cc
-    src/new-matrix-dialog.cc)
+    src/new-matrix-dialog.cc
+    src/toggle-button.cc)
 
 # profiles
 set(PROJECT_PROFILES
