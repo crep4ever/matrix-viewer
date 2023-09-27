@@ -93,6 +93,11 @@ COperationsDialog::~COperationsDialog()
     delete m_backup;
 }
 
+QSize COperationsDialog::sizeHint() const
+{
+    return {600, 350};
+}
+
 void COperationsDialog::reset()
 {
     model()->setData(m_backup->data().clone());

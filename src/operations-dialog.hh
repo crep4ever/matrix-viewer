@@ -51,6 +51,8 @@ public:
     /// Destructor.
     ~COperationsDialog() override;
 
+    QSize sizeHint() const override;
+
     CMainWindow *parent() const;
     CMatrixModel *model() const;
 
