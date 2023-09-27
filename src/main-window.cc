@@ -156,7 +156,7 @@ void CMainWindow::readSettings(bool p_firstLaunch)
     settings.beginGroup("general");
     if (p_firstLaunch)
     {
-        resize(settings.value("size", QSize(800, 600)).toSize());
+        resize(settings.value("size", QSize(900, 600)).toSize());
         move(settings.value("pos", QPoint(200, 200)).toPoint());
         if (settings.value("maximized", isMaximized()).toBool())
         {
