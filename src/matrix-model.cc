@@ -933,6 +933,11 @@ void CMatrixModel::merge(const QStringList& p_channels)
 
 QImage* CMatrixModel::toQImage() const
 {
+    if (m_data.empty())
+    {
+        return new QImage;
+    }
+
     QSettings settings;
     settings.beginGroup("image");
     bool stretch = settings.value("stretch-dynamic", true).toBool();
