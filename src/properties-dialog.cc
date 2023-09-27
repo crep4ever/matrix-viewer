@@ -145,20 +145,6 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent), m_p
 
         const QVector<CProperty> &properties = model->metadata().properties();
 
-        QTableWidget *headerInfo = createPropertyTable(properties.count(), 2);
-
-        row = 0;
-        for (const CProperty &property : properties)
-        {
-            item = new QTableWidgetItem(property.key());
-            headerInfo->setItem(row, 0, item);
-
-            item = new QTableWidgetItem(property.value());
-            headerInfo->setItem(row, 1, item);
-
-            ++row;
-        }
-
         QSplitter *splitter = new QSplitter;
 
         QGroupBox *statisticsBox     = new QGroupBox(tr("Statistics"));
@@ -169,6 +155,20 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent), m_p
 
         if (!properties.isEmpty())
         {
+            QTableWidget *headerInfo = createPropertyTable(properties.count(), 2);
+
+            row = 0;
+            for (const CProperty &property : properties)
+            {
+                item = new QTableWidgetItem(property.key());
+                headerInfo->setItem(row, 0, item);
+
+                item = new QTableWidgetItem(property.value());
+                headerInfo->setItem(row, 1, item);
+
+                ++row;
+            }
+
             QGroupBox *headerBox     = new QGroupBox(tr("Header"));
             QBoxLayout *headerLayout = new QVBoxLayout;
             headerLayout->addWidget(headerInfo);
