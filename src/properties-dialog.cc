@@ -147,7 +147,7 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent), m_p
 
         QSplitter *splitter = new QSplitter;
 
-        QGroupBox *statisticsBox     = new QGroupBox(tr("Statistics"));
+        QGroupBox *statisticsBox     = new QGroupBox(tr("Properties"));
         QBoxLayout *statisticsLayout = new QVBoxLayout;
         statisticsLayout->addWidget(matrixInfo);
         statisticsBox->setLayout(statisticsLayout);
@@ -169,7 +169,7 @@ CPropertiesDialog::CPropertiesDialog(QWidget *p_parent) : QDialog(p_parent), m_p
                 ++row;
             }
 
-            QGroupBox *headerBox     = new QGroupBox(tr("Header"));
+            QGroupBox *headerBox     = new QGroupBox(tr("Metadata"));
             QBoxLayout *headerLayout = new QVBoxLayout;
             headerLayout->addWidget(headerInfo);
             headerBox->setLayout(headerLayout);

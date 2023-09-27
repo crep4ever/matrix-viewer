@@ -67,6 +67,13 @@ set(PROJECT_PROFILES
 set(PROJECT_RCS icons/matrix-viewer/matrix.qrc icons/tango/tango.qrc matrix.rc)
 
 # Additional CMake modules
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
+find_package(ECM)
+if (ECM_FOUND)
+   message(STATUS "Found optional Extra CMake Modules (ECM) package in: ${ECM_MODULE_PATH}")
+   set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_MODULE_PATH})
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 # Version information
@@ -111,6 +118,13 @@ endif()
 list(APPEND LIBRARIES Qt::Core Qt::Widgets)
 list(APPEND LIBRARIES ${OpenCV_LIBS})
 
+find_package(LibExiv2)
+if (LibExiv2_FOUND)
+   message(STATUS "Found optional component LibExiv2 for reading exif metadata in standard images")
+   list(APPEND LIBRARIES LibExiv2::LibExiv2)
+   list(APPEND DEFINITIONS LIBEXIV2_ENABLED)
+endif()   
+
 # Compiler flags
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -137,6 +151,7 @@ message(STATUS "Compile options: ${FLAGS}")
 add_executable(${PROJECT_NAME} WIN32 ${PROJECT_RCS} ${PROJECT_SOURCES})
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINITIONS})
 
 # Installation
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

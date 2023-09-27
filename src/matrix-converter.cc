@@ -27,6 +27,10 @@
 #include <QStringList>
 #include <QTextStream>
 
+#if defined(LIBEXIV2_ENABLED)
+#    include <exiv2/exiv2.hpp>
+#endif
+
 const QStringList CMatrixConverter::s_imageExtensions = QStringList() << "bmp"
                                                                       << "jpg"
                                                                       << "jpeg"
@@ -311,8 +315,46 @@ bool CMatrixConverter::loadFromImage(const QString& filename)
     catch (cv::Exception& e)
     {
         qWarning() << "CMatrixConverter::loadFromImage invalid matrix:" << filename;
+        qWarning() << " -- OpenCV error:" << e.what();
         return false;
     }
+
+#if defined(LIBEXIV2_ENABLED)
+    try
+    {
+        auto image = Exiv2::ImageFactory::open(filename.toStdString());
+        image->readMetadata();
+
+        const Exiv2::ExifData& exifData = image->exifData();
+        if (exifData.empty())
+        {
+            qDebug() << "No exif metadata found for file:" << filename;
+        }
+
+        for (auto it = exifData.begin(); it != exifData.end(); ++it)
+        {
+            QString key         = QString::fromStdString(it->key()).simplified();
+            const QString value = QString::fromStdString(it->value().toString()).simplified();
+
+            // - Ignore keys 'tags' (eg: skip Exif.Image.0x9002)
+            if (key.isEmpty() || key.contains("0x") || value.isEmpty())
+            {
+                continue;
+            }
+
+            m_metadata.addProperty(CProperty(key, value));
+        }
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << "Can't read exif metadata for file:" << filename;
+        qDebug() << "-- error:" << e.what();
+    }
+    catch (...)
+    {
+        qDebug() << "Can't read exif metadata for file:" << filename;
+    }
+#endif
 
     return true;
 }
