@@ -153,7 +153,7 @@ CMainWindow::~CMainWindow() { }
 void CMainWindow::readSettings(bool p_firstLaunch)
 {
     QSettings settings;
-    settings.beginGroup("general");
+    settings.beginGroup("application");
     if (p_firstLaunch)
     {
         resize(settings.value("size", QSize(900, 600)).toSize());
@@ -176,7 +176,7 @@ void CMainWindow::readSettings(bool p_firstLaunch)
 void CMainWindow::writeSettings()
 {
     QSettings settings;
-    settings.beginGroup("general");
+    settings.beginGroup("application");
     settings.setValue("maximized", isMaximized());
     if (!isMaximized())
     {
