@@ -87,7 +87,7 @@ void CTabWidget::paintEvent(QPaintEvent *p_event)
         painter.drawText(topRect, Qt::AlignCenter | Qt::TextWordWrap, message);
 
         QVector<Format> formats;
-        formats.append(Format("Standard images", "*tif, *.png, *.jpg, *.webp, *.bmp ..."));
+        formats.append(Format("Standard images", "*.tif, *.png, *.jpg, *.webp, *.bmp ..."));
         formats.append(Format("OpenCV file storage", "*.xml, *.yaml, *.json"));
         formats.append(Format("Matrix Format Exchange", "*.mfe"));
         formats.append(Format("European Data Format", "*.edf"));
