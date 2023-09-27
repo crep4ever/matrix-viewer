@@ -109,14 +109,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 # Find external dependencies
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED COMPONENTS core imgcodecs)
+list(APPEND LIBRARIES ${OpenCV_LIBS})
+
 find_package(Qt6 COMPONENTS Core Widgets)
 if(NOT Qt6_FOUND)
   find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets)
 endif()
-
 list(APPEND LIBRARIES Qt::Core Qt::Widgets)
-list(APPEND LIBRARIES ${OpenCV_LIBS})
+
 
 find_package(LibExiv2)
 if (LibExiv2_FOUND)
