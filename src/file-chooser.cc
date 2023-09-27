@@ -43,12 +43,10 @@ CFileChooser::CFileChooser(QWidget *p_parent)
     , m_completer(new QCompleter(this))
 {
     const int size = 22;
-    m_button->setFixedSize(QSize(size, size)); // never allow a 'vertical' rectangle
+    m_button->setMinimumSize(QSize(size, size));
     m_button->setText(tr("Browse"));
     m_button->setIcon(QIcon::fromTheme("folder-open"));
     m_button->setIconSize(QSize(22, 22));
-    m_button->setStyleSheet(QString("QPushButton:hover {border:none; border-radius: 2px; background-color: lightgrey;} "));
-    m_button->setFlat(true);
     connect(m_button, SIGNAL(clicked()), SLOT(browse()));
 
     m_completerModel->setRootPath(QString());
