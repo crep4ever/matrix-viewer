@@ -202,7 +202,7 @@ bool CMatrixConverter::loadFromTxt(const QString& filename)
         QStringList values = stream.readLine().split(" ");
         if (values.size() != 2)
         {
-            qWarning() << tr("CMatrixConverter::loadFromTxt first line of file [%1] should contain COL ROW information but has [%2]")
+            qWarning() << QString("CMatrixConverter::loadFromTxt first line of file [%1] should contain COL ROW information but has [%2]")
                               .arg(filename)
                               .arg(values.join(" "));
             return false;
@@ -211,7 +211,7 @@ bool CMatrixConverter::loadFromTxt(const QString& filename)
         const uint rows = values[1].toInt(), cols = values[0].toInt();
         if (rows == 0 || cols == 0)
         {
-            qWarning() << tr("CMatrixConverter::loadFromTxt invalid dimensions for matrix: ") << filename;
+            qWarning() << "CMatrixConverter::loadFromTxt invalid dimensions for matrix:" << filename;
             return false;
         }
 
@@ -232,7 +232,7 @@ bool CMatrixConverter::loadFromTxt(const QString& filename)
         return true;
     }
 
-    qWarning() << tr("CMatrixConverter::loadFromTxt unable to open: ") << filename;
+    qWarning() << "CMatrixConverter::loadFromTxt unable to open:" << filename;
     return false;
 }
 
@@ -258,7 +258,7 @@ bool CMatrixConverter::saveToTxt(const QString& filename)
         return true;
     }
 
-    qWarning() << tr("CMatrixConverter::saveToTxt unable to open: ") << filename;
+    qWarning() << "CMatrixConverter::saveToTxt unable to open:" << filename;
     return false;
 }
 
@@ -277,7 +277,7 @@ bool CMatrixConverter::loadFromFileStorage(const QString& filename)
     }
     catch (cv::Exception& e)
     {
-        qWarning() << tr("CMatrixConverter::loadFromXml invalid matrix: ") << filename;
+        qWarning() << "CMatrixConverter::loadFromXml invalid matrix:" << filename;
         return false;
     }
 
@@ -310,7 +310,7 @@ bool CMatrixConverter::loadFromImage(const QString& filename)
     }
     catch (cv::Exception& e)
     {
-        qWarning() << tr("CMatrixConverter::loadFromImage invalid matrix: ") << filename;
+        qWarning() << "CMatrixConverter::loadFromImage invalid matrix:" << filename;
         return false;
     }
 
@@ -342,7 +342,7 @@ bool CMatrixConverter::saveToImage(const QString& filename)
     }
     catch (cv::Exception& e)
     {
-        qWarning() << tr("CMatrixConverter::saveToImage invalid matrix: ") << filename;
+        qWarning() << "CMatrixConverter::saveToImage invalid matrix:" << filename;
         qWarning() << "OpenCV error:" << QString::fromStdString(e.msg);
         return false;
     }
@@ -362,14 +362,14 @@ bool CMatrixConverter::loadFromRaw(const QString& filename)
 
             if (readBytes == 0)
             {
-                qWarning() << tr("Nothing to read from raw image file: %1").arg(filename);
+                qWarning() << "Nothing to read from raw image file:" << filename;
                 delete[] buffer;
                 return false;
             }
         }
         else
         {
-            qWarning() << tr("Can't open raw image file in read mode: %1").arg(filename);
+            qWarning() << "Can't open raw image file in read mode:" << filename;
             delete[] buffer;
             return false;
         }
