@@ -96,7 +96,6 @@ public:
     static bool isFilenameSupported(const QString& p_filename);
 
 private:
-
     bool loadFromFileStorage(const QString& filename);
     bool saveToFileStorage(const QString& filename);
 
