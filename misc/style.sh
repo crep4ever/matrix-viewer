@@ -57,6 +57,6 @@ print_step "Running clang-format on C++ source files..."
 find src -name *.hh -o -name *.cc | xargs clang-format -i -style=file
 
 print_step "Running cmake-format on CMake source files..."
-find . -name CMakeLists.txt | xargs cmake-format --in-place
+find . -name CMakeLists.txt | xargs cmake-format -c .cmake-format --in-place
 
 print_step "Success"
