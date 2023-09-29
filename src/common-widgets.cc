@@ -28,13 +28,17 @@
 Point2D widget
 */
 
-CPoint2DWidget::CPoint2DWidget(QWidget *p_parent) : QWidget(p_parent), m_point(QPointF(0, 0)), p_xLabel(new QLabel("x")), p_yLabel(new QLabel("y"))
+CPoint2DWidget::CPoint2DWidget(QWidget *p_parent)
+    : QWidget(p_parent)
+    , m_point(QPointF(0, 0))
+    , p_xLabel(new QLabel("x"))
+    , p_yLabel(new QLabel("y"))
+    , m_xInput(new CDoubleSpinBox)
+    , m_yInput(new CDoubleSpinBox)
 {
-    m_xInput = new CDoubleSpinBox;
     m_xInput->setDecimals(4);
     connect(m_xInput, SIGNAL(valueChanged(double)), this, SLOT(updateXValue(double)));
 
-    m_yInput = new CDoubleSpinBox;
     m_yInput->setDecimals(4);
     connect(m_yInput, SIGNAL(valueChanged(double)), this, SLOT(updateYValue(double)));
 
