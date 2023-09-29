@@ -1,9 +1,12 @@
-.build*
+# build dirs
+build*
+debug
+release
+
+# generated files
 src/config.h
-build
-buildpackage.sh
+
+# generated documentation
 doc/html
 doc/man
 doc/latex
-debug
-release
