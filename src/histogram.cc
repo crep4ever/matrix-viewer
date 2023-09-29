@@ -96,14 +96,7 @@ QBoxLayout *CHistogram::makeAxisBar() const
 void CHistogram::drawPixmap()
 {
     // normalize histogram
-    qreal max = 0.0;
-    for (unsigned int mValue : m_values)
-    {
-        if (mValue > max)
-        {
-            max = mValue;
-        }
-    }
+    const qreal max = *std::max_element(m_values.begin(), m_values.end());
 
     QVector<qreal> normalizedValues(m_values.size(), 0);
     if (max > 0.0)
