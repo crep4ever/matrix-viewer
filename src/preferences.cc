@@ -39,16 +39,14 @@
 
 // Config Dialog
 
-ConfigDialog::ConfigDialog(QWidget *p_parent) : QDialog(p_parent), m_contentsWidget(nullptr), m_pagesWidget(nullptr)
+ConfigDialog::ConfigDialog(QWidget *p_parent) : QDialog(p_parent), m_contentsWidget(new QListWidget), m_pagesWidget(new QStackedWidget)
 {
-    m_contentsWidget = new QListWidget(this);
     m_contentsWidget->setViewMode(QListView::IconMode);
     m_contentsWidget->setIconSize(QSize(62, 62));
     m_contentsWidget->setMovement(QListView::Static);
     m_contentsWidget->setSpacing(12);
     m_contentsWidget->setFixedWidth(110);
 
-    m_pagesWidget = new QStackedWidget(this);
     m_pagesWidget->addWidget(new DisplayPage(this));
     m_pagesWidget->addWidget(new ImagePage(this));
 
@@ -195,14 +193,14 @@ void DisplayPage::writeSettings()
 
 ImagePage::ImagePage(QWidget *p_parent)
     : Page(p_parent)
-    , m_stretchDynamic(nullptr)
-    , m_rawType(nullptr)
-    , m_rawWidth(nullptr)
-    , m_rawHeight(nullptr)
-    , m_rawLittleEndianByteOrder(nullptr)
+    , m_stretchDynamic(new QCheckBox)
+    , m_rawType(new QComboBox)
+    , m_rawWidth(new QSpinBox)
+    , m_rawHeight(new QSpinBox)
+    , m_rawLittleEndianByteOrder(new QCheckBox)
 {
     QGroupBox *displayGroupBox = new QGroupBox(tr("Display options"));
-    m_stretchDynamic           = new QCheckBox;
+
     m_stretchDynamic->setEnabled(true);
 
     QFormLayout *displayLayout = new QFormLayout;
@@ -210,16 +208,13 @@ ImagePage::ImagePage(QWidget *p_parent)
     displayGroupBox->setLayout(displayLayout);
 
     QGroupBox *rawGroupBox = new QGroupBox(tr("Raw images"));
-    m_rawType              = new QComboBox;
+
     m_rawType->addItem(tr("16-bit unsigned"));
 
-    m_rawWidth = new QSpinBox;
     m_rawWidth->setMaximum(20000);
 
-    m_rawHeight = new QSpinBox;
     m_rawHeight->setMaximum(20000);
 
-    m_rawLittleEndianByteOrder = new QCheckBox;
     m_rawLittleEndianByteOrder->setEnabled(false);
 
     QFormLayout *rawLayout = new QFormLayout;

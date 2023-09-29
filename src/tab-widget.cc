@@ -63,7 +63,7 @@ void CTabWidget::addTab(QWidget *p_page, const QString &p_label)
 
 void CTabWidget::paintEvent(QPaintEvent *p_event)
 {
-    QWidget::paintEvent(p_event);
+    QTabWidget::paintEvent(p_event);
 
     if (count() <= 0)
     {

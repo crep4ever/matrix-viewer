@@ -46,7 +46,7 @@ const QStringList CMatrixConverter::s_fileStorageExtensions = QStringList() << "
 
 CMatrixConverter::CMatrixConverter() : QObject(), m_format(Format_Unknown), m_data(), m_metadata(), m_rawType(0), m_rawWidth(0), m_rawHeight(0) { }
 
-CMatrixConverter::CMatrixConverter(const QString& filename)
+CMatrixConverter::CMatrixConverter(const QString& p_filename)
     : QObject()
     , m_format(Format_Unknown)
     , m_data()
@@ -55,9 +55,9 @@ CMatrixConverter::CMatrixConverter(const QString& filename)
     , m_rawWidth(0)
     , m_rawHeight(0)
 {
-    if (!load(filename))
+    if (!load(p_filename))
     {
-        qWarning() << "Can't load file: " << filename;
+        qWarning() << "Can't load file: " << p_filename;
     }
 }
 
@@ -93,91 +93,91 @@ void CMatrixConverter::setRawType(const int p_value)
     m_rawType = p_value;
 }
 
-bool CMatrixConverter::load(const QString& filename)
+bool CMatrixConverter::load(const QString& p_filename)
 {
-    const QString suffix = QFileInfo(filename).suffix().toLower();
+    const QString suffix = QFileInfo(p_filename).suffix().toLower();
 
     if (s_fileStorageExtensions.contains(suffix))
     {
         m_format = Format_FileStorage;
-        return loadFromFileStorage(filename);
+        return loadFromFileStorage(p_filename);
     }
 
     if (s_imageExtensions.contains(suffix))
     {
         m_format = Format_Image;
-        return loadFromImage(filename);
+        return loadFromImage(p_filename);
     }
 
-    if (filename.endsWith(".txt", Qt::CaseInsensitive))
+    if (p_filename.endsWith(".txt", Qt::CaseInsensitive))
     {
         m_format = Format_Txt;
-        return loadFromTxt(filename);
+        return loadFromTxt(p_filename);
     }
 
-    if (filename.endsWith(".raw", Qt::CaseInsensitive))
+    if (p_filename.endsWith(".raw", Qt::CaseInsensitive))
     {
         m_format = Format_Raw;
-        return loadFromRaw(filename);
+        return loadFromRaw(p_filename);
     }
 
-    if (filename.endsWith(".mfe", Qt::CaseInsensitive))
+    if (p_filename.endsWith(".mfe", Qt::CaseInsensitive))
     {
         m_format = Format_Mfe;
-        return loadFromMfe(filename);
+        return loadFromMfe(p_filename);
     }
 
-    if (filename.endsWith(".edf", Qt::CaseInsensitive))
+    if (p_filename.endsWith(".edf", Qt::CaseInsensitive))
     {
         m_format = Format_Edf;
-        return loadFromEdf(filename);
+        return loadFromEdf(p_filename);
     }
 
     m_format = Format_Unknown;
-    return loadFromImage(filename);
+    return loadFromImage(p_filename);
 }
 
-bool CMatrixConverter::save(const QString& filename)
+bool CMatrixConverter::save(const QString& p_filename)
 {
-    const QString suffix = QFileInfo(filename).suffix().toLower();
+    const QString suffix = QFileInfo(p_filename).suffix().toLower();
 
     if (s_fileStorageExtensions.contains(suffix))
     {
         m_format = Format_FileStorage;
-        return saveToFileStorage(filename);
+        return saveToFileStorage(p_filename);
     }
 
     if (s_imageExtensions.contains(suffix))
     {
         m_format = Format_Image;
-        return saveToImage(filename);
+        return saveToImage(p_filename);
     }
 
     if (suffix == "txt")
     {
         m_format = Format_Txt;
-        return saveToTxt(filename);
+        return saveToTxt(p_filename);
     }
 
     if (suffix == "raw")
     {
         m_format = Format_Raw;
-        return saveToRaw(filename);
+        return saveToRaw(p_filename);
     }
 
     if (suffix == "mfe")
     {
         m_format = Format_Mfe;
-        return saveToMfe(filename);
+        return saveToMfe(p_filename);
     }
 
     if (suffix == "edf")
     {
         m_format = Format_Edf;
-        return saveToEdf(filename);
+        return saveToEdf(p_filename);
     }
 
-    return saveToImage(filename);
+    return saveToImage(p_filename);
 }
 
 cv::Mat CMatrixConverter::data() const
@@ -185,9 +185,9 @@ cv::Mat CMatrixConverter::data() const
     return m_data;
 }
 
-void CMatrixConverter::setData(const cv::Mat& matrix)
+void CMatrixConverter::setData(const cv::Mat& p_matrix)
 {
-    m_data = matrix;
+    m_data = p_matrix;
 }
 
 const CMetadata& CMatrixConverter::metadata()
@@ -195,9 +195,9 @@ const CMetadata& CMatrixConverter::metadata()
     return m_metadata;
 }
 
-bool CMatrixConverter::loadFromTxt(const QString& filename)
+bool CMatrixConverter::loadFromTxt(const QString& p_filename)
 {
-    QFile file(filename);
+    QFile file(p_filename);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
@@ -207,7 +207,7 @@ bool CMatrixConverter::loadFromTxt(const QString& filename)
         if (values.size() != 2)
         {
             qWarning() << QString("CMatrixConverter::loadFromTxt first line of file [%1] should contain COL ROW information but has [%2]")
-                              .arg(filename)
+                              .arg(p_filename)
                               .arg(values.join(" "));
             return false;
         }
@@ -215,7 +215,7 @@ bool CMatrixConverter::loadFromTxt(const QString& filename)
         const uint rows = values[1].toInt(), cols = values[0].toInt();
         if (rows == 0 || cols == 0)
         {
-            qWarning() << "CMatrixConverter::loadFromTxt invalid dimensions for matrix:" << filename;
+            qWarning() << "CMatrixConverter::loadFromTxt invalid dimensions for matrix:" << p_filename;
             return false;
         }
 
@@ -236,15 +236,15 @@ bool CMatrixConverter::loadFromTxt(const QString& filename)
         return true;
     }
 
-    qWarning() << "CMatrixConverter::loadFromTxt unable to open:" << filename;
+    qWarning() << "CMatrixConverter::loadFromTxt unable to open:" << p_filename;
     return false;
 }
 
-bool CMatrixConverter::saveToTxt(const QString& filename)
+bool CMatrixConverter::saveToTxt(const QString& p_filename)
 {
     m_data.convertTo(m_data, CV_64FC1);
 
-    QFile file(filename);
+    QFile file(p_filename);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream stream(&file);
@@ -262,16 +262,16 @@ bool CMatrixConverter::saveToTxt(const QString& filename)
         return true;
     }
 
-    qWarning() << "CMatrixConverter::saveToTxt unable to open:" << filename;
+    qWarning() << "CMatrixConverter::saveToTxt unable to open:" << p_filename;
     return false;
 }
 
-bool CMatrixConverter::loadFromFileStorage(const QString& filename)
+bool CMatrixConverter::loadFromFileStorage(const QString& p_filename)
 {
     try
     {
         cv::FileStorage fs;
-        if (!fs.open(filename.toStdString(), cv::FileStorage::READ))
+        if (!fs.open(p_filename.toStdString(), cv::FileStorage::READ))
         {
             return false;
         }
@@ -281,17 +281,17 @@ bool CMatrixConverter::loadFromFileStorage(const QString& filename)
     }
     catch (cv::Exception& e)
     {
-        qWarning() << "CMatrixConverter::loadFromXml invalid matrix:" << filename;
+        qWarning() << "CMatrixConverter::loadFromXml invalid matrix:" << p_filename;
         return false;
     }
 
     return true;
 }
 
-bool CMatrixConverter::saveToFileStorage(const QString& filename)
+bool CMatrixConverter::saveToFileStorage(const QString& p_filename)
 {
     cv::FileStorage fs;
-    if (!fs.open(filename.toStdString(), cv::FileStorage::WRITE))
+    if (!fs.open(p_filename.toStdString(), cv::FileStorage::WRITE))
     {
         return false;
     }
@@ -302,11 +302,11 @@ bool CMatrixConverter::saveToFileStorage(const QString& filename)
     return true;
 }
 
-bool CMatrixConverter::loadFromImage(const QString& filename)
+bool CMatrixConverter::loadFromImage(const QString& p_filename)
 {
     try
     {
-        m_data = cv::imread(filename.toStdString(), -1);
+        m_data = cv::imread(p_filename.toStdString(), -1);
         if (m_data.type() == CV_8UC4)
         {
             cv::cvtColor(m_data, m_data, cv::COLOR_BGRA2BGR); // remove alpha channel
@@ -314,7 +314,7 @@ bool CMatrixConverter::loadFromImage(const QString& filename)
     }
     catch (cv::Exception& e)
     {
-        qWarning() << "CMatrixConverter::loadFromImage invalid matrix:" << filename;
+        qWarning() << "CMatrixConverter::loadFromImage invalid matrix:" << p_filename;
         qWarning() << " -- OpenCV error:" << e.what();
         return false;
     }
@@ -322,13 +322,13 @@ bool CMatrixConverter::loadFromImage(const QString& filename)
 #if defined(LIBEXIV2_ENABLED)
     try
     {
-        auto image = Exiv2::ImageFactory::open(filename.toStdString());
+        auto image = Exiv2::ImageFactory::open(p_filename.toStdString());
         image->readMetadata();
 
         const Exiv2::ExifData& exifData = image->exifData();
         if (exifData.empty())
         {
-            qDebug() << "No exif metadata found for file:" << filename;
+            qDebug() << "No exif metadata found for file:" << p_filename;
         }
 
         for (auto it = exifData.begin(); it != exifData.end(); ++it)
@@ -347,56 +347,56 @@ bool CMatrixConverter::loadFromImage(const QString& filename)
     }
     catch (std::exception& e)
     {
-        qDebug() << "Can't read exif metadata for file:" << filename;
+        qDebug() << "Can't read exif metadata for file:" << p_filename;
         qDebug() << "-- error:" << e.what();
     }
     catch (...)
     {
-        qDebug() << "Can't read exif metadata for file:" << filename;
+        qDebug() << "Can't read exif metadata for file:" << p_filename;
     }
 #endif
 
     return true;
 }
 
-bool CMatrixConverter::saveToImage(const QString& filename)
+bool CMatrixConverter::saveToImage(const QString& p_filename)
 {
     bool ret;
     try
     {
-        const QString suffix = QFileInfo(filename).suffix().toLower();
+        const QString suffix = QFileInfo(p_filename).suffix().toLower();
 
-        std::vector<int> compression_params;
+        std::vector<int> compressionParams;
         if (suffix == "png")
         {
-            compression_params.push_back(cv::IMWRITE_PNG_STRATEGY);
-            compression_params.push_back(cv::IMWRITE_PNG_STRATEGY_DEFAULT);
-            compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
-            compression_params.push_back(9);
+            compressionParams.push_back(cv::IMWRITE_PNG_STRATEGY);
+            compressionParams.push_back(cv::IMWRITE_PNG_STRATEGY_DEFAULT);
+            compressionParams.push_back(cv::IMWRITE_PNG_COMPRESSION);
+            compressionParams.push_back(9);
         }
         else if (suffix == "jpg" || suffix == "jpeg" || suffix == "jpe")
         {
-            compression_params.push_back(cv::IMWRITE_JPEG_QUALITY);
-            compression_params.push_back(80);
+            compressionParams.push_back(cv::IMWRITE_JPEG_QUALITY);
+            compressionParams.push_back(80);
         }
 
-        ret = cv::imwrite(filename.toStdString(), m_data, compression_params);
+        ret = cv::imwrite(p_filename.toStdString(), m_data, compressionParams);
     }
     catch (cv::Exception& e)
     {
-        qWarning() << "CMatrixConverter::saveToImage invalid matrix:" << filename;
+        qWarning() << "CMatrixConverter::saveToImage invalid matrix:" << p_filename;
         qWarning() << "OpenCV error:" << QString::fromStdString(e.msg);
         return false;
     }
     return ret;
 }
 
-bool CMatrixConverter::loadFromRaw(const QString& filename)
+bool CMatrixConverter::loadFromRaw(const QString& p_filename)
 {
     if (m_rawType == 0)
     {
         unsigned short* buffer = new unsigned short[m_rawWidth * m_rawHeight];
-        FILE* fd               = fopen(filename.toStdString().c_str(), "rb");
+        FILE* fd               = fopen(p_filename.toStdString().c_str(), "rb");
         if (fd != nullptr)
         {
             size_t readBytes = fread(buffer, sizeof(unsigned short), m_rawWidth * m_rawHeight, fd);
@@ -404,14 +404,14 @@ bool CMatrixConverter::loadFromRaw(const QString& filename)
 
             if (readBytes == 0)
             {
-                qWarning() << "Nothing to read from raw image file:" << filename;
+                qWarning() << "Nothing to read from raw image file:" << p_filename;
                 delete[] buffer;
                 return false;
             }
         }
         else
         {
-            qWarning() << "Can't open raw image file in read mode:" << filename;
+            qWarning() << "Can't open raw image file in read mode:" << p_filename;
             delete[] buffer;
             return false;
         }
@@ -432,26 +432,26 @@ bool CMatrixConverter::loadFromRaw(const QString& filename)
     return true;
 }
 
-bool CMatrixConverter::saveToRaw(const QString& filename)
+bool CMatrixConverter::saveToRaw(const QString& p_filename)
 {
-    Q_UNUSED(filename);
+    Q_UNUSED(p_filename);
     qWarning() << "CMatrixConverter::saveToRaw not implemented yet";
     return false;
 }
 
-bool CMatrixConverter::loadFromMfe(const QString& filename)
+bool CMatrixConverter::loadFromMfe(const QString& p_filename)
 {
     try
     {
         MatrixFormatExchange mfe;
-        mfe.read(filename);
+        mfe.read(p_filename);
         m_data = mfe.data();
         m_metadata.addProperty(CProperty("Comment", QString::fromStdString(mfe.comment())));
     }
     catch (cv::Exception& e)
     {
         qWarning() << "OpenCV error while reading MFE matrix";
-        qWarning() << "file: " << filename;
+        qWarning() << "file: " << p_filename;
         qWarning() << "error: " << e.what();
         return false;
     }
@@ -459,19 +459,19 @@ bool CMatrixConverter::loadFromMfe(const QString& filename)
     return true;
 }
 
-bool CMatrixConverter::saveToMfe(const QString& filename)
+bool CMatrixConverter::saveToMfe(const QString& p_filename)
 {
     try
     {
         MatrixFormatExchange mfe;
         mfe.setData(m_data);
         mfe.setComment("MatrixViewer");
-        mfe.write(filename);
+        mfe.write(p_filename);
     }
     catch (cv::Exception& e)
     {
         qWarning() << "OpenCV error while writing MFE matrix";
-        qWarning() << "file: " << filename;
+        qWarning() << "file: " << p_filename;
         qWarning() << "error: " << e.what();
         return false;
     }
@@ -479,19 +479,19 @@ bool CMatrixConverter::saveToMfe(const QString& filename)
     return true;
 }
 
-bool CMatrixConverter::loadFromEdf(const QString& filename)
+bool CMatrixConverter::loadFromEdf(const QString& p_filename)
 {
     try
     {
         CEdfFile edf;
-        edf.read(filename);
+        edf.read(p_filename);
         m_data     = edf.data();
         m_metadata = edf.metadata();
     }
     catch (cv::Exception& e)
     {
         qWarning() << "OpenCV error while reading EDF matrix";
-        qWarning() << "file: " << filename;
+        qWarning() << "file: " << p_filename;
         qWarning() << "error: " << e.what();
         return false;
     }
@@ -499,19 +499,19 @@ bool CMatrixConverter::loadFromEdf(const QString& filename)
     return true;
 }
 
-bool CMatrixConverter::saveToEdf(const QString& filename)
+bool CMatrixConverter::saveToEdf(const QString& p_filename)
 {
     try
     {
         CEdfFile edf;
         edf.setData(m_data);
         edf.setMetadata(m_metadata);
-        edf.write(filename);
+        edf.write(p_filename);
     }
     catch (cv::Exception& e)
     {
         qWarning() << "OpenCV error while writing EDF matrix";
-        qWarning() << "file: " << filename;
+        qWarning() << "file: " << p_filename;
         qWarning() << "error: " << e.what();
         return false;
     }
@@ -521,9 +521,9 @@ bool CMatrixConverter::saveToEdf(const QString& filename)
 
 bool CMatrixConverter::isFilenameSupported(const QString& p_filename)
 {
-    static const QStringList extensions = QStringList() << CMatrixConverter::s_fileStorageExtensions << CMatrixConverter::s_imageExtensions << "mfe"
-                                                        << "edf"
-                                                        << "txt"
-                                                        << "raw";
-    return extensions.contains(QFileInfo(p_filename).suffix().toLower());
+    static const QStringList s_extensions = QStringList() << CMatrixConverter::s_fileStorageExtensions << CMatrixConverter::s_imageExtensions << "mfe"
+                                                          << "edf"
+                                                          << "txt"
+                                                          << "raw";
+    return s_extensions.contains(QFileInfo(p_filename).suffix().toLower());
 }

@@ -82,9 +82,9 @@ BenchmarkResult::Status BenchmarkResult::status() const
     return m_status;
 }
 
-void BenchmarkResult::setStatus(const Status s)
+void BenchmarkResult::setStatus(const Status p_status)
 {
-    m_status = s;
+    m_status = p_status;
 }
 
 QString BenchmarkResult::statusStr() const

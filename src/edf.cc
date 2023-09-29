@@ -240,8 +240,8 @@ bool CEdfFile::isEndHeaderLine(const QString& p_line) const
 
 bool CEdfFile::checkRequiredHeaderProperties()
 {
-    static const QStringList required {"Dim_1", "Dim_2", "DataType"};
-    for (const QString& key : required)
+    static const QStringList s_required {"Dim_1", "Dim_2", "DataType"};
+    for (const QString& key : s_required)
     {
         bool found = false;
         for (const CProperty& property : metadata().properties())
@@ -280,19 +280,19 @@ unsigned int CEdfFile::headerSize() const
 
 unsigned int CEdfFile::readBinarySize() const
 {
-    static const QHash<int, unsigned int> sizes {{CV_8SC1, sizeof(char)},
-                                                 {CV_8UC1, sizeof(unsigned char)},
-                                                 {CV_16SC1, sizeof(short)},
-                                                 {CV_16UC1, sizeof(unsigned short)},
-                                                 {CV_32SC1, sizeof(int)},
-                                                 {CV_32FC1, sizeof(float)},
-                                                 {CV_64FC1, sizeof(double)}};
+    static const QHash<int, unsigned int> s_sizes {{CV_8SC1, sizeof(char)},
+                                                   {CV_8UC1, sizeof(unsigned char)},
+                                                   {CV_16SC1, sizeof(short)},
+                                                   {CV_16UC1, sizeof(unsigned short)},
+                                                   {CV_32SC1, sizeof(int)},
+                                                   {CV_32FC1, sizeof(float)},
+                                                   {CV_64FC1, sizeof(double)}};
 
     const int type = readDataType();
-    Q_ASSERT_X(sizes.contains(type), "EDF reader", "Can't determine binary size from dimensions and datatype (unsupported image type)");
+    Q_ASSERT_X(s_sizes.contains(type), "EDF reader", "Can't determine binary size from dimensions and datatype (unsupported image type)");
 
     const unsigned int elements = readRowCount() * readColumnCount();
-    return sizes.contains(type) ? sizes.value(type) * elements : numericValue("EDF_BinarySize");
+    return s_sizes.contains(type) ? s_sizes.value(type) * elements : numericValue("EDF_BinarySize");
 }
 
 unsigned int CEdfFile::readRowCount() const
@@ -307,20 +307,20 @@ unsigned int CEdfFile::readColumnCount() const
 
 int CEdfFile::readDataType() const
 {
-    static const QHash<QString, int> types {{"SignedByte", CV_8SC1},
-                                            {"UnsignedByte", CV_8UC1},
-                                            {"SignedShort", CV_16SC1},
-                                            {"UnsignedShort", CV_16UC1},
-                                            {"SignedInteger", CV_32SC1},
-                                            {"FloatValue", CV_32FC1},
-                                            {"DoubleValue", CV_64FC1}};
+    static const QHash<QString, int> s_types {{"SignedByte", CV_8SC1},
+                                              {"UnsignedByte", CV_8UC1},
+                                              {"SignedShort", CV_16SC1},
+                                              {"UnsignedShort", CV_16UC1},
+                                              {"SignedInteger", CV_32SC1},
+                                              {"FloatValue", CV_32FC1},
+                                              {"DoubleValue", CV_64FC1}};
 
     // Warning: some .edf images are badly formatted
     // There notably exist some images with "DataType = UnsignedInteger"
     // that should be decoded as float images
 
     const QString& type = metadata().value("DataType").simplified();
-    return types.contains(type) ? types.value(type) : CV_32FC1;
+    return s_types.contains(type) ? s_types.value(type) : CV_32FC1;
 }
 
 void CEdfFile::clear()
@@ -411,14 +411,14 @@ void CEdfFile::updateHeader()
 
 QString CEdfFile::matrixTypeToDataType(const int p_type) const
 {
-    static const QHash<int, QString> types {{CV_8SC1, "SignedByte"},
-                                            {CV_8UC1, "UnsignedByte"},
-                                            {CV_16SC1, "SignedShort"},
-                                            {CV_16UC1, "UnsignedShort"},
-                                            {CV_32SC1, "SignedInteger"},
-                                            {CV_32FC1, "FloatValue"},
-                                            {CV_64FC1, "DoubleValue"}};
-    return types.contains(p_type) ? types.value(p_type) : QString();
+    static const QHash<int, QString> s_types {{CV_8SC1, "SignedByte"},
+                                              {CV_8UC1, "UnsignedByte"},
+                                              {CV_16SC1, "SignedShort"},
+                                              {CV_16UC1, "UnsignedShort"},
+                                              {CV_32SC1, "SignedInteger"},
+                                              {CV_32FC1, "FloatValue"},
+                                              {CV_64FC1, "DoubleValue"}};
+    return s_types.contains(p_type) ? s_types.value(p_type) : QString();
 }
 
 QTextStream* CEdfFile::stream() const
@@ -482,13 +482,13 @@ QString CEdfFile::path() const
 
 CProperty CEdfFile::parseHeaderLine(const QString& p_line, const QString& p_startMarker, const QString& p_endMarker) const
 {
-    static const QStringList separators = QStringList() << "    "
-                                                        << " : "
-                                                        << " = "
-                                                        << "="
-                                                        << ":"
-                                                        << "  "
-                                                        << " ";
+    static const QStringList s_separators = QStringList() << "    "
+                                                          << " : "
+                                                          << " = "
+                                                          << "="
+                                                          << ":"
+                                                          << "  "
+                                                          << " ";
 
     // Strategy:
     // 1. Test separators until we get at least two non-empty fields for property name and value
@@ -517,7 +517,7 @@ CProperty CEdfFile::parseHeaderLine(const QString& p_line, const QString& p_star
 
     CProperty result;
     bool keyValuePairFound = false;
-    for (const QString& separator : separators)
+    for (const QString& separator : s_separators)
     {
         QStringList tokens = line.split(separator, Qt::SkipEmptyParts);
         if (tokens.count() >= 2)

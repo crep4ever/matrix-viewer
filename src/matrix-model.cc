@@ -815,12 +815,12 @@ void CMatrixModel::horizontalFlip()
     }
 }
 
-void CMatrixModel::rotate(const QPointF& p_center, const double p_angle_dg, const double p_scaleFactor)
+void CMatrixModel::rotate(const QPointF& p_center, const double p_angleDg, const double p_scaleFactor)
 {
     try
     {
         const cv::Point2f rotationCenter(p_center.x(), p_center.y());
-        cv::Mat rotation = getRotationMatrix2D(rotationCenter, p_angle_dg, p_scaleFactor);
+        cv::Mat rotation = getRotationMatrix2D(rotationCenter, p_angleDg, p_scaleFactor);
 
         cv::Mat dst;
         cv::warpAffine(m_data, dst, rotation, m_data.size());

@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
   message(
     FATAL_ERROR
-    "In-source builds are not permitted. Make a separate folder for building:\n"
-    "mkdir build; cd build; cmake ..\n" "Before that, remove the files already created:\n"
-    "rm -rf CMakeCache.txt CMakeFiles")
+      "In-source builds are not permitted. Make a separate folder for building:\n"
+      "mkdir build; cd build; cmake ..\n" "Before that, remove the files already created:\n"
+      "rm -rf CMakeCache.txt CMakeFiles")
 endif()
 
 if(${CMAKE_VERSION} VERSION_GREATER "3.17")
@@ -21,46 +21,46 @@ include(GNUInstallDirs)
 
 # sources
 set(PROJECT_SOURCES
-  src/main.cc
-  src/main-window.cc
-  src/preferences.cc
-  src/progress-bar.cc
-  src/empty-icon-provider.cc
-  src/file-chooser.cc
-  src/matrix-model.cc
-  src/matrix-view.cc
-  src/image-view.cc
-  src/matrix-converter.cc
-  src/operation.cc
-  src/operations-dialog.cc
-  src/benchmark-task.cc
-  src/benchmark-result.cc
-  src/benchmark-dialog.cc
-  src/properties-dialog.cc
-  src/tab-widget.cc
-  src/tab.cc
-  src/position.cc
-  src/histogram.cc
-  src/histogram-widget.cc
-  src/operations-widget.cc
-  src/common-widgets.cc
-  src/parser.cc
-  src/mfe.cc
-  src/edf.cc
-  src/double-spinbox.cc
-  src/new-matrix-dialog.cc
-  src/toggle-button.cc)
+    src/main.cc
+    src/main-window.cc
+    src/preferences.cc
+    src/progress-bar.cc
+    src/empty-icon-provider.cc
+    src/file-chooser.cc
+    src/matrix-model.cc
+    src/matrix-view.cc
+    src/image-view.cc
+    src/matrix-converter.cc
+    src/operation.cc
+    src/operations-dialog.cc
+    src/benchmark-task.cc
+    src/benchmark-result.cc
+    src/benchmark-dialog.cc
+    src/properties-dialog.cc
+    src/tab-widget.cc
+    src/tab.cc
+    src/position.cc
+    src/histogram.cc
+    src/histogram-widget.cc
+    src/operations-widget.cc
+    src/common-widgets.cc
+    src/parser.cc
+    src/mfe.cc
+    src/edf.cc
+    src/double-spinbox.cc
+    src/new-matrix-dialog.cc
+    src/toggle-button.cc)
 
 # profiles
 set(PROJECT_PROFILES
-  profiles/cameras.xml
-  profiles/projectors.xml
-  profiles/dataBand.xml
-  profiles/planes.xml
-  profiles/tool.xml
-  profiles/lines.xml
-  profiles/dataRelocalization.xml
-  profiles/measures.xml)
+    profiles/cameras.xml
+    profiles/projectors.xml
+    profiles/dataBand.xml
+    profiles/planes.xml
+    profiles/tool.xml
+    profiles/lines.xml
+    profiles/dataRelocalization.xml
+    profiles/measures.xml)
 
 # resources
 set(PROJECT_RCS icons/matrix-viewer/matrix.qrc icons/tango/tango.qrc matrix.rc)
@@ -105,13 +105,19 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 # Find external dependencies
-find_package(OpenCV COMPONENTS core imgcodecs REQUIRED)
+find_package(
+  OpenCV
+  COMPONENTS core imgcodecs
+  REQUIRED)
 list(APPEND LIBRARIES ${OpenCV_LIBS})
 
 find_package(Qt6 COMPONENTS Core Widgets)
 
 if(NOT Qt6_FOUND)
-  find_package(Qt5 5.15 COMPONENTS Core Widgets REQUIRED)
+  find_package(
+    Qt5 5.15
+    COMPONENTS Core Widgets
+    REQUIRED)
 endif()
 
 list(APPEND LIBRARIES Qt::Core Qt::Widgets)
@@ -132,13 +138,13 @@ if(CMAKE_BUILD_TYPE MATCHES "Release")
   set(FLAGS -O3 -march=native -DNDEBUG)
 elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
   set(FLAGS
-    -g
-    -Werror
-    -Wall
-    -Wextra
-    -Wshadow
-    -Wnon-virtual-dtor
-    -pedantic)
+      -g
+      -Werror
+      -Wall
+      -Wextra
+      -Wshadow
+      -Wnon-virtual-dtor
+      -pedantic)
 endif()
 
 include(FeatureSummary)

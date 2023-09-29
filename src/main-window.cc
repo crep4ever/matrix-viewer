@@ -399,7 +399,7 @@ void CMainWindow::previousFile()
     showMessage(tr("No previous file found"));
 }
 
-void CMainWindow::toggleDataView(bool value)
+void CMainWindow::toggleDataView(bool p_value)
 {
     if (currentWidget() == nullptr)
     {
@@ -412,12 +412,12 @@ void CMainWindow::toggleDataView(bool value)
         CMatrixView* view = qobject_cast<CMatrixView*>(currentWidget()->widget(i));
         if (view != nullptr)
         {
-            view->setVisible(value);
+            view->setVisible(p_value);
         }
     }
 }
 
-void CMainWindow::toggleImageView(bool value)
+void CMainWindow::toggleImageView(bool p_value)
 {
     if (currentWidget() == nullptr)
     {
@@ -430,7 +430,7 @@ void CMainWindow::toggleImageView(bool value)
         CImageView* view = qobject_cast<CImageView*>(currentWidget()->widget(i));
         if (view != nullptr)
         {
-            view->setVisible(value);
+            view->setVisible(p_value);
         }
     }
 }
@@ -475,10 +475,10 @@ CPosition* CMainWindow::positionWidget() const
     return m_position;
 }
 
-void CMainWindow::setToolBarDisplayed(bool value)
+void CMainWindow::setToolBarDisplayed(bool p_value)
 {
     Q_ASSERT(m_mainToolBar);
-    m_mainToolBar->setVisible(value);
+    m_mainToolBar->setVisible(p_value);
 }
 
 bool CMainWindow::isToolBarDisplayed()
@@ -486,10 +486,10 @@ bool CMainWindow::isToolBarDisplayed()
     return m_isToolBarDisplayed;
 }
 
-void CMainWindow::setStatusBarDisplayed(bool value)
+void CMainWindow::setStatusBarDisplayed(bool p_value)
 {
-    m_isStatusBarDisplayed = value;
-    statusBar()->setVisible(value);
+    m_isStatusBarDisplayed = p_value;
+    statusBar()->setVisible(p_value);
 }
 
 bool CMainWindow::isStatusBarDisplayed()

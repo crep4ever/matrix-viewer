@@ -124,7 +124,7 @@ public slots:
 
     void horizontalFlip();
 
-    void rotate(const QPointF &p_center, const double p_angle_dg, const double p_scaleFactor);
+    void rotate(const QPointF &p_center, const double p_angleDg, const double p_scaleFactor);
 
     void normalize(const double p_alpha, const double p_beta, const int p_norm);
 

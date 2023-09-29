@@ -274,10 +274,8 @@ void CImageView::draw()
     m_scene->clear();
 
     // delete previous image
-    if (m_image != nullptr)
-    {
-        delete m_image;
-    }
+
+    delete m_image;
 
     // set p_image as current image
     m_image = model()->toQImage();

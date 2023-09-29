@@ -34,13 +34,12 @@
 COperationsDialog::COperationsDialog(QWidget *p_parent)
     : QDialog(p_parent)
     , m_parent(qobject_cast<CMainWindow *>(p_parent))
-    , m_backup(nullptr)
-    , m_categoriesWidget(nullptr)
-    , m_operationsWidget(nullptr)
+    , m_backup(model()->clone())
+    , m_categoriesWidget(new QListWidget)
+    , m_operationsWidget(new QStackedWidget)
 {
     setWindowTitle(tr("Operations"));
 
-    m_categoriesWidget = new QListWidget(this);
     m_categoriesWidget->setViewMode(QListView::IconMode);
     m_categoriesWidget->setIconSize(QSize(62, 62));
     m_categoriesWidget->setMovement(QListView::Static);
@@ -48,7 +47,6 @@ COperationsDialog::COperationsDialog(QWidget *p_parent)
     m_categoriesWidget->setFixedWidth(125);
     m_categoriesWidget->setCurrentRow(0);
 
-    m_operationsWidget = new QStackedWidget(this);
     m_operationsWidget->addWidget(new CFormatWidget(tr("Format"), model(), m_parent));
     m_operationsWidget->addWidget(new CScalarWidget(tr("Scalar"), model(), m_parent));
     m_operationsWidget->addWidget(new CMatrixWidget(tr("Matrix"), model(), m_parent));
@@ -85,7 +83,6 @@ COperationsDialog::COperationsDialog(QWidget *p_parent)
 
     // save a backup of the model data
     // that can be restored by the reset button
-    m_backup = model()->clone();
 }
 
 COperationsDialog::~COperationsDialog()

@@ -150,7 +150,7 @@ void CToggleButton::mouseReleaseEvent(QMouseEvent *p_e)
     QAbstractButton::mouseReleaseEvent(p_e);
 }
 
-void CToggleButton::resizeEvent(QResizeEvent *)
+void CToggleButton::resizeEvent(QResizeEvent * /*event*/)
 {
     if (isChecked())
     {

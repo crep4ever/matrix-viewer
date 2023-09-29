@@ -30,27 +30,23 @@
 
 NewMatrixDialog::NewMatrixDialog(QWidget *p_parent)
     : QDialog(p_parent)
-    , m_rows(nullptr)
-    , m_cols(nullptr)
-    , m_channels(nullptr)
-    , m_type(nullptr)
-    , m_value1(nullptr)
-    , m_value2(nullptr)
-    , m_value3(nullptr)
+    , m_rows(new QSpinBox)
+    , m_cols(new QSpinBox)
+    , m_channels(new QSpinBox)
+    , m_type(new QComboBox)
+    , m_value1(new QDoubleSpinBox)
+    , m_value2(new QDoubleSpinBox)
+    , m_value3(new QDoubleSpinBox)
 {
-    m_rows = new QSpinBox;
     m_rows->setMaximum(INT_MAX);
     m_rows->setToolTip(tr("Number of rows (matrix height)"));
 
-    m_cols = new QSpinBox;
     m_cols->setMaximum(INT_MAX);
     m_cols->setToolTip(tr("Number of cols (matrix width)"));
 
-    m_channels = new QSpinBox;
     m_channels->setRange(1, 3);
     m_channels->setToolTip(tr("Number of channels (matrix depth)"));
 
-    m_type = new QComboBox;
     m_type->addItem("8U");
     m_type->addItem("8S");
     m_type->addItem("16U");
@@ -60,15 +56,12 @@ NewMatrixDialog::NewMatrixDialog(QWidget *p_parent)
     m_type->addItem("64F");
     m_type->setToolTip(tr("OpenCV type (matrix format)"));
 
-    m_value1 = new QDoubleSpinBox;
     m_value1->setRange(-DBL_MAX, DBL_MAX);
     m_value1->setToolTip(tr("Default initial value."));
 
-    m_value2 = new QDoubleSpinBox;
     m_value2->setRange(-DBL_MAX, DBL_MAX);
     m_value2->setToolTip(tr("Default initial value."));
 
-    m_value3 = new QDoubleSpinBox;
     m_value3->setRange(-DBL_MAX, DBL_MAX);
     m_value3->setToolTip(tr("Default initial value."));
 

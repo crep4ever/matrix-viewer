@@ -53,7 +53,7 @@ public:
     bool isBeginHeaderLine(const QString& p_line) const;
     bool isEndHeaderLine(const QString& p_line) const;
 
-    bool save(bool p_creatFile = false);
+    bool save(bool p_createFile = false);
 
     QString path() const;
 
