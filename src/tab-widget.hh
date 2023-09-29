@@ -55,10 +55,10 @@ public:
     void addTab(QWidget *p_page, const QString &p_label);
 
 protected:
-    void paintEvent(QPaintEvent *p_event);
-    void dragEnterEvent(QDragEnterEvent *p_event);
-    void dragLeaveEvent(QDragLeaveEvent *p_event);
-    void dropEvent(QDropEvent *p_event);
+    void paintEvent(QPaintEvent *p_event) override;
+    void dragEnterEvent(QDragEnterEvent *p_event) override;
+    void dragLeaveEvent(QDragLeaveEvent *p_event) override;
+    void dropEvent(QDropEvent *p_event) override;
 
 public slots:
     void changeTabText(const QString &p_str);
