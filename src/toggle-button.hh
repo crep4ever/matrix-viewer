@@ -27,9 +27,8 @@ class QPropertyAnimation;
 
 /** @class CToggleButton
  *  @brief On/Off button with 'mobile' design
- *  @image html xanalysis_0.1.6_toggle-button.png
  *
- *  A CToggle button implements a design
+ *  A CToggleButton implements a design
  *  that is often found in mobile (android, ios) applications
  *  to enable/disable an option.
  *

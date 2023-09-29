@@ -76,9 +76,6 @@ private:
   \brief CTabBar is the widget representing the tabs in the mainwindow
 
   A CTabBar allows tabs to be closed when middle-clicked with a mouse.
-
-  \image html tab-widget.png
-
 */
 
 class QMouseEvent;

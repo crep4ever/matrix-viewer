@@ -10,11 +10,10 @@ Frontend to [OpenCV](http://opencv.org/) matrices for visualization and edition 
 
 * required packages: cmake; qt5 (core, widgets); libopencv-dev (2.4.11)
 * optionnal packages: python-opencv, [Extra CMake Modules package (ECM)](https://api.kde.org/ecm/), [Exiv2](https://exiv2.org/)
-* static analysis: use cmake variable `-DCMAKE_CXX_CLANG_TIDY:STRING="clang-tidy;-checks=-*,readability-*"`
 
 ## Example to install build dependencies on Ubuntu 22.04
 
-```
+```shell
 # Build tools
 sudo apt install build-essential cmake git
 
@@ -31,12 +30,14 @@ sudo apt install doxygen
 
 ## Linux
 
->     git clone https://github.com/crep4ever/matrix-viewer.git
->     cd matrix-viewer
->     mkdir build && cd build
->     cmake .. && make
->     sudo make install
->     matrix-viewer
+```shell
+git clone https://github.com/crep4ever/matrix-viewer.git
+cd matrix-viewer
+mkdir build && cd build
+cmake .. && make
+sudo make install
+matrix-viewer
+```
 
 ## Integration with gdb
 

@@ -107,9 +107,7 @@ private:
 
 /**
  * \class DisplayPage
- * \brief DisplayPage is the config page used to specify
- * which components should be displayed/hidden
- * \image html pref-display.png
+ * \brief Config page used to specify which components should be displayed/hidden
  */
 class DisplayPage : public Page
 {
