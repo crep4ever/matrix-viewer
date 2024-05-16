@@ -61,7 +61,8 @@ public:
         Format_Image,
         Format_Raw,
         Format_Mfe,
-        Format_Edf
+        Format_Edf,
+        Format_Ada
     };
 
     /// Constructor.
@@ -113,6 +114,9 @@ private:
 
     bool loadFromTxt(const QString& filename);
     bool saveToTxt(const QString& filename);
+
+    bool loadFromAda(const QString& filename);
+    bool saveToAda(const QString& filename);
 
     FileFormat m_format;
     cv::Mat m_data;

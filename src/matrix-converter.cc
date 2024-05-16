@@ -26,6 +26,7 @@
 #include <QSettings>
 #include <QStringList>
 #include <QTextStream>
+#include <QElapsedTimer>
 
 #if defined(LIBEXIV2_ENABLED)
 #    include <exiv2/exiv2.hpp>
@@ -133,6 +134,12 @@ bool CMatrixConverter::load(const QString& p_filename)
         return loadFromEdf(p_filename);
     }
 
+    if (p_filename.endsWith(".ada", Qt::CaseInsensitive))
+    {
+        m_format = Format_Ada;
+        return loadFromAda(p_filename);
+    }
+
     m_format = Format_Unknown;
     return loadFromImage(p_filename);
 }
@@ -175,6 +182,12 @@ bool CMatrixConverter::save(const QString& p_filename)
     {
         m_format = Format_Edf;
         return saveToEdf(p_filename);
+    }
+
+    if (suffix == "ada")
+    {
+        m_format = Format_Ada;
+        return saveToAda(p_filename);
     }
 
     return saveToImage(p_filename);
@@ -511,6 +524,126 @@ bool CMatrixConverter::saveToEdf(const QString& p_filename)
     catch (cv::Exception& e)
     {
         qWarning() << "OpenCV error while writing EDF matrix";
+        qWarning() << "file: " << p_filename;
+        qWarning() << "error: " << e.what();
+        return false;
+    }
+
+    return true;
+}
+
+bool CMatrixConverter::loadFromAda(const QString& p_filename)
+{
+    try
+    {
+        QElapsedTimer timer;
+        timer.start();
+
+        QFile file(p_filename);
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            qWarning() << "Can't read matrix from:" << file.fileName();
+            qWarning() << "-- error:" <<file.errorString();
+            return false;
+        }
+
+        QDataStream stream(&file);
+        qint32 columns, rows;
+        qint8 type, channels;
+        stream >> columns >> rows >> type >> channels;
+
+        m_data.create(rows, columns, type);
+
+        switch (type)
+        {
+            case CV_64F:
+            {
+                for (int c = 0; c < columns; ++c)
+                {
+                    for (int r = 0; r < rows; ++r)
+                    {
+                        double value;
+                        stream >> value;
+                        m_data.at<double>(r, c) = value;
+                    }
+                }
+            }
+            break;
+
+            case CV_32F:
+            {
+                for (int c = 0; c < columns; ++c)
+                {
+                    for (int r = 0; r < rows; ++r)
+                    {
+                        stream >> m_data.at<float>(r, c);
+                    }
+                }
+            }
+            break;
+
+            case CV_32S:
+            {
+                for (int c = 0; c < columns; ++c)
+                {
+                    for (int r = 0; r < rows; ++r)
+                    {
+                        stream >> m_data.at<int>(r, c);
+                    }
+                }
+            }
+            break;
+
+        }
+
+        qInfo() << "Matrix" << m_data.rows << "x" << m_data.cols << "loaded from:" << p_filename << "in:" << timer.elapsed() << "ms";
+    }
+    catch (cv::Exception& e)
+    {
+        qWarning() << "OpenCV error while reading ADA matrix";
+        qWarning() << "file: " << p_filename;
+        qWarning() << "error: " << e.what();
+        return false;
+    }
+
+    return true;
+}
+
+bool CMatrixConverter::saveToAda(const QString& p_filename)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    QFile file(p_filename);
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        qWarning() << "Can't write matrix as:" << file.fileName();
+        qWarning() << "-- error:" <<file.errorString();
+        return false;
+    }
+
+    try
+    {
+        const qint32 columns = m_data.cols;
+        const qint32 rows = m_data.rows;
+        const qint8 type = m_data.type();
+        const qint8 channels = m_data.channels();
+
+        QDataStream stream(&file);
+        stream << columns << rows << type << channels;
+        for (int c = 0; c < columns; ++c)
+        {
+            for (int r = 0; r < rows; ++r)
+            {
+                stream << m_data.at<double>(r, c);
+            }
+        }
+
+        qInfo() << "Matrix" << m_data.rows << "x" << m_data.cols << "saved as:" << p_filename << "in:" << timer.elapsed() << "ms";
+    }
+    catch (cv::Exception& e)
+    {
+        qWarning() << "OpenCV error while reading ADA matrix";
         qWarning() << "file: " << p_filename;
         qWarning() << "error: " << e.what();
         return false;

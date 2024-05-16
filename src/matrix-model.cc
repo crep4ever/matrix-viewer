@@ -112,7 +112,7 @@ const QString& CMatrixModel::filePath() const
 
 bool CMatrixModel::isFormatData() const
 {
-    return (m_format == CMatrixConverter::Format_FileStorage || m_format == CMatrixConverter::Format_Txt || m_format == CMatrixConverter::Format_Mfe);
+    return (m_format == CMatrixConverter::Format_FileStorage || m_format == CMatrixConverter::Format_Txt || m_format == CMatrixConverter::Format_Mfe || m_format == CMatrixConverter::Format_Ada);
 }
 
 bool CMatrixModel::isFormatImage() const
