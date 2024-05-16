@@ -76,11 +76,15 @@ private slots:
     void insertRowBeforeCurrent();
     void insertColumnBeforeCurrent();
 
+    void enableSortByColumn(int col);
+
 private:
     CMainWindow *m_parent;
 
     QAction *m_adjustColumnsAct;
     QAction *m_propertiesAct;
+
+    bool m_isSortingEnabled;
 
     QModelIndex m_currentSelection;
 };

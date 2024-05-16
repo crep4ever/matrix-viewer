@@ -33,16 +33,19 @@ CMatrixView::CMatrixView(QWidget *p_parent)
     , m_parent(qobject_cast<CMainWindow *>(p_parent))
     , m_adjustColumnsAct(nullptr)
     , m_propertiesAct(nullptr)
+    , m_isSortingEnabled(false)
+    , m_currentSelection()
 {
     setAlternatingRowColors(true);
     setShowGrid(true);
-    setSortingEnabled(true);
+    setSortingEnabled(false);
     setEditTriggers(QAbstractItemView::DoubleClicked);
     setSelectionMode(QAbstractItemView::SingleSelection);
 
     horizontalHeader()->setDefaultSectionSize(120);
     horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(horizontalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(horizontalHeaderContextMenu(const QPoint &)));
+    connect(horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(enableSortByColumn(int)));
 
     verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(verticalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(verticalHeaderContextMenu(const QPoint &)));
@@ -275,5 +278,15 @@ void CMatrixView::insertColumnBeforeCurrent()
     if (!model()->insertColumn(idx))
     {
         qWarning() << "Can't insert column before index " << idx;
+    }
+}
+
+void CMatrixView::enableSortByColumn(int p_column)
+{
+    if (!m_isSortingEnabled)
+    {
+        setSortingEnabled(true);
+        sortByColumn(p_column, Qt::AscendingOrder);
+        m_isSortingEnabled = true;
     }
 }
