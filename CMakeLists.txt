@@ -134,17 +134,19 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES "Release")
-  set(FLAGS -O3 -march=native -DNDEBUG)
-elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
-  set(FLAGS
-      -g
-      -Werror
-      -Wall
-      -Wextra
-      -Wshadow
-      -Wnon-virtual-dtor
-      -pedantic)
+if (NOT MSVC)
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+        set(FLAGS -O3 -march=native -DNDEBUG)
+    elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(FLAGS
+            -g
+            -Werror
+            -Wall
+            -Wextra
+            -Wshadow
+            -Wnon-virtual-dtor
+            -pedantic)
+    endif()
 endif()
 
 include(FeatureSummary)
