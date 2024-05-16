@@ -50,6 +50,10 @@ CMatrixView::CMatrixView(QWidget *p_parent)
     verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(verticalHeader(), SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(verticalHeaderContextMenu(const QPoint &)));
 
+    const QString css = QString("QHeaderView::section {background-color: #babdb6 ; color: white; font-weight: bold;}");
+    horizontalHeader()->setStyleSheet(css);
+    verticalHeader()->setStyleSheet(css);
+
     m_adjustColumnsAct = new QAction(tr("&Adjust columns"), this);
     m_adjustColumnsAct->setStatusTip(tr("Adjust columns of the table view to contents"));
     connect(m_adjustColumnsAct, SIGNAL(triggered()), SLOT(adjustColumnsToContents()));
