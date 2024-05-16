@@ -128,7 +128,7 @@ CMainWindow *CImageView::parent() const
 
 void CImageView::wheelEvent(QWheelEvent *p_event)
 {
-    if (p_event->pixelDelta().y() > 0)
+    if (p_event->angleDelta().y() > 0)
     {
         zoomIn();
     }
