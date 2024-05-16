@@ -52,8 +52,8 @@ void CTabWidget::addTab(QWidget *p_page, const QString &p_label)
     {
         tab->setFilePath(fi.absoluteFilePath());
         tab->setWindowTitle(fi.fileName());
-        setToolTip(fi.absoluteFilePath());
         QTabWidget::addTab(p_page, fi.fileName());
+        setTabToolTip(count() - 1, fi.absoluteFilePath());
     }
     else
     {
